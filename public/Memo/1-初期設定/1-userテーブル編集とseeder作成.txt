@@ -1,0 +1,100 @@
+
+1-userテーブル編集とseeder作成
+
+下記コマンドでseederファイル新規作成
+php artisan make:seeder UserTableSeeder
+
+◆userテーブルの編集◆
+
+ディレクトリ
+\database\migrations\2014_10_12_000000_create_users_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('users', function (Blueprint $table) {
+      $table->id();
+      $table->string('name');
+      $table->string('username')->nullable();
+      $table->string('email')->unique();
+      $table->timestamp('email_verified_at')->nullable();
+      $table->string('password');
+      $table->string('photo')->nullable();
+      $table->string('phone')->nullable();
+      $table->string('address')->nullable();
+      $table->enum('role', ['admin', 'instructor', 'user'])->default('user');
+      $table->enum('status', ['1', '0'])->default('1');
+      $table->rememberToken();
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Seederの編集◆
+
+ディレクトリ
+\database\seeders\UserTableSeeder.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function run(): void
+  {
+    DB::table('users')->insert([
+
+      // Admin 
+      [
+        'name' => 'Admin',
+        'username' => 'admin',
+        'email' => 'admin@gmail.com',
+        'password' => Hash::make('111'),
+        'role' => 'admin',
+        'status' => '1',
+      ],
+      // Instructor 
+
+      [
+        'name' => 'Instructor',
+        'username' => 'instructor',
+        'email' => 'instructor@gmail.com',
+        'password' => Hash::make('111'),
+        'role' => 'instructor',
+        'status' => '1',
+      ],
+      // User Data 
+
+      [
+        'name' => 'User',
+        'username' => 'user',
+        'email' => 'user@gmail.com',
+        'password' => Hash::make('111'),
+        'role' => 'user',
+        'status' => '1',
+      ],
+
+    ]);
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\database\seeders\DatabaseSeeder.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function run(): void
+  {
+
+    ↓↓seederファイルの記述↓↓
+    $this->call(UserTableSeeder::class);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+下記コマンドを実行し、DBにデータが格納されたらOK
+
+php artisan migrate:refresh --seed
