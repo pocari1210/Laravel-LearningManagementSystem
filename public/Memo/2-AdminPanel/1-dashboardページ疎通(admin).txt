@@ -1,0 +1,40 @@
+
+1-dashboardページ疎通(admin)
+
+admin権限のダッシュボードの疎通を行う
+
+publicフォルダ配下にbackendフォルダを作成し、
+jsフォルダやcssフォルダ等を格納する
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])
+    ->name('admin.index');
+
+★コード解説★
+routeの遷移先を変更
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function AdminDashboard()
+  {
+    return view('admin.index');
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+admin権限でログインし、ダッシュボードページが疎通されていればOK
