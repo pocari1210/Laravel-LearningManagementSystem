@@ -1,0 +1,87 @@
+
+
+下記コマンドでミドルウェアファイル新規作成
+php artisan make:middleware Role
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Auth\AuthenticatedSessionController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function store(LoginRequest $request): RedirectResponse
+  {
+    $request->authenticate();
+
+    $request->session()->regenerate();
+
+    // role毎のログイン後の遷移先指定
+    $url = '';
+    if ($request->user()->role === 'admin') {
+      $url = 'admin/dashboard';
+    } elseif ($request->user()->role === 'instructor') {
+      $url = 'instructor/dashboard';
+    } elseif ($request->user()->role === 'user') {
+      $url = '/dashboard';
+    }
+
+    return redirect()->intended($url);
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Middlewareの編集◆
+
+ディレクトリ
+\app\Http\Middleware\Role.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // $roleを記述し、権限(role)をパラメーターとして受け取れるようにする
+  public function handle(Request $request, Closure $next, $role): Response
+  {
+
+    // roleが一致していない場合、dashboardページにリダイレクトされる
+    if ($request->user()->role !== $role) {
+      return redirect('dashboard');
+    }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Kernelの編集◆
+
+ディレクトリ
+\app\Http\Kernel.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  protected $middlewareAliases = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+
+    ↓↓追記↓↓
+    'roles' => \App\Http\Middleware\Role::class,
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆routeの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group Middleware 
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+★コード解説★
+authとrolesはKernel.phpで記載したmiddlewareAliasesのキーと紐づいている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ログイン後、各roleごとにリダイレクト先が遷移されたらOK
