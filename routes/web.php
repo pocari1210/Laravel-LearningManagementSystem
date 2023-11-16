@@ -43,6 +43,10 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     ->name('admin.logout');
 }); // End Admin Group Middleware 
 
+// Adminのloginページのルート
+Route::get('/admin/login', [AdminController::class, 'AdminLogin'])
+  ->name('admin.login');
+
 ///// Instructor Group Middleware
 Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
