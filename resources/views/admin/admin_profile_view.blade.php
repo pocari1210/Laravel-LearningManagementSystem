@@ -26,11 +26,11 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="{{ asset('backend/assets/images/avatars/avatar-2.png') }}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                <img src="{{ (!empty($profileData->photo)) ? url('storage/upload/admin_images/'.$profileData->photo) : url('storage/upload/no_image.jpg')}}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                 <div class="mt-3">
-                  <h4>John Doe</h4>
-                  <p class="text-secondary mb-1">Full Stack Developer</p>
-                  <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
+                  <h4>{{ $profileData->name }}</h4>
+                  <p class="text-secondary mb-1">{{ $profileData->username }}</p>
+                  <p class="text-muted font-size-sm">{{ $profileData->email }}</p>
                   <button class="btn btn-primary">Follow</button>
                   <button class="btn btn-outline-primary">Message</button>
                 </div>
