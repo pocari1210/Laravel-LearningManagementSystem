@@ -64,6 +64,9 @@ class AdminController extends Controller
     // 画像の変更が含まれた場合の処理
     if ($request->file('photo')) {
       $file = $request->file('photo');
+
+      // @unlinkで、登録されている画像のpathを指定し、削除を行う
+      @unlink(public_path('strage/upload/admin_images/' . $data->photo));
       $filename = date('YmdHi') . $file->getClientOriginalName();
       $file->move(public_path('storage/upload/admin_images'), $filename);
       $data['photo'] = $filename;
@@ -72,6 +75,11 @@ class AdminController extends Controller
     // 保存処理を行う
     $data->save();
 
-    return redirect()->back();
+    $notification = array(
+      'message' => 'Admin Profile Updated Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
   } // End Method  
 }

@@ -340,7 +340,9 @@
       </div>
       <div class="user-box dropdown px-3">
         <a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{{ asset('backend/assets/images/avatars/avatar-2.png') }}" class="user-img" alt="user avatar">
+
+          <!-- 三項演算子を用いて、画像の登録があった場合とない場合の表示を行う -->
+          <img src="{{ (!empty($profileData->photo)) ? url('storage/upload/admin_images/'.$profileData->photo) : url('storage/upload/no_image.jpg')}}" class="user-img" alt="user avatar">
           <div class="user-info">
             <p class="user-name mb-0">Pauline Seitz</p>
             <p class="designattion mb-0">Web Designer</p>
