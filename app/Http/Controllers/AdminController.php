@@ -44,4 +44,34 @@ class AdminController extends Controller
       compact('profileData')
     );
   } // End Method
+
+  public function AdminProfileStore(Request $request)
+  {
+
+    // LoginしているUserのid情報を取得
+    $id = Auth::user()->id;
+
+    // Userモデルのレコードを指定
+    $data = User::find($id);
+
+    // formからわたってきたデータを受け取る
+    $data->name = $request->name;
+    $data->username = $request->username;
+    $data->email = $request->email;
+    $data->phone = $request->phone;
+    $data->address = $request->address;
+
+    // 画像の変更が含まれた場合の処理
+    if ($request->file('photo')) {
+      $file = $request->file('photo');
+      $filename = date('YmdHi') . $file->getClientOriginalName();
+      $file->move(public_path('storage/upload/admin_images'), $filename);
+      $data['photo'] = $filename;
+    }
+
+    // 保存処理を行う
+    $data->save();
+
+    return redirect()->back();
+  } // End Method  
 }
