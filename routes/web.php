@@ -68,3 +68,7 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
   Route::get('/instructor/logout', [InstructorController::class, 'InstructorLogout'])
     ->name('instructor.logout');
 }); // End Instructor Group Middleware 
+
+// Instructorのloginページのルート
+Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])
+  ->name('instructor.login');
