@@ -1,0 +1,22 @@
+
+1-dashboardページ疎通(instructor)
+
+AdminPanelを参考にし、
+テンプレートの疎通を行う
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\InstructorController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorDashboard()
+  {
+    return view('instructor.index');
+  } // End Method 
+
+★コード解説★
+リターン先のviewファイルを変更
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
