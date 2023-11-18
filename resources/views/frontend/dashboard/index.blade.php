@@ -1,13 +1,18 @@
 @extends('frontend.dashboard.user_dashboard')
 @section('userdashboard')
 
+@php
+$id = Auth::user()->id;
+$profileData = App\Models\User::find($id);
+@endphp
+
 <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between mb-5">
   <div class="media media-card align-items-center">
     <div class="media-img media--img media-img-md rounded-full">
-      <img class="rounded-full" src="images/small-avatar-1.jpg" alt="Student thumbnail image">
+      <img class="rounded-full" src="{{ (!empty($profileData->photo)) ? url('storage/upload/user_images/'.$profileData->photo) : url('storage/upload/no_image.jpg')}}" alt="Student thumbnail image">
     </div>
     <div class="media-body">
-      <h2 class="section__title fs-30">Howdy, Tim Buchalka</h2>
+      <h2 class="section__title fs-30">Hello, {{ $profileData->name }}</h2>
       <div class="rating-wrap d-flex align-items-center pt-2">
         <div class="review-stars">
           <span class="rating-number">4.4</span>
@@ -21,10 +26,7 @@
       </div><!-- end rating-wrap -->
     </div><!-- end media-body -->
   </div><!-- end media -->
-  <div class="file-upload-wrap file-upload-wrap-2 file--upload-wrap">
-    <input type="file" name="files[]" class="multi file-upload-input">
-    <span class="file-upload-text"><i class="la la-upload mr-2"></i>Upload a course</span>
-  </div><!-- file-upload-wrap -->
+
 </div><!-- end breadcrumb-content -->
 <div class="section-block mb-5"></div>
 <div class="dashboard-heading mb-5">
@@ -67,7 +69,7 @@
                                             z M170.667,53.333c0-5.885,4.792-10.667,10.667-10.667h37.917c3.792,0,7.313-2.021,9.208-5.302
                                             c5.854-10.042,16.146-16.031,27.542-16.031s21.688,5.99,27.542,16.031c1.896,3.281,5.417,5.302,9.208,5.302h37.917
                                             c5.875,0,10.667,4.781,10.667,10.667V64c0,11.76-9.563,21.333-21.333,21.333H192c-11.771,0-21.333-9.573-21.333-21.333V53.333z
-                                            M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
+                                             M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
                                             c0-11.76,9.563-21.333,21.333-21.333h42.667c0,23.531,19.146,42.667,42.667,42.667h128c23.521,0,42.667-19.135,42.667-42.667
                                             h42.667c11.771,0,21.333,9.573,21.333,21.333V469.333z" />
                   <path d="M160,170.667c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32
@@ -77,7 +79,7 @@
                                             C192,291.688,177.646,277.333,160,277.333z M160,320c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667
                                             s10.667,4.781,10.667,10.667C170.667,315.219,165.875,320,160,320z" />
                   <path d="M160,384c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32C192,398.354,177.646,384,160,384z
-                                            M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
+                                             M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
                                             C170.667,421.885,165.875,426.667,160,426.667z" />
                   <path d="M373.333,192h-128c-5.896,0-10.667,4.771-10.667,10.667c0,5.896,4.771,10.667,10.667,10.667h128
                                             c5.896,0,10.667-4.771,10.667-10.667C384,196.771,379.229,192,373.333,192z" />
@@ -111,7 +113,7 @@
                                             z M170.667,53.333c0-5.885,4.792-10.667,10.667-10.667h37.917c3.792,0,7.313-2.021,9.208-5.302
                                             c5.854-10.042,16.146-16.031,27.542-16.031s21.688,5.99,27.542,16.031c1.896,3.281,5.417,5.302,9.208,5.302h37.917
                                             c5.875,0,10.667,4.781,10.667,10.667V64c0,11.76-9.563,21.333-21.333,21.333H192c-11.771,0-21.333-9.573-21.333-21.333V53.333z
-                                            M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
+                                             M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
                                             c0-11.76,9.563-21.333,21.333-21.333h42.667c0,23.531,19.146,42.667,42.667,42.667h128c23.521,0,42.667-19.135,42.667-42.667
                                             h42.667c11.771,0,21.333,9.573,21.333,21.333V469.333z" />
                   <path d="M160,170.667c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32
@@ -121,7 +123,7 @@
                                             C192,291.688,177.646,277.333,160,277.333z M160,320c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667
                                             s10.667,4.781,10.667,10.667C170.667,315.219,165.875,320,160,320z" />
                   <path d="M160,384c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32C192,398.354,177.646,384,160,384z
-                                            M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
+                                             M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
                                             C170.667,421.885,165.875,426.667,160,426.667z" />
                   <path d="M373.333,192h-128c-5.896,0-10.667,4.771-10.667,10.667c0,5.896,4.771,10.667,10.667,10.667h128
                                             c5.896,0,10.667-4.771,10.667-10.667C384,196.771,379.229,192,373.333,192z" />
@@ -211,7 +213,7 @@
                                             z M170.667,53.333c0-5.885,4.792-10.667,10.667-10.667h37.917c3.792,0,7.313-2.021,9.208-5.302
                                             c5.854-10.042,16.146-16.031,27.542-16.031s21.688,5.99,27.542,16.031c1.896,3.281,5.417,5.302,9.208,5.302h37.917
                                             c5.875,0,10.667,4.781,10.667,10.667V64c0,11.76-9.563,21.333-21.333,21.333H192c-11.771,0-21.333-9.573-21.333-21.333V53.333z
-                                            M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
+                                             M426.667,469.333c0,11.76-9.563,21.333-21.333,21.333H106.667c-11.771,0-21.333-9.573-21.333-21.333v-384
                                             c0-11.76,9.563-21.333,21.333-21.333h42.667c0,23.531,19.146,42.667,42.667,42.667h128c23.521,0,42.667-19.135,42.667-42.667
                                             h42.667c11.771,0,21.333,9.573,21.333,21.333V469.333z" />
                   <path d="M160,170.667c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32
@@ -221,7 +223,7 @@
                                             C192,291.688,177.646,277.333,160,277.333z M160,320c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667
                                             s10.667,4.781,10.667,10.667C170.667,315.219,165.875,320,160,320z" />
                   <path d="M160,384c-17.646,0-32,14.354-32,32c0,17.646,14.354,32,32,32s32-14.354,32-32C192,398.354,177.646,384,160,384z
-                                            M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
+                                             M160,426.667c-5.875,0-10.667-4.781-10.667-10.667c0-5.885,4.792-10.667,10.667-10.667s10.667,4.781,10.667,10.667
                                             C170.667,421.885,165.875,426.667,160,426.667z" />
                   <path d="M373.333,192h-128c-5.896,0-10.667,4.771-10.667,10.667c0,5.896,4.771,10.667,10.667,10.667h128
                                             c5.896,0,10.667-4.771,10.667-10.667C384,196.771,379.229,192,373.333,192z" />
@@ -261,194 +263,9 @@
       </div><!-- end card-body -->
     </div><!-- end card -->
   </div><!-- end col-lg-4 -->
-  <div class="col-lg-4 responsive-column-half">
-    <div class="card card-item">
-      <div class="card-body">
-        <h3 class="fs-18 font-weight-semi-bold pb-4">Total Sales</h3>
-        <canvas id="doughnut-chart"></canvas>
-        <div id="legend" class="mt-40px text-center"></div>
-      </div>
-    </div><!-- end card -->
-  </div><!-- end col-lg-4 -->
-  <div class="col-lg-4 responsive-column-half">
-    <div class="card card-item">
-      <div class="card-body">
-        <h3 class="fs-18 font-weight-semi-bold pb-4">Net Income</h3>
-        <canvas id="bar-chart"></canvas>
-        <ul class="chart-legend mt-40px text-center">
-          <li>Sales for this month</li>
-        </ul>
-      </div>
-    </div><!-- end card -->
-  </div><!-- end col-lg-4 -->
-  <div class="col-lg-4">
-    <div class="card card-item">
-      <div class="card-body">
-        <h3 class="fs-18 font-weight-semi-bold pb-4">Earning by Location</h3>
-        <div class="my-course-progress-bar-wrap">
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">USA:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="80%">
-                <div class="skillbar-bar skillbar--bar-2 bg-1"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">80%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">UK:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="70%">
-                <div class="skillbar-bar skillbar--bar-2 bg-2"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">70%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">China:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="60%">
-                <div class="skillbar-bar skillbar--bar-2 bg-3"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">60%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">Canada:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="50%">
-                <div class="skillbar-bar skillbar--bar-2 bg-4"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">50%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">Brazil:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="40%">
-                <div class="skillbar-bar skillbar--bar-2 bg-5"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">40%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">Russia:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="30%">
-                <div class="skillbar-bar skillbar--bar-2 bg-6"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">30%</div>
-          </div>
-          <div class="d-flex flex-wrap align-items-center mb-2 position-relative">
-            <p class="skillbar-title">Australia:</p>
-            <div class="skillbar-box">
-              <div class="skillbar skillbar-skillbar-2" data-percent="20%">
-                <div class="skillbar-bar skillbar--bar-2 bg-7"></div>
-              </div><!-- End Skill Bar -->
-            </div>
-            <div class="skill-bar-percent">20%</div>
-          </div>
-        </div><!-- end my-course-progress-bar-wrap -->
-      </div>
-    </div><!-- end card -->
-  </div><!-- end col-lg-4 -->
-  <div class="col-lg-7 responsive-column-half">
-    <div class="card card-item">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center pb-4">
-          <h3 class="fs-18 font-weight-semi-bold pb-4">Earning Statistics</h3>
-          <div class="select-container w-auto">
-            <select class="select-container-select">
-              <option value="this-week">This Week</option>
-              <option value="this-month">This Month</option>
-              <option value="last-months">Last 6 Months</option>
-              <option value="this-year">This Year</option>
-            </select>
-          </div>
-        </div>
-        <canvas id="line-chart"></canvas>
-        <ul class="chart-legend mt-40px text-center">
-          <li>Earnings for this month</li>
-        </ul>
-      </div>
-    </div><!-- end card -->
-  </div><!-- end col-lg-7 -->
-  <div class="col-lg-5 responsive-column-half">
-    <div class="card card-item">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center pb-4">
-          <h3 class="fs-18 font-weight-semi-bold">Notifications</h3>
-          <span class="fs-15 cursor-pointer">Mark all as read</span>
-        </div>
-        <div class="notification-body scrolled-box custom-scrollbar-styled">
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-1 mr-3 text-white">
-              <i class="la la-bolt"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">Your resume updated!</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">1 hour ago</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-2 mr-3 text-white">
-              <i class="la la-lock"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">You changed password</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-3 mr-3 text-white">
-              <i class="la la-user"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">Your account has been created successfully</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-4 mr-3 text-white">
-              <i class="la la-lock"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">You changed password</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-5 mr-3 text-white">
-              <i class="la la-user"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">Your account has been created successfully</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-6 mr-3 text-white">
-              <i class="la la-briefcase"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">You applied for a job Front-end Developer</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-          <a href="dashboard.html" class="media media-card align-items-center">
-            <div class="icon-element icon-element-sm flex-shrink-0 bg-7 mr-3 text-white">
-              <i class="la la-upload"></i>
-            </div>
-            <div class="media-body">
-              <h5 class="fs-15">Your course uploaded successfully</h5>
-              <span class="d-block lh-18 pt-1 text-gray fs-13">November 12, 2019</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div><!-- end card -->
-  </div><!-- end col-lg-5 -->
+
+
+
 </div><!-- end row -->
 
 @endsection
