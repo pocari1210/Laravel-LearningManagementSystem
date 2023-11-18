@@ -73,6 +73,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
   Route::post('/instructor/profile/store', [InstructorController::class, 'InstructorProfileStore'])
     ->name('instructor.profile.store');
+
+  Route::get('/instructor/change/password', [InstructorController::class, 'InstructorChangePassword'])
+    ->name('instructor.change.password');
+
+  Route::post('/instructor/password/update', [InstructorController::class, 'InstructorPasswordUpdate'])
+    ->name('instructor.password.update');
 }); // End Instructor Group Middleware 
 
 // Instructorのloginページのルート
