@@ -25,4 +25,41 @@ class UserController extends Controller
       compact('profileData')
     );
   } // End Method 
+
+  public function UserProfileUpdate(Request $request)
+  {
+
+    // LoginしているUserのid情報を取得
+    $id = Auth::user()->id;
+
+    // Userモデルのレコードを指定
+    $data = User::find($id);
+
+    // formからわたってきたデータを受け取る
+    $data->name = $request->name;
+    $data->username = $request->username;
+    $data->email = $request->email;
+    $data->phone = $request->phone;
+    $data->address = $request->address;
+
+    // 画像の変更が含まれた場合の処理
+    if ($request->file('photo')) {
+      $file = $request->file('photo');
+
+      // @unlinkで、登録されている画像のpathを指定し、削除を行う
+      @unlink(public_path('storage/upload/user_images/' . $data->photo));
+      $filename = date('YmdHi') . $file->getClientOriginalName();
+      $file->move(public_path('storage/upload/user_images'), $filename);
+      $data['photo'] = $filename;
+    }
+
+    // 保存処理を行う
+    $data->save();
+
+    $notification = array(
+      'message' => 'User Profile Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
 }
