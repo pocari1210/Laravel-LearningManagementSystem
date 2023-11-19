@@ -1,0 +1,71 @@
+
+4-ログアウト処理(userdashboard)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::middleware('auth')->group(function () {
+
+  Route::get('/user/logout', [UserController::class, 'UserLogout'])
+    ->name('user.logout');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元①)◆
+
+ディレクトリ
+\resources\views\frontend\dashboard\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    ↓↓routeの追加↓↓
+    <li><a href="{{ route('user.logout') }}"><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px">
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z" />
+        </svg> Logout</a></li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元②)◆
+
+ディレクトリ
+\resources\views\frontend\dashboard\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li>
+
+    ↓↓routeの追加↓↓
+    <a href="{{ route('user.logout') }}">
+      <i class="la la-power-off mr-1"></i> Logout
+    </a>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\UserController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UserLogout(Request $request)
+  {
+    Auth::guard('web')->logout();
+
+    $request->session()->invalidate();
+
+    $request->session()->regenerateToken();
+
+    return redirect('/login');
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ログアウト処理ができたらOK
