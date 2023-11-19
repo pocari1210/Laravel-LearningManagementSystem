@@ -1,0 +1,120 @@
+
+8-Categoryの削除処理とsweetalert
+
+◆sweetalert2@10ファイル作成◆
+
+ディレクトリ
+\public\backend\assets\js\code.js
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// sweetalert2@10
+
+$(function () {
+  $(document).on('click', '#delete', function (e) {
+    e.preventDefault();
+    var link = $(this).attr("href");
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Delete This Data?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = link
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      }
+    })
+  });
+});
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆テンプレートベースの編集◆
+
+ディレクトリ
+\resources\views\admin\admin_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <!-- sweetalert2@10 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="{{ asset('backend/assets/js/code.js') }}"></script>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // Category All Route 
+  Route::controller(CategoryController::class)->group(function () {
+
+    Route::get('/delete/category/{id}', 'DeleteCategory')
+      ->name('delete.category');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\category\all_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+↓↓routeの追記↓↓
+<a href="{{ route('delete.category',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+
+★コード解説★
+
+id="delete"は\public\backend\assets\js\code.jsの'#delete'と
+紐づいている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CategoryController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteCategory($id)
+  {
+
+    $item = Category::find($id);
+    $img = $item->image;
+    unlink($img);
+
+    Category::find($id)->delete();
+
+    $notification = array(
+      'message' => 'Category Deleted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

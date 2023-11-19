@@ -90,6 +90,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/category', 'UpdateCategory')
       ->name('update.category');
+
+    Route::get('/delete/category/{id}', 'DeleteCategory')
+      ->name('delete.category');
   });
 }); // End Admin Group SideBar 
 
