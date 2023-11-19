@@ -1,0 +1,134 @@
+
+1-SubCategoryの一覧,追加ページ疎通,保存処理
+
+下記コマンドでコントローラーファイル新規作成
+php artisan make:controller Backend/SubCategoryController
+
+下記コマンドでModelとTableファイル新規作成
+php artisan make:model SubCategory -m
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\SubCategory.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class SubCategory extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+
+  public function category()
+  {
+    return $this->belongsTo(Category::class, 'category_id', 'id');
+  }
+}
+
+★コード解説★
+belongsToで従テーブル(SubCategory)から主テーブル(Category)no
+レコードを取り出している
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Tableの編集◆
+
+ディレクトリ
+\database\migrations\2023_11_19_114729_create_sub_categories_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('sub_categories', function (Blueprint $table) {
+      $table->id();
+      $table->integer('category_id');
+      $table->string('subcategory_name');
+      $table->string('subcategory_slug');
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // SubCategory All Route 
+  Route::controller(SubCategoryController::class)->group(function () {
+    Route::get('/all/subcategory', 'AllSubCategory')
+      ->name('all.subcategory');
+
+    Route::get('/add/subcategory', 'AddSubCategory')
+      ->name('add.subcategory');
+
+    Route::post('/store/subcategory', 'StoreSubCategory')
+      ->name('store.subcategory');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li> <a href="{{ route('all.subcategory') }}"><i class='bx bx-radio-circle'></i>All SubCategory </a>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\SubCategoryController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\SubCategory;
+
+  public function AllSubCategory()
+  {
+
+    $subcategory = SubCategory::latest()->get();
+
+    return view(
+      'admin.backend.subcategory.all_subcategory',
+      compact('subcategory')
+    );
+  } // End Method 
+
+  public function AddSubCategory()
+  {
+    $category = Category::latest()->get();
+
+    return view(
+      'admin.backend.subcategory.add_subcategory',
+      compact('category')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\subcategory\add_subcategory.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

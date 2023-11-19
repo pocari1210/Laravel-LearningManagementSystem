@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\SubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +94,18 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/delete/category/{id}', 'DeleteCategory')
       ->name('delete.category');
+  });
+
+  // SubCategory All Route 
+  Route::controller(SubCategoryController::class)->group(function () {
+    Route::get('/all/subcategory', 'AllSubCategory')
+      ->name('all.subcategory');
+
+    Route::get('/add/subcategory', 'AddSubCategory')
+      ->name('add.subcategory');
+
+    Route::post('/store/subcategory', 'StoreSubCategory')
+      ->name('store.subcategory');
   });
 }); // End Admin Group SideBar 
 
