@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Backend\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,16 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpdate'])
     ->name('admin.password.update');
 }); // End Admin Group Middleware 
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // Category All Route 
+  Route::controller(CategoryController::class)->group(function () {
+    Route::get('/all/category', 'AllCategory')
+      ->name('all.category');
+  });
+}); // End Admin Group SideBar 
 
 // Adminのloginページのルート
 Route::get('/admin/login', [AdminController::class, 'AdminLogin'])

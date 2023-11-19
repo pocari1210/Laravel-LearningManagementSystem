@@ -1,0 +1,122 @@
+
+1-Categoryの一覧表示疎通
+
+下記コマンドでコントローラーファイル新規作成
+php artisan make:controller Backend/CategoryController
+
+下記コマンドでModelとTableファイル新規作成
+php artisan make:model Category -m
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Category.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Category extends Model
+{
+  use HasFactory;
+
+  ↓↓下記を追加し、DBに保存処理を行えるようにする
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Tableの編集◆
+
+ディレクトリ
+\database\migrations\2023_11_19_080859_create_categories_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('categories', function (Blueprint $table) {
+      $table->id();
+      $table->string('category_name');
+      $table->string('category_slug');
+      $table->string('image')->nullable();
+      $table->timestamps();
+    });
+  }
+
+入力が完了したら下記コマンド実行
+php artisan migrate
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // Category All Route 
+  Route::controller(CategoryController::class)->group(function () {
+    Route::get('/all/category', 'AllCategory')
+      ->name('all.category');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  ↓↓タイトル名の変更↓↓
+  <div class="menu-title">Manage Category</div>
+</a>
+  <ul>
+
+  ↓↓routeの追記↓↓
+  <li> <a href="{{ route('all.category') }}"><i class='bx bx-radio-circle'></i>All Category </a>
+  </li>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CategoryController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\Category;
+
+  public function AllCategory()
+  {
+    $category = Category::latest()->get();
+
+    return view(
+      'admin.backend.category.all_category',
+      compact('category')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\category\all_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Categoryの一覧ページが疎通できていたらOK
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
