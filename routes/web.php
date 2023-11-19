@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/user/logout', [UserController::class, 'UserLogout'])
     ->name('user.logout');
+
+  Route::get('/user/change/password', [UserController::class, 'UserChangePassword'])
+    ->name('user.change.password');
 });
 
 require __DIR__ . '/auth.php';

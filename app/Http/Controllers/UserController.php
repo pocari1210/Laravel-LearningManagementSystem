@@ -73,4 +73,9 @@ class UserController extends Controller
 
     return redirect('/login');
   } // End Method 
+
+  public function UserChangePassword()
+  {
+    return view('frontend.dashboard.change_password');
+  } // End Method 
 }
