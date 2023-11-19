@@ -125,6 +125,9 @@ Route::get('/admin/login', [AdminController::class, 'AdminLogin'])
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
   ->name('become.instructor');
 
+Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
+  ->name('instructor.register');
+
 ///// Instructor Group Middleware
 Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
