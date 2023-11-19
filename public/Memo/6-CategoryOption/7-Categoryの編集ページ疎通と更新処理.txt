@@ -1,0 +1,108 @@
+
+7-Categoryの編集ページ疎通と更新処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // Category All Route 
+  Route::controller(CategoryController::class)->group(function () {
+
+    Route::get('/edit/category/{id}', 'EditCategory')
+      ->name('edit.category');
+
+    Route::post('/update/category', 'UpdateCategory')
+      ->name('update.category');
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\category\all_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+↓↓routeの追記↓↓
+<a href="{{ route('edit.category',$item->id) }}" class="btn btn-info px-5">Edit </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CategoryController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+　// 編集ページ疎通
+  public function EditCategory($id)
+  {
+
+    $category = Category::find($id);
+
+    return view(
+      'admin.backend.category.edit_category',
+      compact('category')
+    );
+  } // End Method 
+
+
+  // 更新処理
+  public function UpdateCategory(Request $request)
+  {
+
+    // formからきたid情報を取得
+    $cat_id = $request->id;
+
+    if ($request->file('image')) {
+
+      $image = $request->file('image');
+      $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+      Image::make($image)->resize(370, 246)->save('storage/upload/category/' . $name_gen);
+      $save_url = 'storage/upload/category/' . $name_gen;
+
+      Category::find($cat_id)->update([
+        'category_name' => $request->category_name,
+        'category_slug' => strtolower(str_replace(' ', '-', $request->category_name)),
+        'image' => $save_url,
+      ]);
+
+      $notification = array(
+        'message' => 'Category Updated with image Successfully',
+        'alert-type' => 'success'
+      );
+      return redirect()->route('all.category')->with($notification);
+    } else {
+
+      // 更新処理
+      Category::find($cat_id)->update([
+        'category_name' => $request->category_name,
+        'category_slug' => strtolower(str_replace(' ', '-', $request->category_name)),
+      ]);
+
+      $notification = array(
+        'message' => 'Category Updated without image Successfully',
+        'alert-type' => 'success'
+      );
+      return redirect()->route('all.category')->with($notification);
+    } // end else 
+
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\category\edit_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+編集ページに遷移でき、更新処理を行うことができたらOK
