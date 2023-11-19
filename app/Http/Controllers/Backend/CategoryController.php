@@ -18,4 +18,9 @@ class CategoryController extends Controller
       compact('category')
     );
   } // End Method 
+
+  public function AddCategory()
+  {
+    return view('admin.backend.category.add_category');
+  } // End Method 
 }
