@@ -81,6 +81,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/add/category', 'AddCategory')
       ->name('add.category');
+
+    Route::post('/store/category', 'StoreCategory')
+      ->name('store.category');
   });
 }); // End Admin Group SideBar 
 

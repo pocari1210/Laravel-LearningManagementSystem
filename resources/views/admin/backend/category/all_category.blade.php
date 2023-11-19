@@ -43,8 +43,8 @@
                 <a href="" class="btn btn-info px-5">Edit </a>
                 <a href="" class="btn btn-danger px-5">Delete </a>
               </td>
-              /tr>
-              @endforeach
+            </tr>
+            @endforeach
 
           </tbody>
 
