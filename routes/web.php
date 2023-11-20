@@ -116,6 +116,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::get('/delete/subcategory/{id}', 'DeleteSubCategory')
       ->name('delete.subcategory');
   });
+
+  // Instructor All Route 
+  Route::controller(AdminController::class)->group(function () {
+    Route::get('/all/instructor', 'AllInstructor')
+      ->name('all.instructor');
+  });
 }); // End Admin Group SideBar 
 
 // Adminのloginページのルート
