@@ -1,0 +1,81 @@
+
+
+下記コマンドでコントローラーファイル新規作成
+php artisan make:controller Backend/CourseController
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\CourseController;
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+    Route::get('/all/course', 'AllCourse')
+      ->name('all.course');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+C:\xampp\htdocs\lms\cms\resources\views\instructor\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li class="menu-label">Course Manage </li>
+
+    <li>
+      <a href="javascript:;" class="has-arrow">
+        <div class="parent-icon"><i class='bx bx-cart'></i>
+        </div>
+        <div class="menu-title">Course Manage</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('all.course') }}"><i class='bx bx-radio-circle'></i>All Course </a>
+        </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AllCourse()
+  {
+
+    $id = Auth::user()->id;
+
+    $courses = Course::where('instructor_id', $id)
+      ->orderBy('id', 'desc')->get();
+
+    return view(
+      'instructor.courses.all_course',
+      compact('courses')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+courseの一覧ページが疎通できたらOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
