@@ -168,4 +168,23 @@ class AdminController extends Controller
       compact('allinstructor')
     );
   } // End Method
+
+  public function UpdateUserStatus(Request $request)
+  {
+
+    // チェックボックスをクリックしたuser_id情報を取得
+    $userId = $request->input('user_id');
+
+    // デフォルトで0にする
+    $isChecked = $request->input('is_checked', 0);
+
+    // statusの更新処理
+    $user = User::find($userId);
+    if ($user) {
+      $user->status = $isChecked;
+      $user->save();
+    }
+
+    return response()->json(['message' => 'User Status Updated Successfully']);
+  } // End Method  
 }

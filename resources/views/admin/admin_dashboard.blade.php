@@ -211,6 +211,9 @@
   <!--end switcher-->
   <!-- Bootstrap JS -->
   <script src="{{ asset('backend/assets/js/bootstrap.bundle.min.js') }}"></script>
+
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <!--plugins-->
   <script src="{{ asset('backend/assets/js/jquery.min.js') }}"></script>
   <script src="{{ asset('backend/assets/plugins/simplebar/js/simplebar.min.js') }}"></script>

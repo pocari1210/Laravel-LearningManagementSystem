@@ -1,6 +1,15 @@
 @extends('admin.admin_dashboard')
 @section('admin')
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<style>
+  /* チェックボックスの大きさを変更 */
+  .large-checkbox {
+    transform: scale(1.5);
+  }
+</style>
+
 <div class="page-content">
   <!--breadcrumb-->
   <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -55,8 +64,13 @@
               </td>
 
               <td>
-                <a href="{{ route('edit.category',$item->id) }}" class="btn btn-info px-5">Edit </a>
-                <a href="{{ route('delete.category',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+                <div class="form-check-danger form-check form-switch">
+
+                  <!-- data-user-idでinstructorのidデータを取得 -->
+                  <!-- 三項演算子を用いて、チェックの有無を判定 -->
+                  <input class="form-check-input status-toggle large-checkbox" type="checkbox" id="flexSwitchCheckCheckedDanger" data-user-id="{{ $item->id }}" {{ $item->status ? 'checked' : ''}}>
+                  <label class="form-check-label" for="flexSwitchCheckCheckedDanger"> </label>
+                </div>
               </td>
             </tr>
             @endforeach
@@ -69,5 +83,35 @@
   </div>
 
 </div>
+
+<script>
+  $(document).ready(function() {
+    $('.status-toggle').on('change', function() {
+
+      // data-user-idのid情報を取得
+      var userId = $(this).data('user-id');
+
+      // チェックボックスのstatusをtrueにする
+      var isChecked = $(this).is(':checked');
+
+      // send an ajax request to update status 
+      $.ajax({
+        url: "{{ route('update.user.stauts') }}",
+        method: "POST",
+        data: {
+          user_id: userId,
+          is_checked: isChecked ? 1 : 0,
+
+          // Ajaxを用いる場,トークンも送る必要がある
+          _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+          toastr.success(response.message);
+        },
+        error: function() {}
+      });
+    });
+  });
+</script>
 
 @endsection

@@ -1,0 +1,109 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor All Route 
+  Route::controller(AdminController::class)->group(function () {
+
+    Route::post('/update/user/stauts', 'UpdateUserStatus')
+      ->name('update.user.stauts');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\admin\admin_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+★コード解説★
+Ajax通信を行う場合、記述を行う必要がある
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\instructor\all_instructor.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <div class="form-check-danger form-check form-switch">
+
+      <!-- data-user-idでinstructorのidデータを取得 -->
+      <!-- 三項演算子を用いて、チェックの有無を判定 -->
+      <input class="form-check-input status-toggle large-checkbox" type="checkbox" id="flexSwitchCheckCheckedDanger" data-user-id="{{ $item->id }}" {{ $item->status ? 'checked' : ''}}>
+      <label class="form-check-label" for="flexSwitchCheckCheckedDanger"> </label>
+    </div>
+  </td>
+
+<script>
+  $(document).ready(function() {
+    $('.status-toggle').on('change', function() {
+
+      // data-user-idのid情報を取得
+      var userId = $(this).data('user-id');
+
+      // チェックボックスのstatusをtrueにする
+      var isChecked = $(this).is(':checked');
+
+      // send an ajax request to update status 
+      $.ajax({
+        url: "{{ route('update.user.stauts') }}",
+        method: "POST",
+        data: {
+          user_id: userId,
+          is_checked: isChecked ? 1 : 0,
+
+          // Ajaxを用いる場,トークンも送る必要がある
+          _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+          toastr.success(response.message);
+        },
+        error: function() {}
+      });
+    });
+  });
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateUserStatus(Request $request)
+  {
+
+    // チェックボックスをクリックしたuser_id情報を取得
+    $userId = $request->input('user_id');
+
+    // デフォルトで0にする
+    $isChecked = $request->input('is_checked', 0);
+
+    // statusの更新処理
+    $user = User::find($userId);
+    if ($user) {
+      $user->status = $isChecked;
+      $user->save();
+    }
+
+    return response()->json(['message' => 'User Status Updated Successfully']);
+  } // End Method  
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
