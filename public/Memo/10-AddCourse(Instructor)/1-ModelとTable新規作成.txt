@@ -1,0 +1,97 @@
+
+1-ModelとTable新規作成
+
+下記コマンドでmodelとtableファイル新規作成
+php artisan make:model Course -m
+php artisan make:model Course_goal -m
+
+
+◆モデルの編集①◆
+
+ディレクトリ
+\app\Models\Course.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Course extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆テーブルの編集①◆
+
+ディレクトリ
+\database\migrations\2023_11_20_134626_create_courses_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('courses', function (Blueprint $table) {
+      $table->id();
+      $table->integer('category_id');
+      $table->integer('subcategory_id');
+      $table->integer('instructor_id');
+      $table->string('course_image')->nullable();
+      $table->text('course_title')->nullable();
+      $table->text('course_name')->nullable();
+      $table->string('course_name_slug')->nullable();
+
+      $table->longText('description')->nullable();
+      $table->string('video')->nullable();
+      $table->string('label')->nullable();
+      $table->string('duration')->nullable();
+      $table->string('resources')->nullable();
+      $table->string('certificate')->nullable();
+
+      $table->integer('selling_price')->nullable();
+      $table->integer('discount_price')->nullable();
+      $table->text('prerequisites')->nullable();
+      $table->string('bestseller')->nullable();
+      $table->string('featured')->nullable();
+      $table->string('highestrated')->nullable();
+      $table->tinyInteger('status')->default(0)->comment('0=Inactive', '1=Active');
+      $table->timestamps();
+    });
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆モデルの編集②◆
+
+ディレクトリ
+\app\Models\Course_goal.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Course_goal extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆テーブルの編集②◆
+
+ディレクトリ
+\database\migrations\2023_11_20_134632_create_course_goals_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('course_goals', function (Blueprint $table) {
+      $table->id();
+      $table->integer('course_id');
+      $table->text('goal_name')->nullable();
+      $table->timestamps();
+    });
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

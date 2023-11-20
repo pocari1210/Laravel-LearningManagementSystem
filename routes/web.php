@@ -124,6 +124,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/user/stauts', 'UpdateUserStatus')
       ->name('update.user.stauts');
+
+    Route::post('/update/user/stauts', 'UpdateUserStatus')
+      ->name('update.user.stauts');
   });
 }); // End Admin Group SideBar 
 
