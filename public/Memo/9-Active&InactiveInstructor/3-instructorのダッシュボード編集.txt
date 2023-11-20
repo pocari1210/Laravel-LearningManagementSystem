@@ -1,0 +1,39 @@
+
+3-instructorのダッシュボード編集
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\instructor\index.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+@php
+$id = Auth::user()->id;
+$instructorId = App\Models\User::find($id);
+$status = $instructorId->status;
+@endphp
+
+<div class="page-content">
+
+  @if ($status === '1')
+  <h4>Instructor Account Is <span class="text-success">Active</span> </h4>
+  @else
+  <h4>Instructor Account Is <span class="text-danger">InActive</span> </h4>
+  <p class="text-danger"><b> Plz wait admin will check and approve your account</b> </p>
+  @endif
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+active/inactiveで表示の切り替えができていればOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

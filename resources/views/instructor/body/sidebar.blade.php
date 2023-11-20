@@ -1,3 +1,9 @@
+@php
+$id = Auth::user()->id;
+$instructorId = App\Models\User::find($id);
+$status = $instructorId->status;
+@endphp
+
 <div class="sidebar-wrapper" data-simplebar="true">
   <div class="sidebar-header">
     <div>
@@ -21,6 +27,8 @@
       </a>
     </li>
 
+    <!-- statusがactiveの場合の表示 -->
+    @if ($status === '1')
     <li class="menu-label">UI Elements</li>
 
     <li>
@@ -80,6 +88,11 @@
         </li>
       </ul>
     </li>
+
+    <!-- statusがinactiveの場合の表示 -->
+    @else
+
+    @endif
 
     <li>
       <a href="https://themeforest.net/user/codervent" target="_blank">
