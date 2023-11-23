@@ -1,54 +1,43 @@
-<?php
 
-namespace App\Http\Controllers\Backend;
+6-courceの保存処理
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+◆ルートの編集◆
 
-use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\Course;
-use App\Models\Course_goal;
+ディレクトリ
+\routes\web.php
 
-use InterventionImage;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
 
-class CourseController extends Controller
-{
-  public function AllCourse()
-  {
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
-    $id = Auth::user()->id;
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
 
-    $courses = Course::where('instructor_id', $id)
-      ->orderBy('id', 'desc')->get();
+    Route::post('/store/course', 'StoreCourse')
+      ->name('store.course');
 
-    return view(
-      'instructor.courses.all_course',
-      compact('courses')
-    );
-  } // End Method 
 
-  public function AddCourse()
-  {
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
-    $categories = Category::latest()->get();
+◆ビューの編集(遷移元)◆
 
-    return view(
-      'instructor.courses.add_course',
-      compact('categories')
-    );
-  } // End Method 
+ディレクトリ
+\resources\views\instructor\courses\add_course.blade.php
 
-  public function GetSubCategory($category_id)
-  {
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
 
-    $subcat = SubCategory::where('category_id', $category_id)
-      ->orderBy('subcategory_name', 'ASC')->get();
+  <form id="myForm" action="{{ route('store.course') }}" method="post" class="row g-3" enctype="multipart/form-data">
+    @csrf
 
-    return json_encode($subcat);
-  } // End Method 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
 
   public function StoreCourse(Request $request)
   {
@@ -67,7 +56,8 @@ class CourseController extends Controller
     $video->move(public_path('storage/upload/course/video/'), $videoName);
     $save_video = 'storage/upload/course/video/' . $videoName;
 
-
+    // 他のテーブルのIDも取得するため、
+    // insertGetIdメソッドを用いる
     $course_id = Course::insertGetId([
 
       'category_id' => $request->category_id,
@@ -107,7 +97,6 @@ class CourseController extends Controller
         $gcount->save();
       }
     }
-
     /// End Course Goals Add Form 
 
     $notification = array(
@@ -116,4 +105,7 @@ class CourseController extends Controller
     );
     return redirect()->route('all.course')->with($notification);
   } // End Method 
-}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+保存処理が行えたらOK
