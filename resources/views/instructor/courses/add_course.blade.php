@@ -64,8 +64,8 @@
 
         <div class="form-group col-md-6">
           <label for="input1" class="form-label">Course Subcategory </label>
-          <select name="category_id" class="form-select mb-3" aria-label="Default select example">
-            <option selected="" disabled>Open this select menu</option>
+          <select name="subcategory_id" class="form-select mb-3" aria-label="Default select example">
+            <option> </option>
           </select>
         </div>
 
@@ -200,6 +200,44 @@
     });
   });
 </script>
+
+<!-- SubCategory:Ajax Load START -->
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    // category_idを変更した時の処理
+    $('select[name="category_id"]').on('change', function() {
+      var category_id = $(this).val();
+
+      // Course Categoryを選択した時の処理
+      if (category_id) {
+        $.ajax({
+          url: "{{ url('/subcategory/ajax') }}/" + category_id,
+          type: "GET",
+          dataType: "json",
+
+          // 成功をした時の処理
+          success: function(data) {
+
+            // subcategory_idの要素をhtmlメソッドで取得
+            $('select[name="subcategory_id"]').html('');
+            var d = $('select[name="subcategory_id"]').empty();
+
+            // subcategoryのidとvalueを表示
+            $.each(data, function(key, value) {
+              $('select[name="subcategory_id"]').append('<option value="' + value.id + '">' + value.subcategory_name + '</option>');
+            });
+          },
+        });
+      } else {
+        alert('danger');
+      }
+    });
+  });
+</script>
+
+<!-- SubCategory:Ajax Load END -->
 
 
 @endsection

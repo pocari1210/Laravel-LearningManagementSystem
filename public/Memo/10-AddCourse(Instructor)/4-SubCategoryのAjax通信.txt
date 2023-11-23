@@ -1,0 +1,80 @@
+
+4-SubCategoryのAjax通信
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::get('/subcategory/ajax/{category_id}', 'GetSubCategory');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\add_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="form-group col-md-6">
+    <label for="input1" class="form-label">Course Subcategory </label>
+    <select name="subcategory_id" class="form-select mb-3" aria-label="Default select example">
+      <option> </option>
+    </select>
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function GetSubCategory($category_id)
+  {
+
+    $subcat = SubCategory::where('category_id', $category_id)
+      ->orderBy('subcategory_name', 'ASC')->get();
+
+    return json_encode($subcat);
+  } // End Method 
+
+<!-- SubCategory:Ajax Load START -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('select[name="category_id"]').on('change', function() {
+      var category_id = $(this).val();
+      if (category_id) {
+        $.ajax({
+          url: "{{ url('/subcategory/ajax') }}/" + category_id,
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            $('select[name="subcategory_id"]').html('');
+            var d = $('select[name="subcategory_id"]').empty();
+            $.each(data, function(key, value) {
+              $('select[name="subcategory_id"]').append('<option value="' + value.id + '">' + value.subcategory_name + '</option>');
+            });
+          },
+        });
+      } else {
+        alert('danger');
+      }
+    });
+  });
+</script>
+
+★コード解説★
+選択したcategoryがsubcategoryと連動していればOK
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

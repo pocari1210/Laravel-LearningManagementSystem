@@ -173,6 +173,8 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::get('/add/course', 'AddCourse')
       ->name('add.course');
+
+    Route::get('/subcategory/ajax/{category_id}', 'GetSubCategory');
   });
 }); // End Instructor Group Middleware 
 
