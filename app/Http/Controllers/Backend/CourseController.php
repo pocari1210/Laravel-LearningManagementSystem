@@ -247,4 +247,32 @@ class CourseController extends Controller
     );
     return redirect()->back()->with($notification);
   } // End Method 
+
+  public function DeleteCourse($id)
+  {
+    $course = Course::find($id);
+
+    // 画像の削除
+    unlink($course->course_image);
+
+    // video(動画の削除)
+    unlink($course->video);
+
+    // Courseモデルからレコードを削除
+    Course::find($id)->delete();
+
+    // GoalOptionの削除
+    $goalsData = Course_goal::where('course_id', $id)->get();
+
+    foreach ($goalsData as $item) {
+      $item->goal_name;
+      Course_goal::where('course_id', $id)->delete();
+    }
+
+    $notification = array(
+      'message' => 'Course Deleted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
 }

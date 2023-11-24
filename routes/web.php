@@ -166,7 +166,7 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 ///// Instructor Group SideBar
 Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
-  // Instructor All Route 
+  // Instructor Course All Route 
   Route::controller(CourseController::class)->group(function () {
     Route::get('/all/course', 'AllCourse')
       ->name('all.course');
@@ -193,7 +193,10 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::post('/update/course/goal', 'UpdateCourseGoal')
       ->name('update.course.goal');
-  });
+
+    Route::get('/delete/course/{id}', 'DeleteCourse')
+      ->name('delete.course');
+  }); // Instructor Course All Route : END
 }); // End Instructor Group Middleware 
 
 // Instructorのloginページのルート

@@ -1,0 +1,72 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor Course All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::get('/delete/course/{id}', 'DeleteCourse')
+      ->name('delete.course');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('delete.course',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteCourse($id)
+  {
+    $course = Course::find($id);
+
+    // 画像の削除
+    unlink($course->course_image);
+
+    // video(動画の削除)
+    unlink($course->video);
+
+    // Courseモデルからレコードを削除
+    Course::find($id)->delete();
+
+    // GoalOptionの削除
+    $goalsData = Course_goal::where('course_id', $id)->get();
+
+    foreach ($goalsData as $item) {
+      $item->goal_name;
+      Course_goal::where('course_id', $id)->delete();
+    }
+
+    $notification = array(
+      'message' => 'Course Deleted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+削除処理が行えたらOK
