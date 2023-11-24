@@ -206,6 +206,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::post('/add/course/section/', 'AddCourseSection')
       ->name('add.course.section');
+
+    Route::post('/save-lecture/', 'SaveLecture')
+      ->name('save-lecture');
   }); // Course Section and Lecture All Route : END
 }); // End Instructor Group Middleware 
 

@@ -1,0 +1,126 @@
+
+7-lectureの保存処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/save-lecture/', 'SaveLecture')
+      ->name('save-lecture');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\instructor\instructor_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<button class="btn btn-primary mt-3" onclick="saveLecture('${courseId}',${sectionId},'${containerId}')" >Save Lecture</button>
+
+<script>
+  function saveLecture(courseId, sectionId, containerId) {
+    const lectureContainer = document.getElementById(containerId);
+    const lectureTitle = lectureContainer.querySelector('input[type="text"]').value;
+    const lectureContent = lectureContainer.querySelector('textarea').value;
+    const lectureUrl = lectureContainer.querySelector('input[name="url"]').value;
+
+    fetch('/save-lecture', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+        body: JSON.stringify({
+          course_id: courseId,
+          section_id: sectionId,
+          lecture_title: lectureTitle,
+          lecture_url: lectureUrl,
+          content: lectureContent,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+
+        lectureContainer.style.display = 'none';
+        location.reload();
+
+        // Start Message 
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 6000
+        })
+        if ($.isEmptyObject(data.error)) {
+
+          Toast.fire({
+            type: 'success',
+            title: data.success,
+          })
+
+        } else {
+
+          Toast.fire({
+            type: 'error',
+            title: data.error,
+          })
+        }
+
+        // End Message  
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\cms\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function SaveLecture(Request $request)
+  {
+
+    $lecture = new CourseLecture();
+    $lecture->course_id = $request->course_id;
+    $lecture->section_id = $request->section_id;
+    $lecture->lecture_title = $request->lecture_title;
+    $lecture->url = $request->lecture_url;
+    $lecture->content = $request->content;
+    $lecture->save();
+
+    return response()->json(['success' => 'Lecture Saved Successfully']);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+DBを確認し、保存が確認できたらOK
