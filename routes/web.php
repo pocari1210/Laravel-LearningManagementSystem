@@ -203,6 +203,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
   Route::controller(CourseController::class)->group(function () {
     Route::get('/add/course/lecture/{id}', 'AddCourseLecture')
       ->name('add.course.lecture');
+
+    Route::post('/add/course/section/', 'AddCourseSection')
+      ->name('add.course.section');
   }); // Course Section and Lecture All Route : END
 }); // End Instructor Group Middleware 
 
