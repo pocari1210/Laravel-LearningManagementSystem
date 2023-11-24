@@ -178,6 +178,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::post('/store/course', 'StoreCourse')
       ->name('store.course');
+
+    Route::get('/edit/course/{id}', 'EditCourse')
+      ->name('edit.course');
   });
 }); // End Instructor Group Middleware 
 
