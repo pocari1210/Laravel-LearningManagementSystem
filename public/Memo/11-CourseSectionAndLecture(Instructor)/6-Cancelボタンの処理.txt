@@ -1,0 +1,32 @@
+
+6-Cancelボタンの処理
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<button class="btn btn-secondary mt-3" onclick="hideLectureContainer('${containerId}')">Cancel</button>
+
+    // appendChildでlectureContainerに子要素として
+    // newLectureDivを作成
+    lectureContainer.appendChild(newLectureDiv);
+
+  }
+
+  // ★Cancelボタンの処理★
+  function hideLectureContainer(containerId) {
+    const lectureContainer = document.getElementById(containerId);
+
+    // lectureContainerを非表示にする
+    lectureContainer.style.display = 'none';
+
+    // ページ全体をリロードする
+    location.reload();
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Cancelボタンを押して非表示になったらOK

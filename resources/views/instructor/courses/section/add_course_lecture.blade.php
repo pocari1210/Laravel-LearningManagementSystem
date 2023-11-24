@@ -33,7 +33,16 @@
 
                   <div class="d-flex justify-content-between align-items-center">
                     <button type="submit" class="btn btn-danger px-2 ms-auto"> Delete Section</button> &nbsp;
+
+                    <!-------------------------------------------------------------
+
+                      course_lecturesテーブルのcourse_idとsection_idを指定 
+                      lectureContainerはforeachディレクティブの$key(id)を指定している
+
+                    --------------------------------------------------------------->
+
                     <a class="btn btn-primary" onclick="addLectureDiv({{ $course->id }}, {{ $item->id }}, 'lectureContainer{{ $key }}' )" id="addLectureBtn($key)"> Add Lecture </a>
+
                   </div>
                 </div>
 
@@ -41,7 +50,7 @@
                   <div class="container">
                     <div class="lectureDiv mb-3 d-flex align-items-center justify-content-between">
                       <div>
-                        <strong>lecture title </strong>
+                        <strong>lecture title hogehoge</strong>
                       </div>
 
                       <div class="btn-group">
@@ -99,6 +108,7 @@
     const newLectureDiv = document.createElement('div');
     newLectureDiv.classList.add('lectureDiv', 'mb-3');
 
+    // lectureDivクラス配下に表示される
     newLectureDiv.innerHTML = `
         
     <div class="container">
@@ -108,12 +118,26 @@
       <h6 class="mt-3">Add Video Url</h6>
       <input type="text" name="url" class="form-control" placeholder="Add URL">
       <button class="btn btn-primary mt-3" onclick="" >Save Lecture</button>
-      <button class="btn btn-secondary mt-3" onclick="">Cancel</button>
+      <button class="btn btn-secondary mt-3" onclick="hideLectureContainer('${containerId}')">Cancel</button>
     </div>
     
     `;
+
+    // appendChildでlectureContainerに子要素として
+    // newLectureDivを作成
     lectureContainer.appendChild(newLectureDiv);
 
+  }
+
+  // ★Cancelボタンの処理★
+  function hideLectureContainer(containerId) {
+    const lectureContainer = document.getElementById(containerId);
+
+    // lectureContainerを非表示にする
+    lectureContainer.style.display = 'none';
+
+    // ページ全体をリロードする
+    location.reload();
   }
 </script>
 
