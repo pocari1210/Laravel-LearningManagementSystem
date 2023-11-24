@@ -184,6 +184,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::post('/update/course', 'UpdateCourse')
       ->name('update.course');
+
+    Route::post('/update/course/image', 'UpdateCourseImage')
+      ->name('update.course.image');
+
+    Route::post('/update/course/video', 'UpdateCourseVideo')
+      ->name('update.course.video');
   });
 }); // End Instructor Group Middleware 
 

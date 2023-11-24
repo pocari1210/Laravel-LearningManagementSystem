@@ -164,4 +164,58 @@ class CourseController extends Controller
     );
     return redirect()->route('all.course')->with($notification);
   } // End Method 
+
+  public function UpdateCourseImage(Request $request)
+  {
+
+    $course_id = $request->id;
+    $oldImage = $request->old_img;
+
+    $image = $request->file('course_image');
+    $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+    InterventionImage::make($image)->resize(370, 246)->save('storage/upload/course/thambnail/' . $name_gen);
+    $save_url = 'storage/upload/course/thambnail/' . $name_gen;
+
+    if (file_exists($oldImage)) {
+      unlink($oldImage);
+    }
+
+    Course::find($course_id)->update([
+      'course_image' => $save_url,
+      'updated_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Course Image Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+  public function UpdateCourseVideo(Request $request)
+  {
+
+    $course_id = $request->vid;
+    $oldVideo = $request->old_vid;
+
+    $video = $request->file('video');
+    $videoName = time() . '.' . $video->getClientOriginalExtension();
+    $video->move(public_path('storage/upload/course/video/'), $videoName);
+    $save_video = 'storage/upload/course/video/' . $videoName;
+
+    if (file_exists($oldVideo)) {
+      unlink($oldVideo);
+    }
+
+    Course::find($course_id)->update([
+      'video' => $save_video,
+      'updated_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Course Video Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
 }
