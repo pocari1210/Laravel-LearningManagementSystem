@@ -30,9 +30,25 @@
               <div class="card">
                 <div class="card-body p-4 d-flex justify-content-between">
                   <h6>{{ $item->section_title }} </h6>
+
                   <div class="d-flex justify-content-between align-items-center">
                     <button type="submit" class="btn btn-danger px-2 ms-auto"> Delete Section</button> &nbsp;
-                    <a class="btn btn-primary"> Add Lecture </a>
+                    <a class="btn btn-primary" onclick="addLectureDiv({{ $course->id }}, {{ $item->id }}, 'lectureContainer{{ $key }}' )" id="addLectureBtn($key)"> Add Lecture </a>
+                  </div>
+                </div>
+
+                <div class="courseHide" id="lectureContainer{{ $key }}">
+                  <div class="container">
+                    <div class="lectureDiv mb-3 d-flex align-items-center justify-content-between">
+                      <div>
+                        <strong>lecture title </strong>
+                      </div>
+
+                      <div class="btn-group">
+                        <a href="" class="btn btn-sm btn-primary">Edit</a> &nbsp;
+                        <a href="" class="btn btn-sm btn-danger">Delete</a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -76,5 +92,29 @@
     </div>
   </div>
 </div>
+
+<script>
+  function addLectureDiv(courseId, sectionId, containerId) {
+    const lectureContainer = document.getElementById(containerId);
+    const newLectureDiv = document.createElement('div');
+    newLectureDiv.classList.add('lectureDiv', 'mb-3');
+
+    newLectureDiv.innerHTML = `
+        
+    <div class="container">
+      <h6>Lecture Title </h6>
+      <input type="text" class="form-control" placeholder="Enter Lecture Title">
+      <textarea class="form-control mt-2" placeholder="Enter Lecture Content"  ></textarea>
+      <h6 class="mt-3">Add Video Url</h6>
+      <input type="text" name="url" class="form-control" placeholder="Add URL">
+      <button class="btn btn-primary mt-3" onclick="" >Save Lecture</button>
+      <button class="btn btn-secondary mt-3" onclick="">Cancel</button>
+    </div>
+    
+    `;
+    lectureContainer.appendChild(newLectureDiv);
+
+  }
+</script>
 
 @endsection
