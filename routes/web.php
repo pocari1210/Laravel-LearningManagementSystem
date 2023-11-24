@@ -197,6 +197,13 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
     Route::get('/delete/course/{id}', 'DeleteCourse')
       ->name('delete.course');
   }); // Instructor Course All Route : END
+
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+    Route::get('/add/course/lecture/{id}', 'AddCourseLecture')
+      ->name('add.course.lecture');
+  }); // Course Section and Lecture All Route : END
 }); // End Instructor Group Middleware 
 
 // Instructorのloginページのルート

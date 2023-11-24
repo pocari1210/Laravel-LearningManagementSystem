@@ -182,13 +182,19 @@
         course_title: {
           required: true,
         },
+        video: {
+          required: true,
+        }
       },
       messages: {
         course_name: {
           required: 'Please Enter Course Name',
         },
         course_title: {
-          required: 'Please Enter Course Titile',
+          required: 'Please Enter Course Title',
+        },
+        video: {
+          required: 'Please Enter Course video',
         },
       },
 
