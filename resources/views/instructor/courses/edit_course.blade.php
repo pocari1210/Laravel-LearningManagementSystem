@@ -22,8 +22,10 @@
     <div class="card-body p-4">
       <h5 class="mb-4">Edit Course</h5>
 
-      <form id="myForm" action="{{ route('store.course') }}" method="post" class="row g-3" enctype="multipart/form-data">
+      <form id="myForm" action="{{ route('update.course') }}" method="post" class="row g-3" enctype="multipart/form-data">
         @csrf
+
+        <input type="hidden" name="course_id" value="{{ $course->id }}">
 
         <div class="form-group col-md-6">
           <label for="input1" class="form-label">Course Name</label>
