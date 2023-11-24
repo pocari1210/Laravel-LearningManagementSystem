@@ -1,0 +1,117 @@
+
+10-GoalOptionの更新処理(DOMの操作)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/update/course/goal', 'UpdateCourseGoal')
+      ->name('update.course.goal');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\edit_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<!-- Goal Option Update Start -->
+
+<div class="page-content">
+  <div class="card">
+    <div class="card-body">
+
+      ↓↓routeの編集↓↓
+      <form action="{{ route('update.course.goal') }}" method="post" enctype="multipart/form-data">
+        @csrf
+
+        <input type="hidden" name="id" value="{{ $course->id }}">
+
+        <!--   //////////// Goal Option /////////////// -->
+        @foreach ($goals as $item)
+        <div class="row add_item">
+          <div class="whole_extra_item_delete" id="whole_extra_item_delete">
+            <div class="container mt-2">
+              <div class="row">
+
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="goals" class="form-label"> Goals </label>
+                    <input type="text" name="course_goals[]" id="goals" class="form-control" value="{{ $item->goal_name }}">
+                  </div>
+                </div>
+                <div class="form-group col-md-6" style="padding-top: 30px;">
+                  <a class="btn btn-success addeventmore"><i class="fa fa-plus-circle"></i> Add More..</a>
+                  <span class="btn btn-danger btn-sm removeeventmore"><i class="fa fa-minus-circle">Remove</i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!---end row-->
+
+        @endforeach
+
+        <!--   //////////// End Goal Option /////////////// -->
+        <br><br>
+        <div class="col-md-12">
+          <div class="d-md-flex d-grid align-items-center gap-3">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Option Update End -->
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateCourseGoal(Request $request)
+  {
+
+    $cid = $request->id;
+
+    if ($request->course_goals == NULL) {
+      return redirect()->back();
+    } else {
+
+      Course_goal::where('course_id', $cid)->delete();
+
+      $goles = Count($request->course_goals);
+
+      for ($i = 0; $i < $goles; $i++) {
+        $gcount = new Course_goal();
+        $gcount->course_id = $cid;
+        $gcount->goal_name = $request->course_goals[$i];
+        $gcount->save();
+      }  // end for
+    } // end else 
+
+    $notification = array(
+      'message' => 'Course Goals Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

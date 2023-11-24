@@ -190,6 +190,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::post('/update/course/video', 'UpdateCourseVideo')
       ->name('update.course.video');
+
+    Route::post('/update/course/goal', 'UpdateCourseGoal')
+      ->name('update.course.goal');
   });
 }); // End Instructor Group Middleware 
 
