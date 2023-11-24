@@ -48,9 +48,18 @@
 
                 <div class="courseHide" id="lectureContainer{{ $key }}">
                   <div class="container">
+
+                    <!--------------------------------------------------------
+
+                    $item->lecturesは、app\Models\CourseSection.phpで記述した
+                    lecturesメソッドを指す
+                    
+                    ------------------------------------------------------------->
+                    @foreach ($item->lectures as $lecture)
                     <div class="lectureDiv mb-3 d-flex align-items-center justify-content-between">
+
                       <div>
-                        <strong>lecture title hogehoge</strong>
+                        <strong> {{ $loop->iteration }}. {{ $lecture->lecture_title }}</strong>
                       </div>
 
                       <div class="btn-group">
@@ -58,6 +67,7 @@
                         <a href="" class="btn btn-sm btn-danger">Delete</a>
                       </div>
                     </div>
+                    @endforeach
                   </div>
                 </div>
               </div>
