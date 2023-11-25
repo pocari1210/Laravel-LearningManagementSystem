@@ -1,0 +1,68 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::get('/edit/lecture/{id}', 'EditLecture')
+      ->name('edit.lecture');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @foreach ($item->lectures as $lecture)
+  <div class="lectureDiv mb-3 d-flex align-items-center justify-content-between">
+
+    <div>
+      <strong> {{ $loop->iteration }}. {{ $lecture->lecture_title }}</strong>
+    </div>
+
+    <div class="btn-group">
+
+      ↓↓routeの編集↓↓
+      <a href="{{ route('edit.lecture',['id' => $lecture->id]) }}" class="btn btn-sm btn-primary">Edit</a> &nbsp;
+      <a href="" class="btn btn-sm btn-danger">Delete</a>
+    </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function EditLecture($id)
+  {
+
+    $clecture = CourseLecture::find($id);
+
+    return view(
+      'instructor.courses.lecture.edit_course_lecture',
+      compact('clecture')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\courses\lecture\edit_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
