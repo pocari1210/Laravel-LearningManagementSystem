@@ -19,6 +19,8 @@
     <!-- add/course/lectureに戻るボタン -->
     <div class="ms-auto">
       <div class="btn-group">
+
+        <!-- idをCourseLectureモデルのcourse_idカラムのデータを指定 -->
         <a href="{{ route('add.course.lecture',['id' => $clecture->course_id]) }}" class="btn btn-primary px-5">Back </a>
       </div>
     </div>
