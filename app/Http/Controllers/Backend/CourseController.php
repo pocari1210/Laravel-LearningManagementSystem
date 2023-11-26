@@ -364,4 +364,22 @@ class CourseController extends Controller
     );
     return redirect()->back()->with($notification);
   } // End Method   
+
+  public function DeleteSection($id)
+  {
+
+    $section = CourseSection::find($id);
+
+    // CourseLectureモデルとリレーションしているデータを削除
+    $section->lectures()->delete();
+
+    // CourseSectionモデルのレコード削除
+    $section->delete();
+
+    $notification = array(
+      'message' => 'Course Section Delete Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
 }

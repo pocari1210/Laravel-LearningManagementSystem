@@ -218,6 +218,10 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::get('/delete/lecture/{id}', 'DeleteLecture')
       ->name('delete.lecture');
+
+    // formタグを用いてボタンをsubmitとしているため、POST通信となる
+    Route::post('/delete/section/{id}', 'DeleteSection')
+      ->name('delete.section');
   }); // Course Section and Lecture All Route : END
 }); // End Instructor Group Middleware 
 

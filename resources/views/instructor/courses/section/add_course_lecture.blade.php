@@ -32,8 +32,12 @@
                   <h6>{{ $item->section_title }} </h6>
 
                   <div class="d-flex justify-content-between align-items-center">
-                    <button type="submit" class="btn btn-danger px-2 ms-auto"> Delete Section</button> &nbsp;
+                    <form action="{{ route('delete.section', ['id' => $item->id]) }}" method="POST">
+                      @csrf
 
+                      <button type="submit" class="btn btn-danger px-2 ms-auto"> Delete Section</button> &nbsp;
+
+                    </form>
                     <!-------------------------------------------------------------
 
                       course_lecturesテーブルのcourse_idとsection_idを指定 
