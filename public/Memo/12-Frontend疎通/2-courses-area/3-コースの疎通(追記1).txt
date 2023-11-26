@@ -1,0 +1,58 @@
+
+3-コースの疎通(追記1)
+
+◆ビューの編集(ベーステンプレート)◆
+
+ディレクトリ
+\resources\views\frontend\master.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+tooltip_templatesを切り取り、courses-area.blade.phpに貼り付ける
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @foreach ($categories as $category)
+
+  {{-------------------------------------------------------------
+
+    categoryのidは常に一意のため、hrefの#businessに
+    $category->idを付与する
+
+    --------------------------------------------------------------}}
+
+  <li class="nav-item">
+        <a class="nav-link" id="business-tab" data-toggle="tab" href="#business{{ $category->id }}" role="tab" aria-controls="business" aria-selected="false">{{ $category->category_name }}</a>
+  </li>
+
+  {{------------------------------------
+
+    リレーションを行ったuserモデルにアクセスし、
+    インストラクタ名を表示
+                  
+  --------------------------------------}}
+  <p class="card-text"><a href=" ">{{ $course['user']['name'] }}</a></p>
+
+  {{----------------------------------------------------
+
+    @emptyディレクティブ
+    forelseでデータが空だった場合の処理を記述する
+
+    Courceの登録がなかった場合の表示を記述している
+            
+  ------------------------------------------------------}}
+
+  @empty
+  <h5 class="text-danger"> No Course Found </h5>
+  @endforelse
+
+
