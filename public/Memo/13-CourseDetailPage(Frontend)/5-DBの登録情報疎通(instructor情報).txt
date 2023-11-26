@@ -1,0 +1,22 @@
+
+5-DBの登録情報疎通(instructor情報)
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <a href="teacher-detail.html" class="media-img d-block">
+    <img class="lazy" src="{{ (!empty($course->user->photo)) ? url('storage/upload/instructor_images/'.$course->user->photo) : url('storage/upload/no_image.jpg')}}" data-src="images/small-avatar-1.jpg" alt="Avatar image">
+  </a>
+
+★コード解説★
+コントローラーのconpactメソッドから渡された$courseから
+リレーションしたuserモデルの画像情報を取得している
+
+※三項演算子を用いる場合の記述
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
