@@ -1,0 +1,25 @@
+
+4-DBの登録情報疎通(レクチャー,セクションなど)
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @php
+  $section = App\Models\CourseSection::where('course_id',$course->id)->orderBy('id','asc')->get();
+  @endphp
+
+  <div class="curriculum-content">
+    <div id="accordion" class="generic-accordion">
+
+      @foreach ($section as $sec)
+
+      @php
+      $lecture = App\Models\CourseLecture::where('section_id',$sec->id)->get();
+      @endphp
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
