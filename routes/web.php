@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\SubCategoryController;
 use App\Http\Controllers\Backend\CourseController;
+use App\Http\Controllers\Frontend\IndexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -225,6 +226,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
   }); // Course Section and Lecture All Route : END
 }); // End Instructor Group Middleware 
 
+// FrontendのRoute : START
+
 // Instructorのloginページのルート
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])
   ->name('instructor.login');
+
+Route::get('/course/details/{id}/{slug}', [IndexController::class, 'CourseDetails']);
+
+// FrontendのRoute : END
