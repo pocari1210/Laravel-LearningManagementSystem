@@ -1,0 +1,38 @@
+
+3-DBの登録情報疎通(goal)
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\IndexController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CourseDetails($id, $slug)
+  {
+
+    $course = Course::find($id);
+
+    ↓↓追加↓↓
+    $goals = Course_goal::where('course_id', $id)
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'frontend.cource.course_details',
+      compact('course', 'goals')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Goalの登録情報など、
+疎通できていればOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
