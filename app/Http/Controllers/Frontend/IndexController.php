@@ -53,9 +53,11 @@ class IndexController extends Controller
     $category = Category::where('id', $id)
       ->first();
 
+    $categories = Category::latest()->get();
+
     return view(
       'frontend.category.category_all',
-      compact('courses', 'category')
+      compact('courses', 'category', 'categories')
     );
   } // End Method 
 }
