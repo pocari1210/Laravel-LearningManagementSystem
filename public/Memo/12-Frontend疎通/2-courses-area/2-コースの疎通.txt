@@ -1,0 +1,68 @@
+
+
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Course.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'instructor_id', 'id');
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="course-badge-labels">
+
+    @if ($course->bestseller == 1)
+    <div class="course-badge">Bestseller</div>
+    @else
+
+    @endif
+
+    @if ($course->highestrated == 1)
+    <div class="course-badge sky-blue">Highest Rated</div>
+    @else
+
+    @endif
+
+    @if ($course->discount_price == NULL)
+    <div class="course-badge blue">New</div>
+    @else
+    <div class="course-badge blue">{{ round($discount) }}%</div>
+    @endif
+  </div>
+
+★コード解説★
+courseの各statusが1だった場合の処理を記述している
+
+  @php
+  $amount = $course->selling_price - $course->discount_price;
+  $discount = ($amount/$course->selling_price) * 100;
+  @endphp
+
+  @if ($course->discount_price == NULL)
+  <p class="card-price text-black font-weight-bold">${{ $course->selling_price }} </p>
+  @else
+  <p class="card-price text-black font-weight-bold">${{ $course->discount_price }} <span class="before-price font-weight-medium">${{ $course->selling_price }}</span></p>
+  @endif
+
+★コード解説★
+discount_priceの登録がなかった場合の処理を記述
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+The world's largest selection of coursesの項目で、
+登録されたコースが疎通できればOK
+

@@ -1,0 +1,67 @@
+
+10-lectureの更新処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/update/course/lecture', 'UpdateCourseLecture')
+      ->name('update.course.lecture');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\instructor\courses\lecture\edit_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <!-- add/course/lectureに戻るボタン -->
+    <div class="ms-auto">
+      <div class="btn-group">
+        <a href="{{ route('add.course.lecture',['id' => $clecture->course_id]) }}" class="btn btn-primary px-5">Back </a>
+      </div>
+    </div>
+
+      <form id="myForm" action="{{ route('update.course.lecture') }}" method="post" class="row g-3" enctype="multipart/form-data">
+        @csrf
+
+        <input type="hidden" name="id" value="{{ $clecture->id }}">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateCourseLecture(Request $request)
+  {
+    $lid = $request->id;
+
+    CourseLecture::find($lid)->update([
+      'lecture_title' => $request->lecture_title,
+      'url' => $request->url,
+      'content' => $request->content,
+    ]);
+
+    $notification = array(
+      'message' => 'Course Lecture Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+更新処理が行えたらOK

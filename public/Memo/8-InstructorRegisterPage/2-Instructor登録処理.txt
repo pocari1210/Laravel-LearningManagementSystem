@@ -1,0 +1,77 @@
+
+2-Instructor登録処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/instructor/register', [AdminController::class, 'InstructorRegister'])
+  ->name('instructor.register');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\instructor\reg_instructor.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form method="post" action="{{ route('instructor.register') }}" class="row">
+    @csrf
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorRegister(Request $request)
+  {
+
+    $request->validate([
+      'name' => ['required', 'string', 'max:255'],
+      'email' => ['required', 'string', 'unique:users'],
+    ]);
+
+    User::insert([
+      'name' => $request->name,
+      'username' => $request->username,
+      'email' => $request->email,
+      'phone' => $request->phone,
+      'address' => $request->address,
+      'password' =>  Hash::make($request->password),
+      'role' => 'instructor',
+      'status' => '0',
+    ]);
+
+    $notification = array(
+      'message' => 'Instructor Registed Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('instructor.login')->with($notification);
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\instructor_login.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+toastrの処理を追記
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Instructorの登録処理が成功したらOK
+

@@ -1,0 +1,108 @@
+
+2-SubCategoryの編集ページ疎通,更新処理,削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // SubCategory All Route 
+  Route::controller(SubCategoryController::class)->group(function () {
+
+    Route::get('/edit/subcategory/{id}', 'EditSubCategory')
+      ->name('edit.subcategory');
+
+    Route::post('/update/subcategory', 'UpdateSubCategory')
+      ->name('update.subcategory');
+
+    Route::get('/delete/subcategory/{id}', 'DeleteSubCategory')
+      ->name('delete.subcategory');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\subcategory\all_subcategory.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('edit.subcategory',$item->id) }}" class="btn btn-info px-5">Edit </a>
+    <a href="{{ route('delete.subcategory',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\SubCategoryController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function EditSubCategory($id)
+  {
+
+    $category = Category::latest()->get();
+    $subcategory = SubCategory::find($id);
+
+    return view(
+      'admin.backend.subcategory.edit_subcategory',
+      compact('category', 'subcategory')
+    );
+  } // End Method
+
+
+  public function UpdateSubCategory(Request $request)
+  {
+
+    $subcat_id = $request->id;
+
+    SubCategory::find($subcat_id)->update([
+      'category_id' => $request->category_id,
+      'subcategory_name' => $request->subcategory_name,
+      'subcategory_slug' => strtolower(str_replace(' ', '-', $request->subcategory_name)),
+
+    ]);
+
+    $notification = array(
+      'message' => 'SubCategory Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('all.subcategory')->with($notification);
+  } // End Method 
+
+  public function DeleteSubCategory($id)
+  {
+
+    SubCategory::find($id)->delete();
+
+    $notification = array(
+      'message' => 'SubCategory Deleted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\subcategory\all_subcategory.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('edit.subcategory',$item->id) }}" class="btn btn-info px-5">Edit </a>
+    <a href="{{ route('delete.subcategory',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+編集ページが疎通され、更新処理、削除処理が行えたらOK

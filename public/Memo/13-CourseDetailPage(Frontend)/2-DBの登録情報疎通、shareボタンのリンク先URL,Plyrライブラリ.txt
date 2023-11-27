@@ -1,0 +1,63 @@
+
+2-DBの登録情報疎通、shareボタンのリンク先URL,Plyrライブラリ
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Course.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function subcategory()
+  {
+    return $this->belongsTo(SubCategory::class, 'subcategory_id', 'id');
+  }
+
+★コード解説★
+主テーブルのSubCategoryにbelongsToでDBのリレーションを行う
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(ベーステンプレート)◆
+
+ディレクトリ
+\resources\views\frontend\master.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<link rel="stylesheet" href="{{ asset('frontend/css/plyr.css') }}">
+
+<script src="{{ asset('frontend/js/plyr.js') }}"></script>
+
+  <script>
+    var player = new Plyr('#player');
+  </script>
+
+★コード解説★
+メディアプレイヤーを使用できるようにしている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  {{--------------------------------------------------
+
+  {{ Request::path() }}
+
+  現在のURLのpathを取得
+
+  シェアボタンを押した際、
+  シェアをしたいURLのページを表示させる
+
+  --------------------------------------------------}}
+
+  <input type="text" class="form-control form--control copy-input pl-3" value="http://127.0.0.1:8000/{{ Request::path() }} ">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

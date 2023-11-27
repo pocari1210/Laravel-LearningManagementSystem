@@ -1,0 +1,51 @@
+
+2-ログアウト処理(instructor)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  Route::get('/instructor/logout', [InstructorController::class, 'InstructorLogout'])
+    ->name('instructor.logout');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li><a class="dropdown-item d-flex align-items-center" href="{{ route('instructor.logout') }}">
+      <i class="bx bx-log-out-circle"></i><span>Logout</span></a>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\InstructorController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorLogout(Request $request)
+  {
+    Auth::guard('web')->logout();
+
+    $request->session()->invalidate();
+
+    $request->session()->regenerateToken();
+
+    return redirect('/login');
+  } // End Method   
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Logaut処理が行うことができ、
+LoginページにリダイレクトされたらOK

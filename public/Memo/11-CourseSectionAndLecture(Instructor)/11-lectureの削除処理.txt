@@ -1,0 +1,56 @@
+
+11-lectureの削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::get('/delete/lecture/{id}', 'DeleteLecture')
+      ->name('delete.lecture');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <div class="btn-group">
+      <a href="{{ route('edit.lecture',['id' => $lecture->id]) }}" class="btn btn-sm btn-primary">Edit</a> &nbsp;
+
+      ↓↓routeの追記↓↓
+      <a href="{{ route('delete.lecture',['id' => $lecture->id]) }}" class="btn btn-sm btn-danger" id="delete">Delete</a>
+    </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteLecture($id)
+  {
+
+    CourseLecture::find($id)->delete();
+
+    $notification = array(
+      'message' => 'Course Lecture Delete Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Lectureの策所が行えたらOK

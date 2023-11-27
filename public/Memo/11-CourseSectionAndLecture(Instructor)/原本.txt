@@ -1,0 +1,68 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/delete/section/{id}', 'DeleteSection')
+      ->name('delete.section');
+
+★コード解説★
+formタグを用いてボタンをsubmitとしているため、POST通信となる
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form action="{{ route('delete.section', ['id' => $item->id]) }}" method="POST">
+    @csrf
+
+    <button type="submit" class="btn btn-danger px-2 ms-auto"> Delete Section</button> &nbsp;
+
+  </form>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteSection($id)
+  {
+
+    $section = CourseSection::find($id);
+
+    // CourseLectureモデルとリレーションしているデータを削除
+    $section->lectures()->delete();
+
+    // CourseSectionモデルのレコード削除
+    $section->delete();
+
+    $notification = array(
+      'message' => 'Course Section Delete Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+course_lecturesテーブルのDBを確認し、
+section_idカラムとcourse_sectionsカラムのidの
+リレーションしているデータが削除できていればOK

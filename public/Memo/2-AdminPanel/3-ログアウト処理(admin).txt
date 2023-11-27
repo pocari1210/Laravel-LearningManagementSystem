@@ -1,0 +1,66 @@
+
+3-ログアウト処理(admin)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Admin Group Middleware 
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  Route::get('/admin/logout', [AdminController::class, 'AdminLogout'])
+    ->name('admin.logout');
+
+★コード解説★
+adminのログアウトのルートを記述
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li>
+    <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">
+      <i class="bx bx-log-out-circle"></i><span>Logout</span>
+    </a>
+  </li>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Illuminate\Support\Facades\Auth;
+
+  public function AdminLogout(Request $request)
+  {
+    Auth::guard('web')->logout();
+
+    $request->session()->invalidate();
+
+    $request->session()->regenerateToken();
+
+    // ログアウト先の遷移先
+    return redirect('/login');
+  } // End Method 
+
+★コード解説★
+\app\Http\Controllers\Auth\AuthenticatedSessionController.phpの
+destroyメソッドをベースに記述
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Logautを実行し、LoginページにリダイレクトされたらOK
+

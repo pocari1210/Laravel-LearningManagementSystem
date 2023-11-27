@@ -1,0 +1,95 @@
+
+2-マルチ認証パート1
+
+下記コマンドでコントローラーファイル新規作成
+php artisan make:controller AdminController
+php artisan make:controller InstructorController
+php artisan make:controller UserController
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\UserController;
+
+Route::get('/admin/dashboard', [AdminController::class, 'AdminDashboard'])
+  ->name('admin.dashboard');
+
+Route::get('/instructor/dashboard', [InstructorController::class, 'InstructorDashboard'])
+  ->name('instructor.dashboard');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Adminコントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminDashboard()
+  {
+    return view('admin.admin_dashboard');
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(Admin)◆
+
+ディレクトリ
+\resources\views\admin\admin_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<html>
+<title>Admin Dashboard </title>
+
+<body>
+  <h1>Admin Dashboard </h1>
+</body>
+
+</html>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\InstructorController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorDashboard()
+  {
+    return view('instructor.instructor_dashboard');
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(Instructor)◆
+
+ディレクトリ
+\resources\views\instructor\instructor_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<html>
+<title>Instructor Dashboard </title>
+
+<body>
+  <h1>Instructor Dashboard </h1>
+</body>
+
+</html>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+urlを入力し、各ダッシュボードページの疎通が確認とれたらOK
+

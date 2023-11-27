@@ -1,0 +1,82 @@
+
+3-courceの追加ページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::get('/add/course', 'AddCourse')
+      ->name('add.course');
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('add.course') }}" class="btn btn-primary px-5">Add Course </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddCourse()
+  {
+
+    $categories = Category::latest()->get();
+
+    return view(
+      'instructor.courses.add_course',
+      compact('categories')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\instructor\instructor_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <!-- tinymce : START -->
+  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({
+      selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+      plugins: 'powerpaste advcode table lists checklist',
+      toolbar: 'undo redo | blocks| bold italic | bullist numlist checklist | code | table'
+    });
+  </script>
+  <!-- tinymce : END -->
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('add.course') }}" class="btn btn-primary px-5">Add Course </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

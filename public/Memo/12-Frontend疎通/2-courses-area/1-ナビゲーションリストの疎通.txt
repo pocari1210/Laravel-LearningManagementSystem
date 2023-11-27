@@ -1,0 +1,27 @@
+
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+@php
+$courses = App\Models\Course::where('status',1)
+->orderBy('id','ASC')->limit(6)->get();
+
+$categories = App\Models\Category::orderBy('category_name','ASC')
+->get();
+@endphp
+
+  @foreach ($categories as $category)
+  <li class="nav-item">
+    <a class="nav-link" id="business-tab" data-toggle="tab" href="#business" role="tab" aria-controls="business" aria-selected="false">{{ $category->category_name }}</a>
+  </li>
+  @endforeach
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ナビゲーションの項目が疎通できてればOK
+

@@ -1,0 +1,94 @@
+
+4-InstructorProfile
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group Middleware
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  Route::get('/instructor/profile', [InstructorController::class, 'InstructorProfile'])
+    ->name('instructor.profile');
+
+  Route::post('/instructor/profile/store', [InstructorController::class, 'InstructorProfileStore'])
+    ->name('instructor.profile.store');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li><a class="dropdown-item d-flex align-items-center" href="{{ route('instructor.profile') }}">
+  <i class="bx bx-user fs-5"></i><span>Profile</span></a>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\InstructorController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorProfile()
+  {
+    $id = Auth::user()->id;
+    $profileData = User::find($id);
+
+    return view(
+      'instructor.instructor_profile_view',
+      compact('profileData')
+    );
+  } // End Method
+
+  public function InstructorProfileStore(Request $request)
+  {
+
+    $id = Auth::user()->id;
+    $data = User::find($id);
+
+    $data->name = $request->name;
+    $data->username = $request->username;
+    $data->email = $request->email;
+    $data->phone = $request->phone;
+    $data->address = $request->address;
+
+    if ($request->file('photo')) {
+      $file = $request->file('photo');
+      @unlink(public_path('storage/upload/instructor_images/' . $data->photo));
+      $filename = date('YmdHi') . $file->getClientOriginalName();
+      $file->move(public_path('storage/upload/instructor_images'), $filename);
+      $data['photo'] = $filename;
+    }
+
+    $data->save();
+
+    $notification = array(
+      'message' => 'Instructor Profile Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\instructor_profile_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+プロフィールページが疎通でき、更新処理が行えたらOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

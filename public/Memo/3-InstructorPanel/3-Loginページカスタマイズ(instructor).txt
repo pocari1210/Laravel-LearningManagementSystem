@@ -1,0 +1,42 @@
+
+3-Loginページカスタマイズ(instructor)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// Instructorのloginページのルート
+Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])
+  ->name('instructor.login');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\instructor_login.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+admin_login.blade.phpを参考に作成
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\InstructorController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorLogin()
+  {
+    return view('instructor.instructor_login');
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

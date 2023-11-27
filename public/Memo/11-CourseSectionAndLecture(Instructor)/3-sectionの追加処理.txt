@@ -1,0 +1,87 @@
+
+3-sectionの追加処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/add/course/section/', 'AddCourseSection')
+      ->name('add.course.section');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Section </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form action="{{ route('add.course.section') }}" method="POST">
+          @csrf
+
+          <input type="hidden" name="id" value="{{ $course->id }}">
+
+          <div class="form-group mb-3">
+            <label for="input1" class="form-label">Course Section</label>
+            <input type="text" name="section_title" class="form-control" id="input1">
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+      </form>
+
+★コード解説★
+Modalが表示できたらOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\CourseSection;
+use App\Models\CourseLecture;
+
+  public function AddCourseSection(Request $request)
+  {
+
+    $cid = $request->id;
+
+    CourseSection::insert([
+      'course_id' => $cid,
+      'section_title' => $request->section_title,
+    ]);
+
+    $notification = array(
+      'message' => 'Course Section Added Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Sectionの保存ができたらOK

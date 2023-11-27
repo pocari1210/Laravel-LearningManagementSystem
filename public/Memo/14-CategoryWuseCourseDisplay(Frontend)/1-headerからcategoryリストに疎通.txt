@@ -1,0 +1,90 @@
+
+1-headerからcategoryリストに疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::get('/category/{id}/{slug}', [IndexController::class, 'CategoryCourse']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @php
+  $categories = App\Models\Category::orderBy('category_name','ASC')->get();
+  @endphp
+
+  <div class="col-lg-10">
+    <div class="menu-wrapper">
+      <div class="menu-category">
+        <ul>
+          <li>
+            <a href="#">Categories <i class="la la-angle-down fs-12"></i></a>
+            <ul class="cat-dropdown-menu">
+
+              @foreach ($categories as $cat)
+
+              @php
+              $subcategories = App\Models\SubCategory::where('category_id',$cat->id)->get();
+              @endphp
+
+              <li>
+                <a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}">{{ $cat->category_name }}<i
+                    class="la la-angle-right"></i></a>
+                <ul class="sub-menu">
+                  @foreach ($subcategories as $subcat)
+                  <li><a href="#">{{ $subcat->subcategory_name }}</a></li>
+                  @endforeach
+                </ul>
+              </li>
+              @endforeach
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\IndexController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CategoryCourse($id, $slug)
+  {
+
+    $courses = Course::where('category_id', $id)
+      ->where('status', '1')->get();
+
+    $category = Category::where('id', $id)
+      ->first();
+
+    return view(
+      'frontend.category.category_all',
+      compact('courses', 'category')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\category\category_all.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+headerからcategoyページに疎通ができたらOK
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

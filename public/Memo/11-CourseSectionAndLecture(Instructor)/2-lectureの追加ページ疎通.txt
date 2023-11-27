@@ -1,0 +1,66 @@
+
+2-lectureの追加ページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Course Section and Lecture All Route 
+  Route::controller(CourseController::class)->group(function () {
+    Route::get('/add/course/lecture/{id}', 'AddCourseLecture')
+      ->name('add.course.lecture');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('edit.course',$item->id) }}" class="btn btn-info" title="Edit"><i class="lni lni-eraser"></i> </a>
+    <a href="{{ route('delete.course',$item->id) }}" class="btn btn-danger" id="delete" title="delete"><i class="lni lni-trash"></i> </a>
+
+    ↓↓routeの追加↓↓
+    <a href="{{ route('add.course.lecture',$item->id) }}" class="btn btn-warning" title="Lecture"><i class="lni lni-list"></i> </a>
+  </td>
+
+★コード解説★
+ボタンの表記をアイコンに変更
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddCourseLecture($id)
+  {
+
+    $course = Course::find($id);
+
+    return view(
+      'instructor.courses.section.add_course_lecture',
+      compact('course')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\courses\section\add_course_lecture.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+ページが疎通できてればOK

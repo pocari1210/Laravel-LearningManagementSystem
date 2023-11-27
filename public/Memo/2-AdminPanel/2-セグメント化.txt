@@ -1,0 +1,44 @@
+
+2-セグメント化
+
+headerやfooterなど、主要な箇所をセグメント化する
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\admin\admin_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <!--sidebar wrapper -->
+    @include('admin.body.sidebar')
+    <!--end sidebar wrapper -->
+
+    <!--start header -->
+    @include('admin.body.header')
+    <!--end header -->
+
+★コード解説★
+@includeで別ファイルに記述した内容をimportしている
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\footer.blade.php
+\resources\views\admin\body\header.blade.php
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+★コード解説★
+
+viewフォルダ直下にbodyフォルダを作成し、
+ベーステンプレートの各セグメントごとに、
+切り分けている
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

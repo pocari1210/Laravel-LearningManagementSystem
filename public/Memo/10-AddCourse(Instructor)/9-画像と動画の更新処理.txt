@@ -1,0 +1,200 @@
+
+9-画像と動画の更新処理
+
+◆ルートの編集(画像の更新)◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/update/course/image', 'UpdateCourseImage')
+      ->name('update.course.image');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(画像の更新)◆
+
+ディレクトリ
+\resources\views\instructor\courses\edit_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<!-- Start Main Course Image Update -->
+
+<div class="page-content">
+  <div class="card">
+    <div class="card-body">
+
+      <form action="{{ route('update.course.image') }}" method="post" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="id" value="{{ $course->id }}">
+        <input type="hidden" name="old_img" value="{{ $course->course_image }}">
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="input2" class="form-label">Course Image </label>
+            <input class="form-control" name="course_image" type="file" id="image">
+          </div>
+
+          <div class="col-md-6">
+            <img id="showImage" src="{{ asset($course->course_image) }}" alt="img" class="rounded-circle p-1 bg-primary" width="100">
+          </div>
+        </div>
+
+        <br><br>
+        <div class="col-md-12">
+          <div class="d-md-flex d-grid align-items-center gap-3">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- End Main Course Image Update -->
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集(画像の更新)◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateCourseImage(Request $request)
+  {
+
+    $course_id = $request->id;
+    $oldImage = $request->old_img;
+
+    $image = $request->file('course_image');
+    $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+    InterventionImage::make($image)->resize(370, 246)->save('storage/upload/course/thambnail/' . $name_gen);
+    $save_url = 'storage/upload/course/thambnail/' . $name_gen;
+
+    if (file_exists($oldImage)) {
+      unlink($oldImage);
+    }
+
+    Course::find($course_id)->update([
+      'course_image' => $save_url,
+      'updated_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Course Image Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group SideBar
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Route 
+  Route::controller(CourseController::class)->group(function () {
+
+    Route::post('/update/course/video', 'UpdateCourseVideo')
+      ->name('update.course.video');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\courses\edit_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+      <form action="{{ route('update.course.video') }}" method="post" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="vid" value="{{ $course->id }}">
+        <input type="hidden" name="old_vid" value="{{ $course->video }}">
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="input2" class="form-label">Course Intro Video </label>
+            <input type="file" name="video" class="form-control" accept="video/mp4, video/webm">
+          </div>
+
+          <div class="col-md-6">
+            <video width="300" height="130" controls>
+              <source src="{{ asset( $course->video ) }}" type="video/mp4">
+            </video>
+          </div>
+        </div>
+
+        <br><br>
+        <div class="col-md-12">
+          <div class="d-md-flex d-grid align-items-center gap-3">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- END Main Course Vidoe Update -->
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CourseController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateCourseVideo(Request $request)
+  {
+
+    $course_id = $request->vid;
+    $oldVideo = $request->old_vid;
+
+    $video = $request->file('video');
+    $videoName = time() . '.' . $video->getClientOriginalExtension();
+    $video->move(public_path('storage/upload/course/video/'), $videoName);
+    $save_video = 'storage/upload/course/video/' . $videoName;
+
+    if (file_exists($oldVideo)) {
+      unlink($oldVideo);
+    }
+
+    Course::find($course_id)->update([
+      'video' => $save_video,
+      'updated_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Course Video Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+画像と動画の登録の更新処理ができたらOK

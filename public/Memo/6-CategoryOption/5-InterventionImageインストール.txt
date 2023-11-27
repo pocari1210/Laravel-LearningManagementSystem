@@ -1,0 +1,11 @@
+
+5-InterventionImageインストール
+
+下記コマンドでInterventionImageをインストール
+composer require intervention/image
+
+下記コマンドでconfigファイル新規作成
+※変更は行わなくてよい
+
+php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravelRecent”
+
