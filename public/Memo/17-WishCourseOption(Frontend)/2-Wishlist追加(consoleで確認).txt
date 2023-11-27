@@ -1,0 +1,64 @@
+
+2-Wishlist追加(consoleで確認)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Frontend\WishListController;
+
+Route::post('/add-to-wishlist/{course_id}', [WishListController::class, 'AddToWishList']);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    function addToWishList(course_id){
+        
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "/add-to-wishlist/"+course_id,
+            success:function(data){
+                console.log(data);
+            }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddToWishList(Request $request, $course_id)
+  {
+
+    if (Auth::check()) {
+      $exists = Wishlist::where('user_id', Auth::id())->where('course_id', $course_id)->first();
+
+      if (!$exists) {
+        Wishlist::insert([
+          'user_id' => Auth::id(),
+          'course_id' => $course_id,
+          'created_at' => Carbon::now(),
+        ]);
+        return response()->json(['success' => 'Successfully Added on your Wishlist']);
+      } else {
+        return response()->json(['error' => 'This Product Has Already on your withlist']);
+      }
+    } else {
+      return response()->json(['error' => 'At First Login Your Account']);
+    }
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
