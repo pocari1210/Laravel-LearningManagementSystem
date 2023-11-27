@@ -1,11 +1,24 @@
-{{-- /// Start Wishlist Add Option // --}}
-<script type="text/javascript">
-  // これがないと保存がされない
-  $.ajaxSetup({
-      headers:{
-          'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-      }
-  })
+
+3-sweetalertライブラリ導入
+
+◆ベーステンプレートの編集◆
+
+ディレクトリ
+\resources\views\frontend\master.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
 
   function addToWishList(course_id){
 
@@ -32,7 +45,6 @@
               icon: 'success', 
               title: data.success, 
               })
-
           }else{
 
           Toast.fire({
@@ -47,6 +59,6 @@
       
   }
 
-</script>
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
-{{-- /// End Wishlist Add Option // --}}
+sweetalertが疎通されていたらOK
