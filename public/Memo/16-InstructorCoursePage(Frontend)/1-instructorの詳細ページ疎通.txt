@@ -1,0 +1,56 @@
+
+1-instructorの詳細ページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::get('/instructor/details/{id}', [IndexController::class, 'InstructorDetails'])
+  ->name('instructor.details');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <p class="card-text"><a href="{{ route('instructor.details',$course->instructor_id) }}">
+      {{ $course['user']['name'] }}</a></p>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\IndexController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorDetails($id)
+  {
+
+    $instructor = User::find($id);
+
+    $courses = Course::where('instructor_id', $id)->get();
+
+    return view(
+      'frontend.instructor.instructor_details',
+      compact('instructor', 'courses')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+resources/views/frontend/instructor/instructor_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・

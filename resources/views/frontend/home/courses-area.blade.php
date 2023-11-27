@@ -84,7 +84,8 @@ $categories = App\Models\Category::orderBy('category_name','ASC')
                   <h5 class="card-title"><a
                       href="{{ url('course/details/'.$course->id.'/'.$course->course_name_slug) }}">{{
                       $course->course_name }}</a></h5>
-                  <p class="card-text"><a href=" ">{{ $course['user']['name'] }}</a></p>
+                  <p class="card-text"><a href="{{ route('instructor.details',$course->instructor_id) }}">{{
+                      $course['user']['name'] }}</a></p>
                   <div class="rating-wrap d-flex align-items-center py-2">
                     <div class="review-stars">
                       <span class="rating-number">4.4</span>
@@ -142,7 +143,8 @@ $categories = App\Models\Category::orderBy('category_name','ASC')
                   インストラクタ名を表示
 
                   --------------------------------------}}
-                  <p class="card-text"><a href=" ">{{ $course['user']['name'] }}</a></p>
+                  <p class="card-text"><a href="{{ route('instructor.details',$course->instructor_id) }}">{{
+                      $course['user']['name'] }}</a></p>
 
                   <div class="rating-wrap d-flex align-items-center py-2">
                     <div class="review-stars">
