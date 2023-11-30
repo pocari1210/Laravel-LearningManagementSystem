@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/user/wishlist', 'AllWishlist')
       ->name('user.wishlist');
+
+    Route::get('/get-wishlist-course/', 'GetWishlistCourse');
   });
 });  ///// End Auth Middleware 
 

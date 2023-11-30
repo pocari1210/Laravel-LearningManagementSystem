@@ -1,0 +1,123 @@
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\Wishlist.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function course()
+  {
+    return $this->belongsTo(Course::class, 'course_id', 'id');
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // User Wishlist All Route 
+  Route::controller(WishListController::class)->group(function () {
+
+    Route::get('/get-wishlist-course/', 'GetWishlistCourse');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(userdashboard)◆
+
+ディレクトリ
+\resources\views\frontend\dashboard\user_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  @include('frontend.body.script')
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function GetWishlistCourse()
+  {
+
+    $wishlist = Wishlist::with('course')
+      ->where('user_id', Auth::id())->latest()->get();
+
+    return response()->json(['wishlist' => $wishlist]);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆のスクリプトファイル編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Load Wishlist Data // --}}
+<script type="text/javascript">
+  function wishlist(){
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: "/get-wishlist-course/",
+            success:function(response){
+                
+            var rows = ""
+
+            // GetWishlistCourseのjsonから渡された変数を$.eachで全件表示
+            $.each(response.wishlist, function(key, value){
+            
+            rows += `
+
+              <div class="col-lg-4 responsive-column-half">
+                <div class="card card-item">
+                  <div class="card-image">
+                    <a href="course-details.html" class="d-block">
+
+                      // courseテーブルにアクセスし、course_image(画像)を表示している
+                      <img class="card-img-top" src="/${value.course.course_image}" alt="Card image cap">
+                    </a>
+                  </div><!-- end card-image -->
+
+                  <div class="card-body">
+                    <h6 class="ribbon ribbon-blue-bg fs-14 mb-3">${value.course.label}</h6>
+                    <h5 class="card-title"><a href="course-details.html">${value.course.course_name}</a></h5> 
+                    <div class="d-flex justify-content-between align-items-center">
+                        
+                        ${value.course.discount_price == null 
+                        ?`<p class="card-price text-black font-weight-bold">$${value.course.selling_price}</p>`
+                        :`<p class="card-price text-black font-weight-bold">$${value.course.discount_price} <span class="before-price font-weight-medium">$${value.course.selling_price}</span></p>`
+              
+                      } 
+                      
+                        <div class="icon-element icon-element-sm shadow-sm cursor-pointer" data-toggle="tooltip" data-placement="top" title="Remove from Wishlist"><i class="la la-heart"></i></div>
+                    </div>
+                </div> 
+            </div> 
+        </div> 
+        
+        `
+                });
+              $('#wishlist').html(rows); 
+            }
+        })
+    } // End withlist method
+    wishlist();
+</script>
+{{-- /// End Load Wishlist Data // --}}
+
