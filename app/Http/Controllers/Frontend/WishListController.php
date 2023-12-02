@@ -48,6 +48,12 @@ class WishListController extends Controller
     $wishlist = Wishlist::with('course')
       ->where('user_id', Auth::id())->latest()->get();
 
-    return response()->json(['wishlist' => $wishlist]);
+    // Wishlistの件数をcountメソッドで取得
+    $wishQty = Wishlist::count();
+
+    return response()->json([
+      'wishlist' => $wishlist,
+      'wishQty' => $wishQty
+    ]);
   } // End Method 
 }

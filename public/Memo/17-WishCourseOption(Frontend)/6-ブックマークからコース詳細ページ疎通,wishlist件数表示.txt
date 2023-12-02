@@ -1,0 +1,59 @@
+
+6-ブックマークからコース詳細ページ疎通,wishlist件数表示
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // wishlistの件数をid="wishQty"と記載のあるタグにデータを送信
+  $('#wishQty').text(response.wishQty);
+  
+  <a href="/course/details/${value.course.id}/${value.course.course_name_slug}" class="d-block">
+    <img class="card-img-top" src="/${value.course.course_image}" alt="Card image cap">
+  </a>
+
+★コード解説★
+ブックマークページからコースの遷移先を疎通させている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function GetWishlistCourse()
+  {
+
+    // Wishlistの件数をcountメソッドで取得
+    $wishQty = Wishlist::count();
+
+    return response()->json([
+      'wishlist' => $wishlist,
+      'wishQty' => $wishQty
+    ]);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li><a href="{{ route('user.wishlist') }}"><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" height="18px"
+        viewBox="0 0 24 24" width="18px">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z" />
+
+      ↓↓id="wishQty"と記述し、wishlistの件数を疎通させている
+      </svg> Wishlist <span class="badge badge-info p-1 ml-2" id="wishQty"> </span> </a></li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
