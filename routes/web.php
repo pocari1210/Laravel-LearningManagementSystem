@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\SubCategoryController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishListController;
+use App\Http\Controllers\Frontend\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -254,4 +255,6 @@ Route::get('/instructor/details/{id}', [IndexController::class, 'InstructorDetai
   ->name('instructor.details');
 
 Route::post('/add-to-wishlist/{course_id}', [WishListController::class, 'AddToWishList']);
+
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
 // FrontendのRoute : END
