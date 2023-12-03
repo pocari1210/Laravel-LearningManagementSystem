@@ -259,4 +259,7 @@ Route::post('/add-to-wishlist/{course_id}', [WishListController::class, 'AddToWi
 Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
 
 Route::get('/cart/data/', [CartController::class, 'CartData']);
+
+// Get Data from Minicart 
+Route::get('/course/mini/cart/', [CartController::class, 'AddMiniCart']);
 // FrontendのRoute : END
