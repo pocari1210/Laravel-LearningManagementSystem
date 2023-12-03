@@ -1,45 +1,31 @@
-<?php
 
-namespace App\Http\Controllers\Frontend;
+3-コースをカートに追加part2
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+SweetAlertとCartの中身のデータの確認を行う
 
-use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\Course;
-use App\Models\Course_goal;
-use App\Models\CourseSection;
-use App\Models\CourseLecture;
+◆ルートの編集◆
 
-use InterventionImage;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Gloudemans\Shoppingcart\Facades\Cart;
+ディレクトリ
+\routes\web.php
 
-class CartController extends Controller
-{
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+
+Route::get('/cart/data/', [CartController::class, 'CartData']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
   public function AddToCart(Request $request, $id)
   {
-
-    $course = Course::find($id);
-
-    // コースがカート内にあるか確認を行う
-
-    /*****************************************************************
-     * 
-     * Cart::search
-     * 
-     * カート内を検索し、既にカートに追加済みのコースがあるか判定をしている
-     * 
-     ******************************************************************/
-    $cartItem = Cart::search(function ($cartItem, $rowId) use ($id) {
-      return $cartItem->id === $id;
-    });
-
-    if ($cartItem->isNotEmpty()) {
-      return response()->json(['error' => 'Course is already in your cart']);
-    }
 
     // discount_priceがNullだった場合の処理
     if ($course->discount_price == NULL) {
@@ -83,7 +69,7 @@ class CartController extends Controller
     // Collection形式でカートの中身をすべて取得
     $carts = Cart::content();
 
-    // 商品合計額 + 税額の計算を取得
+    // //商品合計額 + 税額の計算を取得
     $cartTotal = Cart::total();
 
     // 商品合計数の計算を取得
@@ -95,4 +81,8 @@ class CartController extends Controller
       'cartQty' => $cartQty,
     ));
   } // End Method 
-}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/cart/data/のURLを入力し、カートの中身が確認とれたらOK
