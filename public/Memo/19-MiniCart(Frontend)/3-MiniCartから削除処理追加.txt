@@ -1,0 +1,87 @@
+
+3-MiniCartから削除処理追加
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::get('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveMiniCart']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  ↓↓id情報追加とボタンを押した後の処理追加↓↓
+  <a type="submit" id="${value.rowId}" onclick="miniCartRemove(this.id)">
+    <i class="la la-times"></i> 
+  </a> 
+
+    // Mini Cart Remove Start 
+    function miniCartRemove(rowId){
+        $.ajax({
+            type: 'GET',
+            url: '/minicart/course/remove/'+rowId,
+            dataType: 'json',
+            success:function(data){
+            miniCart();
+
+            // Start Message 
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000 
+            })
+
+            if ($.isEmptyObject(data.error)) {
+                Toast.fire({
+                type: 'success', 
+                icon: 'success', 
+                title: data.success, 
+              })
+
+            }else{
+
+            Toast.fire({
+                type: 'error', 
+                icon: 'error', 
+                title: data.error, 
+              })
+                }
+              // End Message   
+            }
+        })
+    }
+    // End Mini Cart Remove 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function RemoveMiniCart($rowId)
+  {
+
+    Cart::remove($rowId);
+
+    return response()->json([
+      'success' => 'Course Remove From Cart'
+    ]);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ミニカートから削除処理を行えたらOK

@@ -262,4 +262,6 @@ Route::get('/cart/data/', [CartController::class, 'CartData']);
 
 // Get Data from Minicart 
 Route::get('/course/mini/cart/', [CartController::class, 'AddMiniCart']);
+
+Route::get('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveMiniCart']);
 // FrontendのRoute : END
