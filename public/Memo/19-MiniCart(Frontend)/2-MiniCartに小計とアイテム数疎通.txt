@@ -1,0 +1,49 @@
+
+2-MiniCartに小計とアイテム数疎通
+
+◆ビューの編集(header)◆
+
+ディレクトリ
+\resources\views\frontend\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <p class="shop-cart-btn d-flex align-items-center">
+    <i class="la la-shopping-cart"></i>
+
+    ↓↓id情報追加↓↓
+    <span class="product-count" id="cartQty"> </span>
+  </p>
+
+  <li class="media media-card">
+    <div class="media-body fs-16">
+
+      ↓↓id情報追加↓↓
+      <p class="text-black font-weight-semi-bold lh-18">
+        Total: $<span class="cart-total" id="cartSubTotal"> </span> </p>
+    </div>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(scriptファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Mini Cart // --}}
+
+  success:function(response){
+    $('span[id="cartSubTotal"]').text(response.cartTotal);
+    $('#cartQty').text(response.cartQty);
+
+★コード解説★
+\Frontend\CartController.phpのAddMiniCartメソッドから
+データを受け取っている
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+headerのカートにコースの個数、合計金額が疎通できていればOK
