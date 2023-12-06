@@ -1,0 +1,120 @@
+
+2-カートに追加したコースの疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// Cart All Route 
+Route::controller(CartController::class)->group(function () {
+
+  Route::get('/get-cart-course', 'GetCartCourse');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start MyCart // --}}
+<script type="text/javascript">
+  function cart(){
+      $.ajax({
+          type: 'GET',
+          url: '/get-cart-course',
+          dataType: 'json',
+
+          success:function(response){
+
+              $('span[id="cartSubTotal"]').text(response.cartTotal);
+
+              var rows = ""
+
+              $.each(response.carts, function(key,value){
+                  rows += `
+                  <tr>
+                  <th scope="row">
+                      <div class="media media-card">
+                          <a href="course-details.html" class="media-img mr-0">
+                              <img src="/${value.options.image}" alt="Cart image">
+                          </a>
+                      </div>
+                  </th>
+                  
+                  <td>
+                      <a href="/course/details/${value.id}/${value.options.slug}" class="text-black font-weight-semi-bold">${value.name}</a>
+                  </td>
+
+                  <td>
+                      <ul class="generic-list-item font-weight-semi-bold">
+                          <li class="text-black lh-18">$${value.price}</li>
+                          
+                      </ul>
+                  </td>
+
+                  <td>
+                      <button type="button" class="icon-element icon-element-xs shadow-sm border-0" data-toggle="tooltip" data-placement="top" title="Remove">
+                          <i class="la la-times"></i>
+                      </button>
+                  </td>
+              </tr>
+              `
+              });
+              $('#cartPage').html(rows);
+          }
+      })
+  }
+  cart();
+</script>
+{{-- /// End MyCart // --}}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function GetCartCourse()
+  {
+
+    $carts = Cart::content();
+    $cartTotal = Cart::total();
+    $cartQty = Cart::count();
+
+    return response()->json(array(
+      'carts' => $carts,
+      'cartTotal' => $cartTotal,
+      'cartQty' => $cartQty,
+    ));
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\mycart\view_mycart.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+ //Cartに追加したコースが疎通される(scriptファイルより)
+        <tbody id="cartPage">
+        </tbody>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+カートに追加↓コースの疎通と、小計の金額が疎通されていたらOK
+
+
