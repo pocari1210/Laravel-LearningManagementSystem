@@ -139,9 +139,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/user/stauts', 'UpdateUserStatus')
       ->name('update.user.stauts');
+  });
 
-    Route::post('/update/user/stauts', 'UpdateUserStatus')
-      ->name('update.user.stauts');
+  // Admin Coruses All Route 
+  Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/all/course', 'AdminAllCourse')
+      ->name('admin.all.course');
   });
 }); // End Admin Group SideBar 
 

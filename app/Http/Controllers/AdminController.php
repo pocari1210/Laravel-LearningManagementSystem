@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use App\Models\Course;
 
 class AdminController extends Controller
 {
@@ -187,4 +188,15 @@ class AdminController extends Controller
 
     return response()->json(['message' => 'User Status Updated Successfully']);
   } // End Method  
+
+  public function AdminAllCourse()
+  {
+
+    $course = Course::latest()->get();
+
+    return view(
+      'admin.backend.courses.all_course',
+      compact('course')
+    );
+  } // End Method
 }
