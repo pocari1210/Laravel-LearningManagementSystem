@@ -272,5 +272,7 @@ Route::controller(CartController::class)->group(function () {
     ->name('mycart');
 
   Route::get('/get-cart-course', 'GetCartCourse');
+
+  Route::get('/cart-remove/{rowId}', 'CartRemove');
 });
 // FrontendのRoute : END

@@ -1,0 +1,70 @@
+
+3-カートから削除、詳細ページからカート追加
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// Cart All Route 
+Route::controller(CartController::class)->group(function () {
+
+  Route::get('/cart-remove/{rowId}', 'CartRemove');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <button type="button" class="icon-element icon-element-xs shadow-sm border-0" data-toggle="tooltip" data-placement="top"  id="${value.rowId}" onclick="cartRemove(this.id)">
+      <i class="la la-times"></i>
+    </button>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CartRemove($rowId)
+  {
+
+    Cart::remove($rowId);
+
+    return response()->json([
+      'success' => 'Course Remove From Cart'
+    ]);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(詳細ページからカートの追加)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="buy-course-btn-box">
+    <button type="submit" class="btn theme-btn w-100 mb-2"
+      onclick="addToCart({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i
+        class="la la-shopping-cart fs-18 mr-1"></i> Add to cart</button>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+カートから削除、詳細ページからカートへ追加できたらOK
+
+
