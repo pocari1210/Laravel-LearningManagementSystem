@@ -217,4 +217,15 @@ class AdminController extends Controller
       'message' => 'Course Status Updated Successfully'
     ]);
   } // End Method
+
+  public function AdminCourseDetails($id)
+  {
+
+    $course = Course::find($id);
+
+    return view(
+      'admin.backend.courses.course_details',
+      compact('course')
+    );
+  } // End Method
 }

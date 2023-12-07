@@ -1,0 +1,61 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Coruses All Route 
+  Route::controller(AdminController::class)->group(function () {
+
+    Route::get('/admin/course/details/{id}', 'AdminCourseDetails')
+      ->name('admin.course.details');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\courses\all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  ↓↓遷移先routeの追記↓↓
+  <td> <a href="{{ route('admin.course.details',$item->id) }}" class="btn btn-info">
+      <i class="lni lni-eye"></i> </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminCourseDetails($id)
+  {
+
+    $course = Course::find($id);
+
+    return view(
+      'admin.backend.courses.course_details',
+      compact('course')
+    );
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\views\admin\backend\courses\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+詳細ページの疎通ができたらOK
