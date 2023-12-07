@@ -1,5 +1,6 @@
 @extends('admin.admin_dashboard')
 @section('admin')
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <style>
@@ -60,7 +61,8 @@
               <td>
                 <div class="form-check-danger form-check form-switch">
                   <input class="form-check-input status-toggle large-checkbox" type="checkbox"
-                    id="flexSwitchCheckCheckedDanger" data-user-id="{{ $item->id }}" {{ $item->status ? 'checked' :''}}>
+                    id="flexSwitchCheckCheckedDanger" data-course-id="{{ $item->id }}" {{ $item->status ? 'checked' :
+                  ''}}>
                   <label class="form-check-label" for="flexSwitchCheckCheckedDanger"> </label>
                 </div>
               </td>
@@ -79,18 +81,18 @@
 <script>
   $(document).ready(function(){
         $('.status-toggle').on('change', function(){
-            var userId = $(this).data('user-id');
-            var isChecked = $(this).is(':checked');
+          var courseId = $(this).data('course-id');
+          var isChecked = $(this).is(':checked');
 
             // send an ajax request to update status 
 
             $.ajax({
-                url: "{{ route('update.user.stauts') }}",
+                url: "{{ route('update.course.stauts') }}",
                 method: "POST",
                 data: {
-                    _token: "{{ csrf_token() }}"
-                    user_id : userId,
+                    course_id : courseId,
                     is_checked: isChecked ? 1 : 0,
+                    _token: "{{ csrf_token() }}"
                 },
 
                 success: function(response){

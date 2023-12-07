@@ -1,0 +1,76 @@
+
+2-courceのステータス更新
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Coruses All Route 
+  Route::controller(AdminController::class)->group(function () {
+
+    Route::post('/update/course/stauts', 'UpdateCourseStatus')
+      ->name('update.course.stauts');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <input class="form-check-input status-toggle large-checkbox" type="checkbox"
+    id="flexSwitchCheckCheckedDanger" data-course-id="{{ $item->id }}" {{ $item->status ? 'checked' : ''}}>
+
+<script>
+  $(document).ready(function(){
+        $('.status-toggle').on('change', function(){
+          var courseId = $(this).data('course-id');
+          var isChecked = $(this).is(':checked');
+
+            // send an ajax request to update status 
+
+            $.ajax({
+                url: "{{ route('update.course.stauts') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                    course_id : courseId,
+                    is_checked: isChecked ? 1 : 0,
+                },
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UpdateCourseStatus(Request $request)
+  {
+
+    $courseId = $request->input('course_id');
+    $isChecked = $request->input('is_checked', 0);
+
+    $course = Course::find($courseId);
+
+    if ($course) {
+      $course->status = $isChecked;
+      $course->save();
+    }
+
+    return response()->json([
+      'message' => 'Course Status Updated Successfully'
+    ]);
+  } // End Method
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+トグルをクリックしたらtoastrの表示がされたらOK
