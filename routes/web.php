@@ -158,6 +158,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::controller(CouponController::class)->group(function () {
     Route::get('/admin/all/coupon', 'AdminAllCoupon')
       ->name('admin.all.coupon');
+
+    Route::get('/admin/add/coupon', 'AdminAddCoupon')
+      ->name('admin.add.coupon');
+
+    Route::post('/admin/store/coupon', 'AdminStoreCoupon')
+      ->name('admin.store.coupon');
   });
 }); // End Admin Group SideBar 
 

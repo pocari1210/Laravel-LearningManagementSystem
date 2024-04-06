@@ -1,0 +1,77 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+
+    Route::get('/admin/add/coupon', 'AdminAddCoupon')
+      ->name('admin.add.coupon');
+
+    Route::post('/admin/store/coupon', 'AdminStoreCoupon')
+      ->name('admin.store.coupon');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\coupon\coupon_all.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('admin.add.coupon') }}" class="btn btn-primary px-5">Add Coupon </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CouponController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminAddCoupon()
+  {
+    return view('admin.backend.coupon.coupon_add');
+  } /// End Method 
+
+  public function AdminStoreCoupon(Request $request)
+  {
+
+    Coupon::insert([
+      'coupon_name' => strtoupper($request->coupon_name),
+      'coupon_discount' => $request->coupon_discount,
+      'coupon_validity' => $request->coupon_validity,
+      'created_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Coupon Inserted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->route('admin.all.coupon')->with($notification);
+  } /// End Method   
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\coupon\coupon_add.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+追加ページに遷移し、保存処理が行えたらOK
