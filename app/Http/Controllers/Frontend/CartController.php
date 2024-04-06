@@ -149,4 +149,8 @@ class CartController extends Controller
       'success' => 'Course Remove From Cart'
     ]);
   } // End Method 
+
+  public function CouponApply(Request $request)
+  {
+  } // End Method 
 }

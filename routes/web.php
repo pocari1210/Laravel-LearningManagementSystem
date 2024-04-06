@@ -306,4 +306,6 @@ Route::controller(CartController::class)->group(function () {
 
   Route::get('/cart-remove/{rowId}', 'CartRemove');
 });
+
+Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
 // FrontendのRoute : END
