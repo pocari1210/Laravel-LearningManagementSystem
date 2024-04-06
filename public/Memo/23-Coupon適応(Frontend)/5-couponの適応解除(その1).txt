@@ -1,0 +1,81 @@
+
+5-couponの適応解除(その1)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// ★couponの適応解除★
+Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<script type="text/javascript">
+  function couponRemove(){
+      $.ajax({
+          type: "GET",
+          dataType: 'json',
+          url: '/coupon-remove',
+          success:function(data){
+              couponCalculation(); 
+              $('#couponField').show();
+
+              // Start Message 
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000 
+          })
+          if ($.isEmptyObject(data.error)) {
+                  
+                  Toast.fire({
+                  type: 'success', 
+                  icon: 'success', 
+                  title: data.success, 
+                  })
+          }else{
+
+              Toast.fire({
+                  type: 'error', 
+                  icon: 'error', 
+                  title: data.error, 
+                  })
+              }
+            // End Message   
+          }
+      })
+  }
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CouponRemove()
+  {
+    Session::forget('coupon');
+    return response()->json(['success' => 'Coupon Remove Successfully']);
+  } // End Method 
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

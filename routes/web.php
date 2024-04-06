@@ -311,4 +311,7 @@ Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
 
 // ★couponの計算処理★
 Route::get('/coupon-calculation', [CartController::class, 'CouponCalculation']);
+
+// ★couponの適応解除★
+Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
 // FrontendのRoute : END
