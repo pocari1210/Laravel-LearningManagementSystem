@@ -308,4 +308,7 @@ Route::controller(CartController::class)->group(function () {
 });
 
 Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
+
+// ★couponの計算処理★
+Route::get('/coupon-calculation', [CartController::class, 'CouponCalculation']);
 // FrontendのRoute : END
