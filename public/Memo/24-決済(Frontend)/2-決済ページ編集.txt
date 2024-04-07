@@ -1,0 +1,25 @@
+
+2-決済ページ編集
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    @foreach ($carts as $item)
+    <div class="media media-card border-bottom border-bottom-gray pb-3 mb-3">
+      <a href="{{ url('course/details/'.$item->id.'/'.$item->options->slug) }}" class="media-img">
+        <img src="{{ asset($item->options->image) }}" alt="Cart image">
+      </a>
+      <div class="media-body">
+        <h5 class="fs-15 pb-2"><a href="{{ url('course/details/'.$item->id.'/'.$item->options->slug) }}">{{
+            $item->name }} </a></h5>
+        <p class="text-black font-weight-semi-bold lh-18">${{ $item->price }} </p>
+      </div>
+    </div><!-- end media -->
+    @endforeach
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
