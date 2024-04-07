@@ -351,6 +351,9 @@
             miniCart();
             cart();
 
+            // cartの中身を削除したら、計算が行われる
+            couponCalculation();
+
             // Start Message 
             const Toast = Swal.mixin({
                   toast: true,

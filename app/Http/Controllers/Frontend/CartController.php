@@ -26,6 +26,17 @@ class CartController extends Controller
 
     $course = Course::find($id);
 
+    /*****************************************************************
+     * 
+     * coupnを適応している状態で新しくコースを追加した場合、
+     * couponの適応が解除される
+     * 
+     * ******************************************************************/
+
+    if (Session::has('coupon')) {
+      Session::forget('coupon');
+    }
+
     // コースがカート内にあるか確認を行う
 
     /*****************************************************************
@@ -146,6 +157,18 @@ class CartController extends Controller
   {
 
     Cart::remove($rowId);
+
+    if (Session::has('coupon')) {
+      $coupon_name = Session::get('coupon')['coupon_name'];
+      $coupon = Coupon::where('coupon_name', $coupon_name)->first();
+
+      Session::put('coupon', [
+        'coupon_name' => $coupon->coupon_name,
+        'coupon_discount' => $coupon->coupon_discount,
+        'discount_amount' => round(Cart::total() * $coupon->coupon_discount / 100),
+        'total_amount' => round(Cart::total() - Cart::total() * $coupon->coupon_discount / 100)
+      ]);
+    }
 
     return response()->json([
       'success' => 'Course Remove From Cart'
