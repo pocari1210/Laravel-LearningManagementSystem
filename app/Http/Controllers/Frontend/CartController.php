@@ -12,6 +12,8 @@ use App\Models\Course_goal;
 use App\Models\CourseSection;
 use App\Models\CourseLecture;
 use App\Models\Coupon;
+use App\Models\Payment;
+use App\Models\Order;
 
 use InterventionImage;
 use Illuminate\Support\Facades\Auth;
@@ -252,5 +254,36 @@ class CartController extends Controller
       );
       return redirect()->route('login')->with($notification);
     }
+  } // End Method 
+
+  public function Payment(Request $request)
+  {
+
+    // couponの処理
+    if (Session::has('coupon')) {
+      $total_amount = Session::get('coupon')['total_amount'];
+    } else {
+      $total_amount = round(Cart::total());
+    }
+
+    // Cerate a new Payment Record 
+
+    // 入力フォームのデータの取得
+    $data = new Payment();
+    $data->name = $request->name;
+    $data->email = $request->email;
+    $data->phone = $request->phone;
+    $data->address = $request->address;
+    $data->cash_delivery = $request->cash_delivery;
+    $data->total_amount = $total_amount;
+    $data->payment_type = 'Direct Payment';
+
+    $data->invoice_no = 'EOS' . mt_rand(10000000, 99999999);
+    $data->order_date = Carbon::now()->format('d F Y');
+    $data->order_month = Carbon::now()->format('F');
+    $data->order_year = Carbon::now()->format('Y');
+    $data->status = 'pending';
+    $data->created_at = Carbon::now();
+    $data->save();
   } // End Method 
 }

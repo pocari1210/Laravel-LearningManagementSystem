@@ -318,4 +318,7 @@ Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
 /// ★決済ページ遷移★ 
 Route::get('/checkout', [CartController::class, 'CheckoutCreate'])
   ->name('checkout');
+
+Route::post('/payment', [CartController::class, 'Payment'])
+  ->name('payment');
 // FrontendのRoute : END

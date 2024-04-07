@@ -33,7 +33,7 @@
           <div class="card-body">
             <h3 class="card-title fs-22 pb-3">Billing Details</h3>
             <div class="divider"><span></span></div>
-            <form method="post" class="row" action="" enctype="multipart/form-data">
+            <form method="post" class="row" action="{{ route('payment') }}" enctype="multipart/form-data">
               @csrf
               <div class="input-box col-lg-6">
                 <label class="label-text">First Name</label>
@@ -154,7 +154,7 @@
               </li>
             </ul>
 
-            <input type="hidden" name="total" value="{{ $cartTotal}}">
+            <input type="hidden" name="total" value="{{ $cartTotal }}">
 
             @else
             <ul class="generic-list-item generic-list-item-flash fs-15">
@@ -162,7 +162,7 @@
                 <span class="text-black">Total:</span>
                 <span>${{ $cartTotal }}</span>
               </li>
-              <input type="hidden" name="total" value="{{ $cartTotal}}">
+              <input type="hidden" name="total" value="{{ $cartTotal }}">
             </ul>
 
             @endif
