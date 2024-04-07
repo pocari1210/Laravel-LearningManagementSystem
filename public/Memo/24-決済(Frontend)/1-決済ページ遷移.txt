@@ -1,0 +1,83 @@
+
+1-決済ページ遷移
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/// ★決済ページ遷移★ 
+Route::get('/checkout', [CartController::class, 'CheckoutCreate'])
+  ->name('checkout');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\mycart\view_mycart.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+      <a href="{{ route('checkout') }}" class="btn theme-btn w-100">Checkout <i
+          class="la la-arrow-right icon ml-1"></i></a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CheckoutCreate()
+  {
+
+    if (Auth::check()) {
+
+      if (Cart::total() > 0) {
+        $carts = Cart::content();
+        $cartTotal = Cart::total();
+        $cartQty = Cart::count();
+
+        return view(
+          'frontend.checkout.checkout_view',
+          compact('carts', 'cartTotal', 'cartQty')
+        );
+      } else {
+
+        $notification = array(
+          'message' => 'Add At list One Course',
+          'alert-type' => 'error'
+        );
+        return redirect()->to('/')->with($notification);
+      }
+    } else {
+
+      $notification = array(
+        'message' => 'You Need to Login First',
+        'alert-type' => 'error'
+      );
+      return redirect()->route('login')->with($notification);
+    }
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\checkout\checkout_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+カートページからcheckページに遷移できたらOK

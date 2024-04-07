@@ -314,4 +314,8 @@ Route::get('/coupon-calculation', [CartController::class, 'CouponCalculation']);
 
 // ★couponの適応解除★
 Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
+
+/// ★決済ページ遷移★ 
+Route::get('/checkout', [CartController::class, 'CheckoutCreate'])
+  ->name('checkout');
 // FrontendのRoute : END
