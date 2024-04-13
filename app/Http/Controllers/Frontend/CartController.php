@@ -285,5 +285,48 @@ class CartController extends Controller
     $data->status = 'pending';
     $data->created_at = Carbon::now();
     $data->save();
+
+    // フォームからきたcourse_titleの配列をforeachでループ処理を行う
+    foreach ($request->course_title as $key => $course_title) {
+
+      // ログインしているユーザーとcourse_idがDBにあるか確認
+      $existingOrder = Order::where('user_id', Auth::user()->id)
+        ->where('course_id', $request->course_id[$key])->first();
+
+      // 既にコースを保有していた場合
+      if ($existingOrder) {
+
+        $notification = array(
+          'message' => 'You Have already enrolled in this course',
+          'alert-type' => 'error'
+        );
+        return redirect()->back()->with($notification);
+      } // end if 
+
+      // コースを保有していない場合、Orderモデルに、保存処理を行う
+      $order = new Order();
+      $order->payment_id = $data->id;
+      $order->user_id = Auth::user()->id;
+      $order->course_id = $request->course_id[$key];
+      $order->instructor_id = $request->instructor_id[$key];
+      $order->course_title = $course_title;
+      $order->price = $request->price[$key];
+      $order->save();
+    } // end foreach 
+
+
+    $request->session()->forget('cart');
+
+    if ($request->cash_delivery == 'stripe') {
+      echo "stripe";
+    } else {
+
+      $notification = array(
+        'message' => 'Cash Payment Submit Successfully',
+        'alert-type' => 'success'
+      );
+
+      return redirect()->route('index')->with($notification);
+    }
   } // End Method 
 }
