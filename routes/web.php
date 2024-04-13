@@ -12,6 +12,7 @@ use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishListController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Backend\CouponController;
+use App\Http\Controllers\Backend\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -173,6 +174,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/delete/coupon/{id}', 'AdminDeleteCoupon')
       ->name('admin.delete.coupon');
+  });
+
+  // Admin All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/admin/pending/order', 'AdminPendingOrder')
+      ->name('admin.pending.order');
   });
 }); // End Admin Group SideBar 
 
