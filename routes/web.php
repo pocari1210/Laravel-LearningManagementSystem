@@ -186,6 +186,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/pending-confirm/{id}', 'PendingToConfirm')
       ->name('pending-confirm');
+
+    Route::get('/admin/confirm/order', 'AdminConfirmOrder')
+      ->name('admin.confirm.order');
   });
 }); // End Admin Group SideBar 
 
