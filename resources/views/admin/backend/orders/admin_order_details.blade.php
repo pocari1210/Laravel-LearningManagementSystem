@@ -162,6 +162,11 @@
                       </td>
                     </tr>
 
+                    {{-- 合計金額の初期値 --}}
+                    @php
+                    $totalPrice = 0;
+                    @endphp
+
                     @foreach ($orderItem as $item)
                     <tr>
                       <td class="col-md-1">
@@ -185,7 +190,20 @@
                         <label> ${{ $item->price }} </label>
                       </td>
                     </tr>
+
+                    {{-- foreachが終わるまで計算を繰り返す --}}
+                    @php
+                    $totalPrice += $item->price;
+                    @endphp
+
                     @endforeach
+
+                    <tr>
+                      <td colspan="4"></td>
+                      <td class="col-md-3">
+                        <strong>Total Price : ${{ $totalPrice }}</strong>
+                      </td>
+                    </tr>
 
                   </tbody>
                 </table>
