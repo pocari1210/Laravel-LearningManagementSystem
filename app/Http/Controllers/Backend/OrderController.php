@@ -87,4 +87,18 @@ class OrderController extends Controller
       compact('orderItem')
     );
   } // End Method 
+
+  public function InstructorOrderDetails($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'instructor.orders.instructor_order_details',
+      compact('payment', 'orderItem')
+    );
+  } // End Method 
 }
