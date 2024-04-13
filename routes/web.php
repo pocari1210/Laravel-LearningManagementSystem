@@ -222,6 +222,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
   Route::post('/instructor/password/update', [InstructorController::class, 'InstructorPasswordUpdate'])
     ->name('instructor.password.update');
+
+  // Instructor All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/instructor/all/order', 'InstructorAllOrder')
+      ->name('instructor.all.order');
+  });
 }); // End Instructor Group Middleware 
 
 ///// Instructor Group SideBar

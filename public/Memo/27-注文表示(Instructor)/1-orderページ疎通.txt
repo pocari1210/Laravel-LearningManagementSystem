@@ -1,0 +1,76 @@
+
+1-orderページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group Middleware
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Instructor All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/instructor/all/order', 'InstructorAllOrder')
+      ->name('instructor.all.order');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">All Orders</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('instructor.all.order') }}">
+            <i class='bx bx-radio-circle'></i>All Orders</a>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\resources\views\instructor\orders\all_orders.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorAllOrder()
+  {
+
+    $id = Auth::user()->id;
+
+    $orderItem = Order::where('instructor_id', $id)
+      ->orderBy('id', 'desc')->get();
+
+    return view(
+      'instructor.orders.all_orders',
+      compact('orderItem')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\orders\all_orders.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

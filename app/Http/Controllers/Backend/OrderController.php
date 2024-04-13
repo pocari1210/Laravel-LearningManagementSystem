@@ -73,4 +73,18 @@ class OrderController extends Controller
       compact('payment')
     );
   } // End Method 
+
+  public function InstructorAllOrder()
+  {
+
+    $id = Auth::user()->id;
+
+    $orderItem = Order::where('instructor_id', $id)
+      ->orderBy('id', 'desc')->get();
+
+    return view(
+      'instructor.orders.all_orders',
+      compact('orderItem')
+    );
+  } // End Method 
 }
