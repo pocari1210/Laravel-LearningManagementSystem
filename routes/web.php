@@ -180,6 +180,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::controller(OrderController::class)->group(function () {
     Route::get('/admin/pending/order', 'AdminPendingOrder')
       ->name('admin.pending.order');
+
+    Route::get('/admin/order/details/{id}', 'AdminOrderDetails')
+      ->name('admin.order.details');
   });
 }); // End Admin Group SideBar 
 

@@ -34,4 +34,18 @@ class OrderController extends Controller
       compact('payment')
     );
   } // End Method 
+
+  public function AdminOrderDetails($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'admin.backend.orders.admin_order_details',
+      compact('payment', 'orderItem')
+    );
+  } // End Method 
 }
