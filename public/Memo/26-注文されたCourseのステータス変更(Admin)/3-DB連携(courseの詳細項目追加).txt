@@ -1,0 +1,66 @@
+
+
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Order.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'user_id', 'id');
+  }
+
+  public function payment()
+  {
+    return $this->belongsTo(Payment::class, 'payment_id', 'id');
+  }
+
+  public function course()
+  {
+    return $this->belongsTo(Course::class, 'course_id', 'id');
+  }
+
+  public function instructor()
+  {
+    return $this->belongsTo(User::class, 'instructor_id', 'id');
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @foreach ($orderItem as $item)
+  <tr>
+    <td class="col-md-1">
+      <label><img src="{{ asset($item->course->course_image) }}" alt=""
+          style="width: 50px; height:50px;"> </label>
+    </td>
+
+    <td class="col-md-2">
+      <label> {{ $item->course->course_name }} </label>
+    </td>
+
+    <td class="col-md-2">
+      <label>{{ $item->course->category->category_name }}</label>
+    </td>
+
+    <td class="col-md-2">
+      <label> {{ $item->instructor->name }} </label>
+    </td>
+
+    <td class="col-md-2">
+      <label> ${{ $item->price }} </label>
+    </td>
+  </tr>
+  @endforeach
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
