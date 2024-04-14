@@ -1,0 +1,71 @@
+
+1-My Courseページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::middleware('auth')->group(function () {
+
+  // User My Course All Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/my/course', 'MyCourse')
+      ->name('my.course');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\dashboard\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li><a href="{{ route('my.course') }}"><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" height="18px"
+        viewBox="0 0 24 24" width="18px">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
+      </svg> My Courses</a></li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function MyCourse()
+  {
+    $id = Auth::user()->id;
+
+    $latestOrders = Order::where('user_id', $id)
+      ->select('course_id', \DB::raw('MAX(id) as max_id'))->groupBy('course_id');
+
+    $mycoruse = Order::joinSub($latestOrders, 'latest_order', function ($join) {
+      $join->on('orders.id', '=', 'latest_order.max_id');
+    })->orderBy('latest_order.max_id', 'DESC')->get();
+
+    return view(
+      'frontend.mycourse.my_all_course',
+      compact('mycoruse')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\mycourse\my_all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+userのdashboardページからMy courseのページに遷移ができたらOK
