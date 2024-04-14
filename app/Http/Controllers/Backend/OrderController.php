@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Session;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -100,5 +101,21 @@ class OrderController extends Controller
       'instructor.orders.instructor_order_details',
       compact('payment', 'orderItem')
     );
+  } // End Method 
+
+  public function InstructorOrderInvoice($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    $pdf = Pdf::loadView('instructor.orders.order_pdf', compact('payment', 'orderItem'))
+      ->setPaper('a4')->setOption([
+        'tempDir' => public_path(),
+        'chroot' => public_path(),
+      ]);
+    return $pdf->download('invoice.pdf');
   } // End Method 
 }

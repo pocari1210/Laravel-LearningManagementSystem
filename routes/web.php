@@ -230,6 +230,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::get('/instructor/order/details/{payment_id}', 'InstructorOrderDetails')
       ->name('instructor.order.details');
+
+    Route::get('/instructor/order/invoice/{payment_id}', 'InstructorOrderInvoice')
+      ->name('instructor.order.invoice');
   });
 }); // End Instructor Group Middleware 
 
