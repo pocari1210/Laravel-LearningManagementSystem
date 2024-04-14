@@ -118,28 +118,10 @@
                   <strong> {{ $payment->order_date }}</strong>
                 </div>
               </div>
-
-              <div class="row mb-3">
-                <div class="col-sm-3">
-                  <h6 class="mb-0">Status </h6>
-                </div>
-                <div class="col-sm-9 text-secondary">
-                  @if ($payment->status == 'pending')
-                  <a href="{{ route('pending-confrim',$payment->id) }}" class="btn btn-block btn-success"
-                    id="confirm">Confirm Order</a>
-                  @elseif ($payment->status == 'confirm')
-                  <a href="" class="btn btn-block btn-success">Confirm Order</a>
-                  @endif
-
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
-
-
-
 
       <div class="card radius-10">
         <div class="card-body">

@@ -1,0 +1,28 @@
+
+2-注文courseのまとめ
+
+複数の商品をカートに入れ、購入した際、
+データ(PDFの領収書等)をひとまとめにする
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    // ★カートから複数courseの注文があった際、
+    // 一行にまとめる記述★
+    $latestOrderItem = Order::where('instructor_id', $id)
+      ->select('payment_id', \DB::raw('MAX(id) as max_id'))
+      ->groupBy('payment_id');
+
+    $orderItem = Order::joinSub($latestOrderItem, 'latest_order', function ($join) {
+      $join->on('orders.id', '=', 'latest_order.max_id');
+    })->orderBy('latest_order.max_id', 'DESC')->get();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+複数商品を注文し、一行にデータをまとめられていたらOK
+PDFや詳細ページも注文した個数分のcourseがはいっていればOK
+
