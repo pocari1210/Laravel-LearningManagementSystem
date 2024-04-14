@@ -68,6 +68,9 @@ Route::middleware('auth')->group(function () {
   Route::controller(OrderController::class)->group(function () {
     Route::get('/my/course', 'MyCourse')
       ->name('my.course');
+
+    Route::get('/course/view/{course_id}', 'CourseView')
+      ->name('course.view');
   });
 });  ///// End Auth Middleware 
 
