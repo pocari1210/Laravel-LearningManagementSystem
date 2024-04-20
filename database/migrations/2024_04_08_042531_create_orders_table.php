@@ -13,9 +13,15 @@ return new class extends Migration
   {
     Schema::create('orders', function (Blueprint $table) {
       $table->id();
-      $table->integer('payment_id');
-      $table->integer('user_id')->nullable();
-      $table->integer('course_id')->nullable();
+      $table->foreignId('payment_id')
+        ->constrained()
+        ->onDelete('cascade');
+      $table->foreignId('user_id')
+        ->constrained()
+        ->onDelete('cascade');
+      $table->foreignId('course_id')
+        ->constrained()
+        ->onDelete('cascade');
       $table->integer('instructor_id')->nullable();
       $table->string('course_title')->nullable();
       $table->integer('price')->nullable();

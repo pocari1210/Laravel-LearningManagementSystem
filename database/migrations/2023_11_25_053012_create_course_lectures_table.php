@@ -13,7 +13,10 @@ return new class extends Migration
   {
     Schema::create('course_lectures', function (Blueprint $table) {
       $table->id();
-      $table->integer('course_id')->nullable();
+      $table->foreignId('course_id')
+        ->constrained()
+        ->onUpdate('cascade')
+        ->onDelete('cascade');
       $table->unsignedBigInteger('section_id');
       $table->string('lecture_title')->nullable();
       $table->string('video')->nullable();
