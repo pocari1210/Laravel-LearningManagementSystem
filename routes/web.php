@@ -13,6 +13,7 @@ use App\Http\Controllers\Frontend\WishListController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/course/view/{course_id}', 'CourseView')
       ->name('course.view');
+  });
+
+  // User Question All Route 
+  Route::controller(QuestionController::class)->group(function () {
+    Route::post('/user/question', 'UserQuestion')
+      ->name('user.question');
   });
 });  ///// End Auth Middleware 
 
