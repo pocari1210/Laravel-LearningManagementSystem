@@ -23,7 +23,7 @@
 ================================= -->
 
 <!-- ================================
-       START CONTACT AREA
+      START CONTACT AREA
 ================================= -->
 <section class="cart-area section--padding">
   <div class="container">
@@ -73,20 +73,17 @@
             <div class="divider"><span></span></div>
             <div class="payment-option-wrap">
               <div class="payment-tab is-active">
-                <div class="payment-tab-toggle">
+                <div class="payment-tab-toggle1">
                   <input checked="" id="bankTransfer" name="cash_delivery" type="radio" value="handcash">
                   <label for="bankTransfer">Direct Payment</label>
                 </div>
 
-                <div class="payment-tab-toggle">
+                <div class="payment-tab-toggle2">
                   <input checked="" id="bankTransfer" name="cash_delivery" type="radio" value="stripe">
                   <label for="bankTransfer">Stripe Payment</label>
                 </div>
 
               </div><!-- end payment-tab -->
-
-
-
 
             </div>
           </div><!-- end card-body -->
@@ -101,7 +98,6 @@
 
               @foreach ($carts as $item)
 
-              {{-- inputのtypeをhiddenとし、前のページ(cart内ページ)から情報を引き継いでいる --}}
               <input type="hidden" name="sulg[]" value="{{ $item->options->slug }}">
               <input type="hidden" name="course_id[]" value="{{ $item->id }}">
               <input type="hidden" name="course_title[]" value="{{ $item->name }}">
@@ -153,10 +149,9 @@
                 <span>${{ session()->get('coupon')['total_amount'] }}</span>
               </li>
             </ul>
-
             <input type="hidden" name="total" value="{{ $cartTotal }}">
-
             @else
+
             <ul class="generic-list-item generic-list-item-flash fs-15">
               <li class="d-flex align-items-center justify-content-between font-weight-bold">
                 <span class="text-black">Total:</span>

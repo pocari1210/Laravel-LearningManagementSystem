@@ -266,68 +266,75 @@ class CartController extends Controller
       $total_amount = round(Cart::total());
     }
 
-    // Cerate a new Payment Record 
-
-    // 入力フォームのデータの取得
-    $data = new Payment();
-    $data->name = $request->name;
-    $data->email = $request->email;
-    $data->phone = $request->phone;
-    $data->address = $request->address;
-    $data->cash_delivery = $request->cash_delivery;
-    $data->total_amount = $total_amount;
-    $data->payment_type = 'Direct Payment';
-
-    $data->invoice_no = 'EOS' . mt_rand(10000000, 99999999);
-    $data->order_date = Carbon::now()->format('d F Y');
-    $data->order_month = Carbon::now()->format('F');
-    $data->order_year = Carbon::now()->format('Y');
-    $data->status = 'pending';
-    $data->created_at = Carbon::now();
-    $data->save();
-
-    // フォームからきたcourse_titleの配列をforeachでループ処理を行う
-    foreach ($request->course_title as $key => $course_title) {
-
-      // ログインしているユーザーとcourse_idがDBにあるか確認
-      $existingOrder = Order::where('user_id', Auth::user()->id)
-        ->where('course_id', $request->course_id[$key])->first();
-
-      // 既にコースを保有していた場合
-      if ($existingOrder) {
-
-        $notification = array(
-          'message' => 'You Have already enrolled in this course',
-          'alert-type' => 'error'
-        );
-        return redirect()->back()->with($notification);
-      } // end if 
-
-      // コースを保有していない場合、Orderモデルに、保存処理を行う
-      $order = new Order();
-      $order->payment_id = $data->id;
-      $order->user_id = Auth::user()->id;
-      $order->course_id = $request->course_id[$key];
-      $order->instructor_id = $request->instructor_id[$key];
-      $order->course_title = $course_title;
-      $order->price = $request->price[$key];
-      $order->save();
-    } // end foreach 
-
-
-    $request->session()->forget('cart');
+    $data = array();
+    $data['name'] = $request->name;
+    $data['email'] = $request->email;
+    $data['phone'] = $request->phone;
+    $data['address'] = $request->address;
+    $data['course_title'] = $request->course_title;
+    $cartTotal = Cart::total();
+    $carts = Cart::content();
 
     if ($request->cash_delivery == 'stripe') {
-      echo "stripe";
-    } else {
+      return view('frontend.payment.stripe', compact('data', 'cartTotal', 'carts'));
+    } elseif ($request->cash_delivery == 'handcash') {
+
+      // Cerate a new Payment Record 
+
+      // 入力フォームのデータの取得
+      $data = new Payment();
+      $data->name = $request->name;
+      $data->email = $request->email;
+      $data->phone = $request->phone;
+      $data->address = $request->address;
+      $data->cash_delivery = $request->cash_delivery;
+      $data->total_amount = $total_amount;
+      $data->payment_type = 'Direct Payment';
+
+      $data->invoice_no = 'EOS' . mt_rand(10000000, 99999999);
+      $data->order_date = Carbon::now()->format('d F Y');
+      $data->order_month = Carbon::now()->format('F');
+      $data->order_year = Carbon::now()->format('Y');
+      $data->status = 'pending';
+      $data->created_at = Carbon::now();
+      $data->save();
+
+      // フォームからきたcourse_titleの配列をforeachでループ処理を行う
+      foreach ($request->course_title as $key => $course_title) {
+
+        // ログインしているユーザーとcourse_idがDBにあるか確認
+        $existingOrder = Order::where('user_id', Auth::user()->id)
+          ->where('course_id', $request->course_id[$key])->first();
+
+        // 既にコースを保有していた場合
+        if ($existingOrder) {
+
+          $notification = array(
+            'message' => 'You Have already enrolled in this course',
+            'alert-type' => 'error'
+          );
+          return redirect()->back()->with($notification);
+        } // end if 
+
+        // コースを保有していない場合、Orderモデルに、保存処理を行う
+        $order = new Order();
+        $order->payment_id = $data->id;
+        $order->user_id = Auth::user()->id;
+        $order->course_id = $request->course_id[$key];
+        $order->instructor_id = $request->instructor_id[$key];
+        $order->course_title = $course_title;
+        $order->price = $request->price[$key];
+        $order->save();
+      } // end foreach 
+
+      $request->session()->forget('cart');
 
       $notification = array(
         'message' => 'Cash Payment Submit Successfully',
         'alert-type' => 'success'
       );
-
       return redirect()->route('index')->with($notification);
-    }
+    } // End Elseif 
   } // End Method 
 
   public function BuyToCart(Request $request, $id)
