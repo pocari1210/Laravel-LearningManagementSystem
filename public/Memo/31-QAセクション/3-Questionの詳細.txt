@@ -1,0 +1,81 @@
+
+3-Questionの詳細
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+///// Instructor Group Middleware
+Route::middleware(['auth', 'roles:instructor'])->group(function () {
+
+  // Question All Order Route 
+  Route::controller(QuestionController::class)->group(function () {
+
+    Route::get('/question/details/{id}', 'QuestionDetails')
+      ->name('question.details');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\question\all_question.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <td>
+      <a href="{{ route('question.details',$item->id)  }}" class="btn btn-info" title="Edit"><i
+          class="lni lni-eye"></i> </a>
+    </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\QuestionController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function QuestionDetails($id)
+  {
+
+    $question = Question::find($id);
+
+    return view('instructor.question.question_details', compact('question'));
+  } // End Method   
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\question\question_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆テンプレートファイルの編集◆
+
+ディレクトリ
+\resources\views\instructor\instructor_dashboard.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <script>
+    new PerfectScrollbar('.chat-list');
+    new PerfectScrollbar('.chat-content');
+  </script>
+
+★コード解説★
+チャットページのスクリプトをロードしている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
