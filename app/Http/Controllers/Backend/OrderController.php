@@ -14,6 +14,7 @@ use App\Models\CourseLecture;
 use App\Models\Coupon;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Models\Question;
 
 use InterventionImage;
 use Illuminate\Support\Facades\Auth;
@@ -156,9 +157,11 @@ class OrderController extends Controller
     $section = CourseSection::where('course_id', $course_id)
       ->orderBy('id', 'asc')->get();
 
+    $allquestion = Question::latest()->get();
+
     return view(
       'frontend.mycourse.course_view',
-      compact('course', 'section')
+      compact('course', 'section', 'allquestion')
     );
   } // End Method 
 }
