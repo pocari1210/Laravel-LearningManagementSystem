@@ -1,0 +1,64 @@
+
+2-詳細ページ表示
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+
+    Route::get('/instructor/order/details/{payment_id}', 'InstructorOrderDetails')
+      ->name('instructor.order.details');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\orders\all_orders.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <a href="{{ route('instructor.order.details',$item->payment->id) }}" class="btn btn-info"
+    title="Edit"><i class="lni lni-eye"></i> </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorOrderDetails($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'instructor.orders.instructor_order_details',
+      compact('payment', 'orderItem')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\orders\instructor_order_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,150 @@
+
+5-course詳細ページから購入
+
+courseの詳細ページからcheckoutページに遷移し、購入を行う
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/buy/data/store/{id}', [CartController::class, 'BuyToCart']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Buy Now Button // --}}
+<script type="text/javascript">
+  function buyCourse(courseId, courseName, instructorId, slug){
+              $.ajax({
+                type: "POST",
+                dataType: 'json',
+                  data: { 
+                      _token: '{{ csrf_token() }}',
+                      course_name: courseName,
+                      course_name_slug: slug,
+                      instructor: instructorId
+                  },
+
+                  url: "/buy/data/store/"+ courseId,
+                  success: function(data) {
+                      miniCart();
+
+                        // Start Message 
+      
+                  const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000 
+                  })
+                  if ($.isEmptyObject(data.error)) {
+                          Toast.fire({
+                          type: 'success', 
+                          icon: 'success', 
+                          title: data.success, 
+                          });
+                           // Redirect to the checkout page 
+                          window.location.href = '/checkout';
+
+                  }else{
+                      
+                  Toast.fire({
+                          type: 'error', 
+                          icon: 'error', 
+                          title: data.error, 
+                        })
+                      }
+
+                     // End Message   
+                  } 
+              });
+          }
+
+</script>
+{{-- /// End Buy Now Button // --}}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <button type="button" class="btn theme-btn w-100 theme-btn-white mb-2"
+      onclick="buyCourse({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i
+        class="la la-shopping-bag mr-1"></i> Buy this course</button>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function BuyToCart(Request $request, $id)
+  {
+
+    $course = Course::find($id);
+
+    // Check if the course is already in the cart
+    $cartItem = Cart::search(function ($cartItem, $rowId) use ($id) {
+      return $cartItem->id === $id;
+    });
+
+    if ($cartItem->isNotEmpty()) {
+      return response()->json(['error' => 'Course is already in your cart']);
+    }
+
+    if ($course->discount_price == NULL) {
+
+      Cart::add([
+        'id' => $id,
+        'name' => $request->course_name,
+        'qty' => 1,
+        'price' => $course->selling_price,
+        'weight' => 1,
+        'options' => [
+          'image' => $course->course_image,
+          'slug' => $request->course_name_slug,
+          'instructor' => $request->instructor,
+        ],
+      ]);
+    } else {
+
+      Cart::add([
+        'id' => $id,
+        'name' => $request->course_name,
+        'qty' => 1,
+        'price' => $course->discount_price,
+        'weight' => 1,
+        'options' => [
+          'image' => $course->course_image,
+          'slug' => $request->course_name_slug,
+          'instructor' => $request->instructor,
+        ],
+      ]);
+    }
+
+    return response()->json(['success' => 'Successfully Added on Your Cart']);
+  } // End Method 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

@@ -13,7 +13,10 @@ return new class extends Migration
   {
     Schema::create('course_sections', function (Blueprint $table) {
       $table->id();
-      $table->integer('course_id');
+      $table->foreignId('course_id')
+        ->constrained()
+        ->onUpdate('cascade')
+        ->onDelete('cascade');
       $table->string('section_title');
       $table->timestamps();
     });

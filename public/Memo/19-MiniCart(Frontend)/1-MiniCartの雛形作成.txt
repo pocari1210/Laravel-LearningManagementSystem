@@ -1,0 +1,93 @@
+
+1-MiniCartの雛形作成
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// Get Data from Minicart 
+Route::get('/course/mini/cart/', [CartController::class, 'AddMiniCart']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div id="miniCart">
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Mini Cart // --}}
+<script type="text/javascript">
+  function miniCart(){
+    
+      $.ajax({
+          type: 'GET',
+          url: '/course/mini/cart',
+          dataType: 'json',
+          success:function(response){
+              var miniCart = ""
+              $.each(response.carts, function(key,value){
+                  miniCart += `
+                    <li class="media media-card">
+                      <a href="shopping-cart.html" class="media-img">
+                        <img src="/${value.options.image}" alt="Cart image">
+                      </a>
+
+                      <div class="media-body">
+                        <h5><a href="course-details.html"> ${value.name}</a></h5>
+                        <span class="d-block fs-14">$${value.price}</span> 
+                      </div>
+                    </li> 
+                  `  
+              });
+              $('#miniCart').html(miniCart);
+          }
+      })
+  }
+  miniCart();
+</script>
+{{-- /// End Mini Cart // --}}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddMiniCart()
+  {
+
+    $carts = Cart::content();
+    $cartTotal = Cart::total();
+    $cartQty = Cart::count();
+
+    return response()->json(array(
+      'carts' => $carts,
+      'cartTotal' => $cartTotal,
+      'cartQty' => $cartQty,
+    ));
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+headerのカートにコースが追加されていたらOK

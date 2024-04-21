@@ -1,0 +1,29 @@
+
+4-courseの合計金額
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\orders\admin_order_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    {{-- 合計金額の初期値 --}}
+    @php
+    $totalPrice = 0;
+    @endphp
+
+    {{-- foreachが終わるまで計算を繰り返す --}}
+    @php
+    $totalPrice += $item->price;
+    @endphp
+
+  <tr>
+    <td colspan="4"></td>
+    <td class="col-md-3">
+      <strong>Total Price : ${{ $totalPrice }}</strong>
+    </td>
+  </tr>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

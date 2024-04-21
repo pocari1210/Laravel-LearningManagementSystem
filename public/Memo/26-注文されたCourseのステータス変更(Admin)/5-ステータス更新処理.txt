@@ -1,0 +1,96 @@
+
+5-ステータス更新処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+
+    Route::get('/pending-confrim/{id}', 'PendingToConfirm')
+      ->name('pending-confrim');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\orders\admin_order_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  @if ($payment->status == 'pending')
+  <a href="{{ route('pending-confirm',$payment->id) }}" class="btn btn-block btn-success"
+    id="confirm">Confirm Order</a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆code.jsの編集◆
+
+ディレクトリ
+\public\backend\assets\js\code.js
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////// confirm 
+
+$(function () {
+  $(document).on('click', '#confirm', function (e) {
+    e.preventDefault();
+    var link = $(this).attr("href");
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Confirm This Data?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Confirm it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = link
+        Swal.fire(
+          'Confirm!',
+          'Your file has been Confirm.',
+          'success'
+        )
+      }
+    })
+
+  });
+
+});
+
+★コード解説★
+確認用のsweetalert
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function PendingToConfirm($payment_id)
+  {
+    Payment::find($payment_id)->update(['status' => 'confirm']);
+
+    $notification = array(
+      'message' => 'Order Confrim Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+paymentのDBを確認し、statusカラムが変更されていたらOK

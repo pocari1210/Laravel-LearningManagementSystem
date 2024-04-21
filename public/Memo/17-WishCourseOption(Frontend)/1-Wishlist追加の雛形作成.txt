@@ -1,0 +1,95 @@
+
+1-Wishlist追加の雛形作成
+
+下記コマンドでmodelとtable新規作成
+php artisan make:model Wishlist -m
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Frontend/WishListController
+
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Wishlist.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Wishlist extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆tableの編集◆
+
+ディレクトリ
+\database\migrations\2023_11_27_034307_create_wishlists_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('wishlists', function (Blueprint $table) {
+      $table->id();
+      $table->unsignedBigInteger('user_id');
+      $table->unsignedBigInteger('course_id');
+      $table->timestamps();
+    });
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(scriptファイル新規作成)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Wishlist Add Option // --}}
+<script type="text/javascript">
+  $.ajaxSetup({
+      headers:{
+          'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+      }
+  })
+
+  function addToWishList(course_id){
+      
+  }
+
+
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(ベーステンプレート)◆
+
+ディレクトリ
+\resources\views\frontend\master.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+@include('frontend.body.script')
+
+★コード解説★
+作成したscriptファイルをimportしている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="icon-element icon-element-sm shadow-sm cursor-pointer" title="Add to Wishlist"
+    id="{{ $course->id }}" onclick="addToWishList(this.id)"><i class="la la-heart-o"></i></div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

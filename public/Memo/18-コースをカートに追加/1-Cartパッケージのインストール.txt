@@ -1,0 +1,11 @@
+
+◆anayarojo/shoppingcartパッケージ◆
+https://packagist.org/packages/anayarojo/shoppingcart
+
+インストールコマンド
+composer require anayarojo/shoppingcart
+
+config作成
+php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider" --tag="config"
+
+

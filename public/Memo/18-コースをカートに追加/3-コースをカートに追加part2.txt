@@ -1,0 +1,88 @@
+
+3-コースをカートに追加part2
+
+SweetAlertとCartの中身のデータの確認を行う
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+
+Route::get('/cart/data/', [CartController::class, 'CartData']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddToCart(Request $request, $id)
+  {
+
+    // discount_priceがNullだった場合の処理
+    if ($course->discount_price == NULL) {
+
+      Cart::add([
+        'id' => $id,
+        'name' => $request->course_name,
+        'qty' => 1,
+        'price' => $course->selling_price,
+        'weight' => 1,
+        'options' => [
+          'image' => $course->course_image,
+          'slug' => $request->course_name_slug,
+          'instructor' => $request->instructor,
+        ],
+      ]);
+    } else {
+
+      Cart::add([
+        'id' => $id,
+        'name' => $request->course_name,
+        'qty' => 1,
+        'price' => $course->discount_price,
+        'weight' => 1,
+        'options' => [
+          'image' => $course->course_image,
+          'slug' => $request->course_name_slug,
+          'instructor' => $request->instructor,
+        ],
+      ]);
+    }
+
+    return response()->json([
+      'success' => 'Successfully Added on Your Cart'
+    ]);
+  } // End Method 
+
+  public function CartData()
+  {
+
+    // Collection形式でカートの中身をすべて取得
+    $carts = Cart::content();
+
+    // //商品合計額 + 税額の計算を取得
+    $cartTotal = Cart::total();
+
+    // 商品合計数の計算を取得
+    $cartQty = Cart::count();
+
+    return response()->json(array(
+      'carts' => $carts,
+      'cartTotal' => $cartTotal,
+      'cartQty' => $cartQty,
+    ));
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/cart/data/のURLを入力し、カートの中身が確認とれたらOK

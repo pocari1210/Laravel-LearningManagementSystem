@@ -1,0 +1,83 @@
+
+2-coupon適応(準備2)
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\mycart\view_mycart.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form method="post">
+
+    ↓↓id属性:couponFieldを追加↓↓
+    <div class="input-group mb-2" id="couponField">
+      <input class="form-control form--control pl-3" type="text" id="coupon_name" placeholder="Coupon code">
+      <div class="input-group-append">
+
+        ↓↓buttonタグからaタグに変更↓↓
+        <a type="submit" onclick="applyCoupon()" class="btn theme-btn">Apply Code</a>
+      </div>
+    </div>
+  </form>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  if (data.validity == true) {
+    $('#couponField').hide();
+  }
+
+クーポンが適応されたら、
+入力コードがhideメソッドで見えなくなる
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\Coupon;
+use Illuminate\Support\Facades\Session;
+
+  public function CouponApply(Request $request)
+  {
+    $coupon = Coupon::where('coupon_name', $request->coupon_name)
+      ->where('coupon_validity', '>=', Carbon::now()->format('Y-m-d'))->first();
+
+    if ($coupon) {
+      Session::put('coupon', [
+        'coupon_name' => $coupon->coupon_name,
+        'coupon_discount' => $coupon->coupon_discount,
+        'discount_amount' => round(Cart::total() * $coupon->coupon_discount / 100),
+        'total_amount' => round(Cart::total() - Cart::total() * $coupon->coupon_discount / 100)
+      ]);
+
+      return response()->json(array(
+        'validity' => true,
+        'success' => 'Coupon Applied Successfully'
+      ));
+    } else {
+      return response()->json(['error' => 'Invaild Coupon']);
+    }
+  } // End Method 
+
+★コード解説★
+Session::putでkeyとvalueを保存
+
+参考サイト
+https://laraweb.net/knowledge/3428/
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+クーポンを適応し、右上にsweetalertのメッセージがでてきたらOK

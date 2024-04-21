@@ -1,0 +1,20 @@
+
+6-修正-courseのsectionを非表示にする
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+・修正前
+<div id="collapse{{ $sec->id }}" class="collapse show" aria-labelledby="heading{{ $sec->id }}"
+
+・修正後
+<div id="collapse{{ $sec->id }}" class="collapse " aria-labelledby="heading{{ $sec->id }}"
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+courseの詳細ページを開いたときに、
+Course contentの項目がとじられていたらOK

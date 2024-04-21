@@ -1,0 +1,97 @@
+
+4-couponの計算処理(その2)
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\mycart\view_mycart.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <div class="bg-gray p-4 rounded-rounded mt-40px" id="couponCalField">
+      <a href="checkout.html" class="btn theme-btn w-100">Checkout <i class="la la-arrow-right icon ml-1"></i></a>
+    </div>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイト)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    /// Start Coupon Calculation 
+    function couponCalculation(){
+        $.ajax({
+            type: 'GET',
+            url: "/coupon-calculation",
+            dataType: 'json',
+            success:function(data){
+              if (data.total) {
+                    $('#couponCalField').html(
+                        `<h3 class="fs-18 font-weight-bold pb-3">Cart Totals</h3>
+                          <div class="divider"><span></span></div>
+                            <ul class="generic-list-item pb-4">
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Subtotal:$</span>
+                                <span>$${data.total} </span>
+                              </li>
+
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Total:$</span>
+                                <span> $${data.total}</span>
+                              </li>
+                            </ul>`
+                          )
+                    
+                } else {
+                    $('#couponCalField').html(
+                        `<h3 class="fs-18 font-weight-bold pb-3">Cart Totals</h3>
+                          <div class="divider"><span></span></div>
+                            <ul class="generic-list-item pb-4">
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Subtotal: </span>
+                                <span>$${data.subtotal} </span>
+                              </li>
+
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Coupon Name : </span>
+                                <span>${data.coupon_name} </span>
+                              </li>
+
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Coupon Discount:</span>
+                                <span> $${data.discount_amount}</span>
+                              </li>
+                              
+                              <li class="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                                <span class="text-black">Grand Total:</span>
+                                <span> $${data.total_amount}</span>
+                              </li> 
+                            </ul>`
+                    )
+                }
+                
+            }
+        })
+    }
+
+    couponCalculation();
+
+★コード解説★
+
+\view_mycart.blade.phpで追記したid属性couponCalFieldと紐づいている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+カードページにcouponお適応した計算結果が表示されていたらOK
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

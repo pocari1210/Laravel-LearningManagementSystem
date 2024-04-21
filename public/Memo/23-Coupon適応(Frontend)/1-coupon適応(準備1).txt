@@ -1,0 +1,102 @@
+
+1-coupon適応(準備1)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Apply Coupon Start // --}}
+<script type="text/javascript">
+  function applyCoupon(){
+      var coupon_name = $('#coupon_name').val();
+      $.ajax({
+          type: "POST",
+          dataType: 'json',
+          data: {coupon_name:coupon_name},
+          url: "/coupon-apply",
+          success:function(data){
+              
+        // Start Message 
+          const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000 
+          })
+          if ($.isEmptyObject(data.error)) {
+                  
+                  Toast.fire({
+                  type: 'success', 
+                  icon: 'success', 
+                  title: data.success, 
+                  })
+          }else{
+            
+              Toast.fire({
+                  type: 'error', 
+                  icon: 'error', 
+                  title: data.error, 
+                  })
+              }
+            // End Message   
+          }
+      })
+  }
+</script>
+{{-- /// End Apply Coupon // --}}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\mycart\view_mycart.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="input-group mb-2">
+    <input class="form-control form--control pl-3" type="text" id="coupon_name" placeholder="Coupon code">
+    <div class="input-group-append">
+      <button class="btn theme-btn" type="submit" onclick="applyCoupon()">Apply Code</button>
+    </div>
+  </div>
+
+★コード解説★
+Apply Codeボタンをおしたら、scriptファイルで実行したメソッドを実行させる
+
+id="coupon_name"は、
+scriptファイルで記述した
+var coupon_name = $('#coupon_name').val();
+と紐づいている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+  public function CouponApply(Request $request)
+  {
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

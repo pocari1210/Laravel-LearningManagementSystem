@@ -1,0 +1,86 @@
+
+6-Frontend疎通(User)
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\app\Models\Question.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+public function instructor()
+{
+   return $this->belongsTo(User::class, 'instructor_id', 'id');
+}
+
+★コード解説★
+Userモデルとリレーション
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CourseView($course_id)
+  {
+    $id = Auth::user()->id;
+
+    $course = Order::where('course_id', $course_id)
+      ->where('user_id', $id)->first();
+
+    $section = CourseSection::where('course_id', $course_id)
+      ->orderBy('id', 'asc')->get();
+
+    ↓↓追記(QAのデータを取得する)↓↓
+    $allquestion = Question::latest()->get();
+
+    return view(
+      'frontend.mycourse.course_view',
+      compact('course', 'section', 'allquestion')
+    );
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\frontend\mycourse\course_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+                          @php
+                          $replay = App\Models\Question::where('parent_id',$que->id)->get();
+                          @endphp
+
+                          @foreach ($replay as $rep)
+                          <div class="media media-card border-bottom border-bottom-gray py-4 px-3"
+                            style="background: #e6e6e6">
+                            <div class="media-img rounded-full flex-shrink-0 avatar-sm">
+                              <img class="rounded-full"
+                                src="{{ (!empty($rep->instructor->photo)) ? url('upload/instructor_images/'.$rep->instructor->photo) : url('upload/no_image.jpg')}}"
+                                alt="User image">
+                            </div>
+                            <div class="media-body">
+                              <div class="d-flex align-items-center justify-content-between">
+                                <div class="question-meta-content">
+                                  <a href="javascript:void(0)" class="d-block">
+                                    <h5 class="fs-16 pb-1">{{ $rep->instructor->name }} </h5>
+                                    <p class="text-truncate fs-15 text-gray">
+                                      {{ $rep->question }}
+                                    </p>
+                                  </a>
+                                </div><!-- end question-meta-content -->
+
+
+★コード解説★
+
+リレーションを行い、instructorのデータを表示させている
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+FrontendのQAでinstructorで回答した答えが表示できていたらOK

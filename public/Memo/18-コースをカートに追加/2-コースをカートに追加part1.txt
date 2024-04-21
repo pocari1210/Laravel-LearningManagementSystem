@@ -1,0 +1,90 @@
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Frontend/CartController
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\courses-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <button type="submit" class="btn theme-btn flex-grow-1 mr-3"
+    onclick="addToCart({{ $item->id }}, '{{ $item->course_name }}','{{ $item->instructor_id }}',{{ $item->course_name_slug }}')"><i
+      class="la la-shopping-cart mr-1 fs-18"></i>Add to Cart</button>
+
+★コード解説★
+addToCartボタンを押し、submitでid,course_name,instructor_id,course_name_slugの情報を
+送信している
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(スクリプトファイル)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+{{-- /// Start Add To Cart // --}}
+<script type="text/javascript">
+  function addToCart(courseId, courseName, instructorId, slug){
+
+    $.ajax({
+            type: "POST",
+            dataType: 'json',
+            data: {
+                _token: '{{ csrf_token() }}',
+                course_name: courseName,
+                course_name_slug: slug,
+                instructor: instructorId
+            },
+            url: "/cart/data/store/"+ courseId,
+            success: function(data) {
+                
+            }
+
+          })
+      
+      }
+</script>
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddToCart(Request $request, $id)
+  {
+
+    $course = Course::find($id);
+
+    // Check if the course is already in the cart
+    $cartItem = Cart::search(function ($cartItem, $rowId) use ($id) {
+      return $cartItem->id === $id;
+    });
+
+    if ($cartItem->isNotEmpty()) {
+      return response()->json(['error' => 'Course is already in your cart']);
+    }
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,103 @@
+
+7-ブックマークページからwishlist削除
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // User Wishlist All Route 
+  Route::controller(WishListController::class)->group(function () {
+
+    Route::get('/wishlist-remove/{id}', 'RemoveWishlist');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\script.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="icon-element icon-element-sm shadow-sm cursor-pointer" data-toggle="tooltip" 
+   data-placement="top" title="Remove from Wishlist" id="${value.id}" onclick="wishlistRemove(this.id)">
+    <i class="la la-heart"></i></div>
+
+★コード解説★
+id="${value.id}"はwishlistのidを指す
+
+    /// WishList Remove Start  // 
+
+    function wishlistRemove(id){
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: "/wishlist-remove/"+id,
+
+            success:function(data){
+            
+            // wishlistメソッドを実行することで、ボタンをおしたらリアルタイムで
+            // 削除を行うことができる
+           //  記述がない場合、リロードをしないとページから削除されない
+            wishlist();
+
+            // Start Message 
+
+            const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 6000 
+            })
+            if ($.isEmptyObject(data.error)) {
+                Toast.fire({
+                type: 'success', 
+                icon: 'success', 
+                title: data.success, 
+              })
+
+            }else{
+
+            Toast.fire({
+                type: 'error', 
+                icon: 'error', 
+                title: data.error, 
+              })
+            }
+
+              // End Message   
+
+
+            }
+        })
+
+    } 
+
+    /// End WishList Remove // 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\WishListController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function RemoveWishlist($id)
+  {
+
+    Wishlist::where('user_id', Auth::id())
+      ->where('id', $id)->delete();
+
+    return response()->json([
+      'success' => 'Successfully Course Remove'
+    ]);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

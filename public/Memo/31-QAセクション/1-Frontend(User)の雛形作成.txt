@@ -1,0 +1,165 @@
+
+1-Frontend(User)の雛形作成
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Backend/QuestionController
+
+下記コマンドでモデルとテーブル作成
+php artisan make:model Question -m
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\Question.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Question extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+◆テーブルの編集◆
+
+ディレクトリ
+\database\migrations\2024_04_20_144407_create_questions_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('questions', function (Blueprint $table) {
+      $table->id();
+      $table->integer('course_id')->nullable();
+      $table->integer('user_id')->nullable();
+      $table->integer('instructor_id')->nullable();
+      $table->integer('parent_id')->nullable();
+      $table->text('subject')->nullable();
+      $table->text('question')->nullable();
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // User My Course All Route 
+  Route::controller(OrderController::class)->group(function () {
+
+  // User Question All Route 
+  Route::controller(QuestionController::class)->group(function () {
+    Route::post('/user/question', 'UserQuestion')
+      ->name('user.question');
+  });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+\resources\views\frontend\mycourse\course_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<form method="post" action="{{ route('user.question') }}" class="pt-4">
+   @csrf
+
+     <input type="hidden" name="course_id" value="{{ $course->course_id }}">
+     <input type="hidden" name="instructor_id" value="{{ $course->instructor_id }}">
+        <div class="custom-control-wrap">
+          <div class="custom-control custom-radio mb-3 pl-0">
+            <input type="text" name="subject" class="form-control form--control pl-3">
+          </div>
+          <div class="custom-control custom-radio mb-3 pl-0">
+             <textarea class="form-control form--control pl-3" name="question" rows="4"
+                placeholder="Write your response..."></textarea>
+          </div>
+       </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\QuestionController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function UserQuestion(Request $request)
+  {
+
+    $course_id = $request->course_id;
+    $instructor_id = $request->instructor_id;
+
+    Question::insert([
+      'course_id' => $course_id,
+      'user_id' => Auth::user()->id,
+      'instructor_id' => $instructor_id,
+      'subject' => $request->subject,
+      'question' => $request->question,
+      'created_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Message Send Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ヘッダーの編集◆
+
+ディレクトリ
+\resources\views\frontend\mycourse\course_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆フッターの編集◆
+
+ディレクトリ
+\resources\views\frontend\mycourse\course_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+  @if(Session::has('message'))
+  var type = "{{ Session::get('alert-type','info') }}"
+  switch(type){
+    case 'info':
+    toastr.info(" {{ Session::get('message') }} ");
+    break;
+    case 'success':
+    toastr.success(" {{ Session::get('message') }} ");
+    break;
+    case 'warning':
+    toastr.warning(" {{ Session::get('message') }} ");
+    break;
+    case 'error':
+    toastr.error(" {{ Session::get('message') }} ");
+    break; 
+  }
+  @endif 
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+

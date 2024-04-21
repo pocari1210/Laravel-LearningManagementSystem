@@ -1,0 +1,100 @@
+
+
+下記コマンドでコントローラーファイル新規作成
+php artisan make:controller Backend/CouponController
+
+下記コマンドでModelとTableファイル新規作成
+php artisan make:model Coupon -m
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Coupon.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Coupon extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Tableの編集◆
+
+ディレクトリ
+\database\migrations\2024_04_06_065745_create_coupons_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('coupons', function (Blueprint $table) {
+      $table->id();
+      $table->string('coupon_name');
+      $table->string('coupon_discount');
+      $table->string('coupon_validity');
+      $table->integer('status')->default(1);
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\CouponController;
+
+  // Admin Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+    Route::get('/admin/all/coupon', 'AdminAllCoupon')
+      ->name('admin.all.coupon');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Coupon</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('admin.all.coupon') }}"><i class='bx bx-radio-circle'></i>All Coupon</a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

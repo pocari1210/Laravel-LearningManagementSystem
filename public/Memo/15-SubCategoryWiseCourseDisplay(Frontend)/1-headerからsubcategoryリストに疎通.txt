@@ -1,0 +1,78 @@
+
+1-headerからsubcategoryリストに疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+// FrontendのRoute : START
+
+Route::get('/subcategory/{id}/{slug}', [IndexController::class, 'SubCategoryCourse']);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    @foreach ($categories as $cat)
+
+    @php
+    $subcategories = App\Models\SubCategory::where('category_id',$cat->id)->get();
+    @endphp
+
+    <li>
+      <a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}">{{ $cat->category_name }}<i
+          class="la la-angle-right"></i></a>
+      <ul class="sub-menu">
+        @foreach ($subcategories as $subcat)
+
+        ↓↓routeの追加↓↓
+        <li><a href="{{ url('subcategory/'.$subcat->id.'/'.$subcat->subcategory_slug) }}">
+            {{ $subcat->subcategory_name }}</a></li>
+        @endforeach
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\IndexController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function SubCategoryCourse($id, $slug)
+  {
+
+    $courses = Course::where('subcategory_id', $id)
+      ->where('status', '1')->get();
+
+    $subcategory = SubCategory::where('id', $id)->first();
+
+    $categories = Category::latest()->get();
+
+    return view(
+      'frontend.category.subcategory_all',
+      compact('courses', 'subcategory', 'categories')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\category\subcategory_all.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+headerからsubcategoryページを疎通できたらOK

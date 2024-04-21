@@ -174,7 +174,7 @@
                         {{ count($lecture) }} lectures</span>
                     </button>
                   </div><!-- end card-header -->
-                  <div id="collapse{{ $sec->id }}" class="collapse show" aria-labelledby="heading{{ $sec->id }}"
+                  <div id="collapse{{ $sec->id }}" class="collapse " aria-labelledby="heading{{ $sec->id }}"
                     data-parent="#accordion">
                     <div class="card-body">
                       <ul class="generic-list-item">
@@ -544,9 +544,12 @@
                   <span class="text-color-3">4 days</span> left at this price!
                 </p>
                 <div class="buy-course-btn-box">
-                  <button type="button" class="btn theme-btn w-100 mb-2"><i class="la la-shopping-cart fs-18 mr-1"></i>
-                    Add to cart</button>
-                  <button type="button" class="btn theme-btn w-100 theme-btn-white mb-2"><i
+                  <button type="submit" class="btn theme-btn w-100 mb-2"
+                    onclick="addToCart({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i
+                      class="la la-shopping-cart fs-18 mr-1"></i> Add to cart</button>
+
+                  <button type="button" class="btn theme-btn w-100 theme-btn-white mb-2"
+                    onclick="buyCourse({{ $course->id }}, '{{ $course->course_name }}', '{{ $course->instructor_id }}', '{{ $course->course_name_slug }}' )"><i
                       class="la la-shopping-bag mr-1"></i> Buy this course</button>
                 </div>
                 <p class="fs-14 text-center pb-4">30-Day Money-Back Guarantee</p>

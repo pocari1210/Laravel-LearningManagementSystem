@@ -1,0 +1,26 @@
+
+2-PopularCategoriesにルート追記
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\category-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="category-inner">
+
+    ↓↓ルートの追加↓↓
+    <h3 class="cat__title"><a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}">{{
+        $cat->category_name }}</a></h3>
+    <p class="cat__meta">{{ count($course ) }} courses</p>
+
+    ↓↓ルートの追加↓↓
+    <a href="{{ url('category/'.$cat->id.'/'.$cat->category_slug) }}"
+      class="btn theme-btn theme-btn-sm theme-btn-white">Explore<i
+        class="la la-arrow-right icon ml-1"></i></a>
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Popular Categoriesの項目からcategoryページに遷移できたらOK

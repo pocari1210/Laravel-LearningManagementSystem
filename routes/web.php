@@ -9,6 +9,11 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\SubCategoryController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Frontend\IndexController;
+use App\Http\Controllers\Frontend\WishListController;
+use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Backend\CouponController;
+use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +53,33 @@ Route::middleware('auth')->group(function () {
 
   Route::post('/user/password/update', [UserController::class, 'UserPasswordUpdate'])
     ->name('user.password.update');
-});
+
+  // User Wishlist All Route 
+  Route::controller(WishListController::class)->group(function () {
+
+    Route::get('/user/wishlist', 'AllWishlist')
+      ->name('user.wishlist');
+
+    Route::get('/get-wishlist-course/', 'GetWishlistCourse');
+
+    Route::get('/wishlist-remove/{id}', 'RemoveWishlist');
+  });
+
+  // User My Course All Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/my/course', 'MyCourse')
+      ->name('my.course');
+
+    Route::get('/course/view/{course_id}', 'CourseView')
+      ->name('course.view');
+  });
+
+  // User Question All Route 
+  Route::controller(QuestionController::class)->group(function () {
+    Route::post('/user/question', 'UserQuestion')
+      ->name('user.question');
+  });
+});  ///// End Auth Middleware 
 
 require __DIR__ . '/auth.php';
 
@@ -126,9 +157,54 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/user/stauts', 'UpdateUserStatus')
       ->name('update.user.stauts');
+  });
 
-    Route::post('/update/user/stauts', 'UpdateUserStatus')
-      ->name('update.user.stauts');
+  // Admin Coruses All Route 
+  Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/all/course', 'AdminAllCourse')
+      ->name('admin.all.course');
+
+    Route::post('/update/course/stauts', 'UpdateCourseStatus')
+      ->name('update.course.stauts');
+
+    Route::get('/admin/course/details/{id}', 'AdminCourseDetails')
+      ->name('admin.course.details');
+  });
+
+  // Admin Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+    Route::get('/admin/all/coupon', 'AdminAllCoupon')
+      ->name('admin.all.coupon');
+
+    Route::get('/admin/add/coupon', 'AdminAddCoupon')
+      ->name('admin.add.coupon');
+
+    Route::post('/admin/store/coupon', 'AdminStoreCoupon')
+      ->name('admin.store.coupon');
+
+    Route::get('/admin/edit/coupon/{id}', 'AdminEditCoupon')
+      ->name('admin.edit.coupon');
+
+    Route::post('/admin/update/coupon', 'AdminUpdateCoupon')
+      ->name('admin.update.coupon');
+
+    Route::get('/admin/delete/coupon/{id}', 'AdminDeleteCoupon')
+      ->name('admin.delete.coupon');
+  });
+
+  // Admin All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/admin/pending/order', 'AdminPendingOrder')
+      ->name('admin.pending.order');
+
+    Route::get('/admin/order/details/{id}', 'AdminOrderDetails')
+      ->name('admin.order.details');
+
+    Route::get('/pending-confirm/{id}', 'PendingToConfirm')
+      ->name('pending-confirm');
+
+    Route::get('/admin/confirm/order', 'AdminConfirmOrder')
+      ->name('admin.confirm.order');
   });
 }); // End Admin Group SideBar 
 
@@ -162,6 +238,30 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
   Route::post('/instructor/password/update', [InstructorController::class, 'InstructorPasswordUpdate'])
     ->name('instructor.password.update');
+
+  // Instructor All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/instructor/all/order', 'InstructorAllOrder')
+      ->name('instructor.all.order');
+
+    Route::get('/instructor/order/details/{payment_id}', 'InstructorOrderDetails')
+      ->name('instructor.order.details');
+
+    Route::get('/instructor/order/invoice/{payment_id}', 'InstructorOrderInvoice')
+      ->name('instructor.order.invoice');
+  });
+
+  // Question All Order Route 
+  Route::controller(QuestionController::class)->group(function () {
+    Route::get('/instructor/all/question', 'InstructorAllQuestion')
+      ->name('instructor.all.question');
+
+    Route::get('/question/details/{id}', 'QuestionDetails')
+      ->name('question.details');
+
+    Route::post('/instructor/replay', 'InstructorReplay')
+      ->name('instructor.replay');
+  });
 }); // End Instructor Group Middleware 
 
 ///// Instructor Group SideBar
@@ -235,4 +335,48 @@ Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin']
 Route::get('/course/details/{id}/{slug}', [IndexController::class, 'CourseDetails']);
 
 Route::get('/category/{id}/{slug}', [IndexController::class, 'CategoryCourse']);
+
+Route::get('/subcategory/{id}/{slug}', [IndexController::class, 'SubCategoryCourse']);
+
+Route::get('/instructor/details/{id}', [IndexController::class, 'InstructorDetails'])
+  ->name('instructor.details');
+
+Route::post('/add-to-wishlist/{course_id}', [WishListController::class, 'AddToWishList']);
+
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+
+Route::post('/buy/data/store/{id}', [CartController::class, 'BuyToCart']);
+
+Route::get('/cart/data/', [CartController::class, 'CartData']);
+
+// Get Data from Minicart 
+Route::get('/course/mini/cart/', [CartController::class, 'AddMiniCart']);
+
+Route::get('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveMiniCart']);
+
+// Cart All Route 
+Route::controller(CartController::class)->group(function () {
+
+  Route::get('/mycart', 'MyCart')
+    ->name('mycart');
+
+  Route::get('/get-cart-course', 'GetCartCourse');
+
+  Route::get('/cart-remove/{rowId}', 'CartRemove');
+});
+
+Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
+
+// ★couponの計算処理★
+Route::get('/coupon-calculation', [CartController::class, 'CouponCalculation']);
+
+// ★couponの適応解除★
+Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
+
+/// ★決済ページ遷移★ 
+Route::get('/checkout', [CartController::class, 'CheckoutCreate'])
+  ->name('checkout');
+
+Route::post('/payment', [CartController::class, 'Payment'])
+  ->name('payment');
 // FrontendのRoute : END

@@ -1,0 +1,67 @@
+
+2-Order Detailsページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+
+    Route::get('/admin/order/details/{id}', 'AdminOrderDetails')
+      ->name('admin.order.details');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\orders\pending_orders.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('admin.order.details',$item->id) }}" class="btn btn-info px-5">Details </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminOrderDetails($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'admin.backend.orders.admin_order_details',
+      compact('payment', 'orderItem')
+    );
+  } // End Method 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\orders\admin_order_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+詳細ページが疎通されたらOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

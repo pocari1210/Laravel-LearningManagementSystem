@@ -1,0 +1,84 @@
+
+1-laravel-dompdfインストール
+
+下記URLよりインストールを行う
+https://github.com/barryvdh/laravel-dompdf
+
+インストールコマンド
+composer require barryvdh/laravel-dompdf
+
+config\dompdf.phpファイル作成
+php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/instructor/all/order', 'InstructorAllOrder')
+
+    Route::get('/instructor/order/invoice/{payment_id}', 'InstructorOrderInvoice')
+      ->name('instructor.order.invoice');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\orders\all_orders.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <a href="{{ route('instructor.order.invoice',$item->payment->id) }}" class="btn btn-danger" id="delete"
+    title="delete"><i class="lni lni-download"></i> </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
+  public function InstructorOrderInvoice($payment_id)
+  {
+
+    $payment = Payment::where('id', $payment_id)->first();
+
+    $orderItem = Order::where('payment_id', $payment_id)
+      ->orderBy('id', 'DESC')->get();
+
+    $pdf = Pdf::loadView('instructor.orders.order_pdf', compact('payment', 'orderItem'))
+      ->setPaper('a4')->setOption([
+        'tempDir' => public_path(),
+        'chroot' => public_path(),
+      ]);
+    return $pdf->download('invoice.pdf');
+  } // End Method 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\orders\order_pdf.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+PDFをダウンロードができ、表示ができたらOK

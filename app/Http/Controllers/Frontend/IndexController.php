@@ -11,6 +11,7 @@ use App\Models\Course;
 use App\Models\Course_goal;
 use App\Models\CourseSection;
 use App\Models\CourseLecture;
+use App\Models\User;
 
 use InterventionImage;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +59,35 @@ class IndexController extends Controller
     return view(
       'frontend.category.category_all',
       compact('courses', 'category', 'categories')
+    );
+  } // End Method 
+
+  public function SubCategoryCourse($id, $slug)
+  {
+
+    $courses = Course::where('subcategory_id', $id)
+      ->where('status', '1')->get();
+
+    $subcategory = SubCategory::where('id', $id)->first();
+
+    $categories = Category::latest()->get();
+
+    return view(
+      'frontend.category.subcategory_all',
+      compact('courses', 'subcategory', 'categories')
+    );
+  } // End Method 
+
+  public function InstructorDetails($id)
+  {
+
+    $instructor = User::find($id);
+
+    $courses = Course::where('instructor_id', $id)->get();
+
+    return view(
+      'frontend.instructor.instructor_details',
+      compact('instructor', 'courses')
     );
   } // End Method 
 }

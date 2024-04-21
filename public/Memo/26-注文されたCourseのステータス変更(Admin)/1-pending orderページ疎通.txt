@@ -1,0 +1,72 @@
+
+
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Backend/OrderController
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\OrderController;
+
+///// Admin Group SideBar
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+
+  // Admin All Order Route 
+  Route::controller(OrderController::class)->group(function () {
+    Route::get('/admin/pending/order', 'AdminPendingOrder')
+      ->name('admin.pending.order');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Orders</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('admin.pending.order') }}"><i class='bx bx-radio-circle'></i>Pending Orders </a>
+        </li>
+        <li> <a href="{{ route('admin.pending.order') }}"><i class='bx bx-radio-circle'></i>Confirm Orders </a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminPendingOrder()
+  {
+
+    $payment = Payment::where('status', 'pending')
+      ->orderBy('id', 'DESC')->get();
+
+    return view(
+      'admin.backend.orders.pending_orders',
+      compact('payment')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

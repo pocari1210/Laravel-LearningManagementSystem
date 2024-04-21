@@ -1,0 +1,54 @@
+
+1-Courseページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // User My Course All Route 
+  Route::controller(OrderController::class)->group(function () {
+
+    Route::get('/course/view/{course_id}', 'CourseView')
+      ->name('course.view');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\mycourse\my_all_course.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\OrderController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function CourseView($course_id)
+  {
+    $id = Auth::user()->id;
+
+    $course = Order::where('course_id', $course_id)
+      ->where('user_id', $id)->first();
+
+    $section = CourseSection::where('course_id', $course_id)
+      ->orderBy('id', 'asc')->get();
+
+    return view(
+      'frontend.mycourse.course_view',
+      compact('course', 'section')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
