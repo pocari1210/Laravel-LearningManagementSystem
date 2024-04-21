@@ -1,0 +1,71 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Question All Order Route 
+  Route::controller(QuestionController::class)->group(function () {
+
+    Route::post('/instructor/replay', 'InstructorReplay')
+      ->name('instructor.replay');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <form action="{{ route('instructor.replay') }}" method="POST">
+      @csrf
+
+      <input type="hidden" name="qid" value="{{ $question->id }}">
+      <input type="hidden" name="course_id" value="{{ $question->course->id }}">
+      <input type="hidden" name="user_id" value="{{ $question->user->id }}">
+      <input type="hidden" name="instructor_id" value="{{ $profileData->id }}">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\QuestionController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorReplay(Request $request)
+  {
+
+    $que_id = $request->qid;
+    $user_id = $request->user_id;
+    $course_id = $request->course_id;
+    $instructor_id = $request->instructor_id;
+
+    Question::insert([
+      'course_id' => $course_id,
+      'user_id' => $user_id,
+      'instructor_id' => $instructor_id,
+      'parent_id' => $que_id,
+      'question' => $request->question,
+      'created_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Message Send Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->route('instructor.all.question')->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+インストラクターの管理画面からreplyができ、
+Questionにレコードがはいっていることを確認出来たらOK

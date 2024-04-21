@@ -258,6 +258,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::get('/question/details/{id}', 'QuestionDetails')
       ->name('question.details');
+
+    Route::post('/instructor/replay', 'InstructorReplay')
+      ->name('instructor.replay');
   });
 }); // End Instructor Group Middleware 
 
