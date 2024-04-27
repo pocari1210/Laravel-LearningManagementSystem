@@ -1,0 +1,80 @@
+
+2-注文のあった日付の検索
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Report All Route 
+  Route::controller(ReportController::class)->group(function () {
+
+    Route::post('/search/by/date', 'SearchByDate')
+      ->name('search.by.date');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  ↓↓route先の追記↓↓
+  <form id="myForm" action="{{ route('search.by.date') }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+    @csrf
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReportController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use DateTime;
+
+  public function SearchByDate(Request $request)
+  {
+
+    // formから入力された日付データを取得
+    $date = new DateTime($request->date);
+
+    // 日付のフォーマットを変更
+    $formatDate = $date->format('d F Y');
+
+    // Paymentモデルのorder_dateカラムと一致するレコードを表示
+    $payment = Payment::where('order_date', $formatDate)
+      ->latest()->get();
+
+    return view(
+      'admin.backend.report.report_by_date',
+      compact('payment', 'formatDate')
+    );
+  } // End Method 
+
+★コード解説★
+
+DateTime関数の使い方
+https://heppoko-room.net/archives/1648
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+検索した日付のレコード尾表示できればOK
