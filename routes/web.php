@@ -278,6 +278,12 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
     Route::post('/instructor/replay', 'InstructorReplay')
       ->name('instructor.replay');
   });
+
+  // Instructor Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+    Route::get('/instructor/all/coupon', 'InstructorAllCoupon')
+      ->name('instructor.all.coupon');
+  });
 }); // End Instructor Group Middleware 
 
 ///// Instructor Group SideBar

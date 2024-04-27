@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\SubCategory;
 
+use Illuminate\Support\Facades\Auth;
 use InterventionImage;
 use Carbon\Carbon;
 
@@ -77,5 +78,20 @@ class CouponController extends Controller
       'alert-type' => 'success'
     );
     return redirect()->back()->with($notification);
+  } /// End Method 
+
+  ///////////////////// Instructor All Coupon Method 
+
+  public function InstructorAllCoupon()
+  {
+    $id = Auth::user()->id;
+
+    $coupon = Coupon::where('instructor_id', $id)
+      ->latest()->get();
+
+    return view(
+      'instructor.coupon.coupon_all',
+      compact('coupon')
+    );
   } /// End Method 
 }
