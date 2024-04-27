@@ -1,0 +1,99 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Report All Route 
+  Route::controller(ReportController::class)->group(function () {
+
+    Route::post('/search/by/month', 'SearchByMonth')
+      ->name('search.by.month');
+
+    Route::post('/search/by/year', 'SearchByYear')
+      ->name('search.by.year');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form id="myForm" action="{{ route('search.by.month') }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+    @csrf
+
+  <form id="myForm" action="{{ route('search.by.year') }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+    @csrf
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReportController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function SearchByMonth(Request $request)
+  {
+
+    $month = $request->month;
+
+    $year = $request->year_name;
+
+    $payment = Payment::where('order_month', $month)
+      ->where('order_year', $year)->latest()->get();
+
+    return view(
+      'admin.backend.report.report_by_month',
+      compact('payment', 'month', 'year')
+    );
+  } // End Method 
+
+
+  public function SearchByYear(Request $request)
+  {
+
+    $year = $request->year;
+
+    $payment = Payment::where('order_year', $year)
+      ->latest()->get();
+
+    return view(
+      'admin.backend.report.report_by_year',
+      compact('payment', 'year')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_by_month.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_by_year.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+年と月の日付で検索ができたらOK

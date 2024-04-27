@@ -215,6 +215,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/search/by/date', 'SearchByDate')
       ->name('search.by.date');
+
+    Route::post('/search/by/month', 'SearchByMonth')
+      ->name('search.by.month');
+
+    Route::post('/search/by/year', 'SearchByYear')
+      ->name('search.by.year');
   });
 }); // End Admin Group SideBar 
 
