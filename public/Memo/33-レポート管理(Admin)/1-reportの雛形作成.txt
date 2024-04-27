@@ -1,0 +1,69 @@
+
+1-reportの雛形作成
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Backend\ReportController
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\ReportController;
+
+  // Admin Report All Route 
+  Route::controller(ReportController::class)->group(function () {
+    Route::get('/report/view', 'ReportView')
+      ->name('report.view');
+  });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Report</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('report.view') }}"><i class='bx bx-radio-circle'></i>Report View </a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReportController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function ReportView()
+  {
+    return view('admin.backend.report.report_view');
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\report\report_view.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
