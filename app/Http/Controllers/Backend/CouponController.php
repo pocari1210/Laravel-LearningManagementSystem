@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\SubCategory;
+use App\Models\Course;
 
 use Illuminate\Support\Facades\Auth;
 use InterventionImage;
@@ -94,4 +95,16 @@ class CouponController extends Controller
       compact('coupon')
     );
   } /// End Method 
+
+  public function InstructorAddCoupon()
+  {
+    $id = Auth::user()->id;
+
+    $courses = Course::where('instructor_id', $id)->get();
+
+    return view(
+      'instructor.coupon.coupon_add',
+      compact('courses')
+    );
+  } // End Method 
 }
