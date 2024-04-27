@@ -1,0 +1,83 @@
+
+3-couponの保存処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+
+    Route::post('/instructor/store/coupon', 'InstructorStoreCoupon')
+      ->name('instructor.store.coupon');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Coupon.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Coupon extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+
+  public function course()
+  {
+    return $this->belongsTo(Course::class, 'course_id', 'id');
+  }
+}
+
+★コード解説★
+Courseモデルとリレーションを行う
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\coupon\coupon_add.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form id="myForm" action="{{ route('instructor.store.coupon') }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+    @csrf
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\resources\views\instructor\coupon\coupon_add.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InstructorStoreCoupon(Request $request)
+  {
+
+    Coupon::insert([
+      'instructor_id' => Auth::user()->id,
+      'course_id' => $request->course_id,
+      'coupon_name' => strtoupper($request->coupon_name),
+      'coupon_discount' => $request->coupon_discount,
+      'coupon_validity' => $request->coupon_validity,
+      'created_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Coupon Inserted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('instructor.all.coupon')->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

@@ -286,6 +286,9 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
     Route::get('/instructor/add/coupon', 'InstructorAddCoupon')
       ->name('instructor.add.coupon');
+
+    Route::post('/instructor/store/coupon', 'InstructorStoreCoupon')
+      ->name('instructor.store.coupon');
   });
 }); // End Instructor Group Middleware 
 
