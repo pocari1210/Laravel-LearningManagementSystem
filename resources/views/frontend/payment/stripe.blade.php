@@ -120,39 +120,37 @@
             <div class="card-body">
               <h3 class="card-title fs-22 pb-3">Billing Details</h3>
               <div class="divider"><span></span></div>
-              <form method="post" class="row" action="{{ route('payment') }}" enctype="multipart/form-data">
-                @csrf
 
-                <div class="input-box col-lg-6">
-                  <label class="label-text">First Name</label>
-                  <div class="form-group">
-                    <input class="form-control form--control" type="text" name="name" value="{{ Auth::user()->name }}">
-                    <span class="la la-user input-icon"></span>
-                  </div>
-                </div><!-- end input-box -->
-                <div class="input-box col-lg-6">
-                  <label class="label-text">Email</label>
-                  <div class="form-group">
-                    <input class="form-control form--control" type="email" name="email"
-                      value="{{ Auth::user()->email }}">
-                    <span class="la la-user input-icon"></span>
-                  </div>
-                </div><!-- end input-box -->
-                <div class="input-box col-lg-12">
-                  <label class="label-text">Address</label>
-                  <div class="form-group">
-                    <input class="form-control form--control" type="text" name="address"
-                      value="{{ Auth::user()->address }}">
-                    <span class="la la-envelope input-icon"></span>
-                  </div>
-                </div><!-- end input-box -->
-                <div class="input-box col-lg-12">
-                  <label class="label-text">Phone Number</label>
-                  <div class="form-group">
-                    <input id="phone" class="form-control form--control" type="tel" name="phone"
-                      value="{{ Auth::user()->phone }}">
-                  </div>
-                </div><!-- end input-box -->
+
+              <div class="input-box col-lg-6">
+                <label class="label-text">First Name</label>
+                <div class="form-group">
+                  <input class="form-control form--control" type="text" name="name" value="{{ Auth::user()->name }}">
+                  <span class="la la-user input-icon"></span>
+                </div>
+              </div><!-- end input-box -->
+              <div class="input-box col-lg-6">
+                <label class="label-text">Email</label>
+                <div class="form-group">
+                  <input class="form-control form--control" type="email" name="email" value="{{ Auth::user()->email }}">
+                  <span class="la la-user input-icon"></span>
+                </div>
+              </div><!-- end input-box -->
+              <div class="input-box col-lg-12">
+                <label class="label-text">Address</label>
+                <div class="form-group">
+                  <input class="form-control form--control" type="text" name="address"
+                    value="{{ Auth::user()->address }}">
+                  <span class="la la-envelope input-icon"></span>
+                </div>
+              </div><!-- end input-box -->
+              <div class="input-box col-lg-12">
+                <label class="label-text">Phone Number</label>
+                <div class="form-group">
+                  <input id="phone" class="form-control form--control" type="tel" name="phone"
+                    value="{{ Auth::user()->phone }}">
+                </div>
+              </div><!-- end input-box -->
 
             </div><!-- end card-body -->
           </div><!-- end card -->
@@ -165,10 +163,15 @@
                 <div class="border cart-totals p-40">
                   <div class="divider-2 mb-30">
                     <div class="table-responsive order_table checkout">
-                      <form action="" method="post" id="payment-form">
+                      <form action="{{ route('stripe_order') }}" method="post" id="payment-form">
                         @csrf
                         <div class="form-row">
                           <label for="card-element"> Credit or Debit Cart</label>
+
+                          <input type="hidden" name="name" value="{{ $data['name'] }}">
+                          <input type="hidden" name="email" value="{{ $data['email'] }}">
+                          <input type="hidden" name="phone" value="{{ $data['phone'] }}">
+                          <input type="hidden" name="address" value="{{ $data['address'] }}">
 
                           <div id="card-element">
                             {{-- // stripe element will be inserted here --}}
@@ -276,7 +279,7 @@
       </div><!-- end row -->
     </div><!-- end container -->
 
-    </form>
+
   </section>
   <!-- ================================
       END CONTACT AREA
@@ -286,7 +289,7 @@
   <!-- /////////////////////////----------Start JavaScript  ------- ///////////////////////////// -->
   <script type="text/javascript">
     // Create a Stripe client.
-var stripe = Stripe('pk_test_51IUTWzALc6pn5BvMAUegqRHV0AAokjG7ZuV6RWcj5rxB9KCAwamgtWpw9T4maGAe34WmDkD6LSn1Yge3nzex6gYk004pILHsNh');
+var stripe = Stripe('pk_test_51KdKmKIqU18BrtXMhCGUt8I1ZRSiedYo04pmgthM0bwHJ7egTUns9jFbJcE0rXnWeAbipF4FMYGs6hreNRZq8HWf00lT2OHIv3');
 // Create an instance of Elements.
 var elements = stripe.elements();
 // Custom styling can be passed to options when creating an Element.

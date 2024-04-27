@@ -1,0 +1,108 @@
+
+2-stripe決済
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/stripe_order', [CartController::class, 'StripeOrder'])
+  ->name('stripe_order');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\payment\stripe.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form action="{{ route('stripe_order') }}" method="post" id="payment-form">
+    @csrf
+    <div class="form-row">
+      <label for="card-element"> Credit or Debit Cart</label>
+
+      <input type="hidden" name="name" value="{{ $data['name'] }}">
+      <input type="hidden" name="email" value="{{ $data['email'] }}">
+      <input type="hidden" name="phone" value="{{ $data['phone'] }}">
+      <input type="hidden" name="address" value="{{ $data['address'] }}">
+
+※注意点※
+"{{ route('payment') }}"の外側のformタグは削除しないと
+動かないので注意が必要
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function StripeOrder(Request $request)
+  {
+    if (Session::has('coupon')) {
+      $total_amount = Session::get('coupon')['total_amount'];
+    } else {
+      $total_amount = round(Cart::total());
+    }
+    \Stripe\Stripe::setApiKey('sk_test_51KdKmKIqU18BrtXMvtRilySQHfRBnlwHKMRbep955ovxk8dR6ThlevT2tlN3JcuJzqprYuX6HHytWXCXUMXtM9OG00nHpWVOJJ');
+
+    $token = $_POST['stripeToken'];
+
+    $charge = \Stripe\Charge::create([
+      'amount' => $total_amount * 100,
+      'currency' => 'usd',
+      'description' => 'Lms',
+      'source' => $token,
+      'metadata' => ['order_id' => '3434'],
+    ]);
+
+    $order_id = Payment::insertGetId([
+      'name' => $request->name,
+      'email' => $request->email,
+      'phone' => $request->phone,
+      'address' => $request->address,
+      'total_amount' => $total_amount,
+      'payment_type' => 'Stripe',
+      'invoice_no' => 'EOS' . mt_rand(10000000, 99999999),
+      'order_date' => Carbon::now()->format('d F Y'),
+      'order_month' => Carbon::now()->format('F'),
+      'order_year' => Carbon::now()->format('Y'),
+      'status' => 'pending',
+      'created_at' => Carbon::now(),
+
+    ]);
+
+    $carts = Cart::content();
+    foreach ($carts as $cart) {
+      Order::insert([
+        'payment_id' => $order_id,
+        'user_id' => Auth::user()->id,
+        'course_id' => $cart->id,
+        'instructor_id' => $cart->options->instructor,
+        'course_title' => $cart->options->name,
+        'price' => $cart->price,
+      ]);
+    } // end foreach 
+
+    if (Session::has('coupon')) {
+      Session::forget('coupon');
+    }
+    Cart::destroy();
+
+    $notification = array(
+      'message' => 'Stripe Payment Submit Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('index')->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+決済が完了し、Stripeのダッシュボードに反映されていたらOK

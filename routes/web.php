@@ -379,4 +379,7 @@ Route::get('/checkout', [CartController::class, 'CheckoutCreate'])
 
 Route::post('/payment', [CartController::class, 'Payment'])
   ->name('payment');
+
+Route::post('/stripe_order', [CartController::class, 'StripeOrder'])
+  ->name('stripe_order');
 // FrontendのRoute : END

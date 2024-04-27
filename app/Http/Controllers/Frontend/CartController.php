@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Session;
+use Stripe;
 
 class CartController extends Controller
 {
@@ -335,6 +336,65 @@ class CartController extends Controller
       );
       return redirect()->route('index')->with($notification);
     } // End Elseif 
+  } // End Method 
+
+  public function StripeOrder(Request $request)
+  {
+    if (Session::has('coupon')) {
+      $total_amount = Session::get('coupon')['total_amount'];
+    } else {
+      $total_amount = round(Cart::total());
+    }
+    \Stripe\Stripe::setApiKey('sk_test_51KdKmKIqU18BrtXMvtRilySQHfRBnlwHKMRbep955ovxk8dR6ThlevT2tlN3JcuJzqprYuX6HHytWXCXUMXtM9OG00nHpWVOJJ');
+
+    $token = $_POST['stripeToken'];
+
+    $charge = \Stripe\Charge::create([
+      'amount' => $total_amount * 100,
+      'currency' => 'usd',
+      'description' => 'Lms',
+      'source' => $token,
+      'metadata' => ['order_id' => '3434'],
+    ]);
+
+    $order_id = Payment::insertGetId([
+      'name' => $request->name,
+      'email' => $request->email,
+      'phone' => $request->phone,
+      'address' => $request->address,
+      'total_amount' => $total_amount,
+      'payment_type' => 'Stripe',
+      'invoice_no' => 'EOS' . mt_rand(10000000, 99999999),
+      'order_date' => Carbon::now()->format('d F Y'),
+      'order_month' => Carbon::now()->format('F'),
+      'order_year' => Carbon::now()->format('Y'),
+      'status' => 'pending',
+      'created_at' => Carbon::now(),
+
+    ]);
+
+    $carts = Cart::content();
+    foreach ($carts as $cart) {
+      Order::insert([
+        'payment_id' => $order_id,
+        'user_id' => Auth::user()->id,
+        'course_id' => $cart->id,
+        'instructor_id' => $cart->options->instructor,
+        'course_title' => $cart->options->name,
+        'price' => $cart->price,
+      ]);
+    } // end foreach 
+
+    if (Session::has('coupon')) {
+      Session::forget('coupon');
+    }
+    Cart::destroy();
+
+    $notification = array(
+      'message' => 'Stripe Payment Submit Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('index')->with($notification);
   } // End Method 
 
   public function BuyToCart(Request $request, $id)
