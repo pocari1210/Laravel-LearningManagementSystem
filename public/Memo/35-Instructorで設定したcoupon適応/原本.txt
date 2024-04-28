@@ -1,0 +1,128 @@
+
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/inscoupon-apply', [CartController::class, 'InsCouponApply']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆スクリプトファイルの編集◆
+
+ディレクトリ
+
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<script type="text/javascript">
+  function applyInsCoupon(){
+    var coupon_name = $('#coupon_name').val();
+    var course_id = $('#course_id').val();
+    var instructor_id = $('#instrutor_id').val();
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        data: {coupon_name:coupon_name,course_id:course_id,instructor_id:instructor_id},
+        url: "/inscoupon-apply",
+        success:function(data){
+              couponCalculation(); 
+              if (data.validity == true) {
+                  $('#couponField').hide();
+              }
+              
+          // Start Message 
+          const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000 
+          })
+          if ($.isEmptyObject(data.error)) {
+
+                  Toast.fire({
+                  type: 'success', 
+                  icon: 'success', 
+                  title: data.success, 
+                  })
+          }else{
+              
+          Toast.fire({
+            type: 'error', 
+            icon: 'error', 
+            title: data.error, 
+          })
+        }
+        // End Message   
+          }
+      })
+  }
+</script>
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <div class="input-group mb-2" id="couponField">
+      <input class="form-control form--control pl-3" type="text" id="coupon_name"
+        placeholder="Coupon code">
+      <div class="input-group-append">
+        <input type="hidden" id="course_id" name="course_id" value="{{ $course->id }}">
+        <input type="hidden" id="instrutor_id" name="instrutor_id" value="{{ $course->instructor_id }}">
+        <a type="submit" onclick="applyInsCoupon()" class="btn theme-btn">Apply Code</a>
+      </div>
+    </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function InsCouponApply(Request $request)
+  {
+
+    $coupon = Coupon::where('coupon_name', $request->coupon_name)->where('coupon_validity', '>=', Carbon::now()->format('Y-m-d'))->first();
+
+    if ($coupon) {
+      if ($coupon->course_id == $request->course_id && $coupon->instructor_id == $request->instructor_id) {
+
+        Session::put('coupon', [
+          'coupon_name' => $coupon->coupon_name,
+          'coupon_discount' => $coupon->coupon_discount,
+          'discount_amount' => round(Cart::total() * $coupon->coupon_discount / 100),
+          'total_amount' => round(Cart::total() - Cart::total() * $coupon->coupon_discount / 100)
+        ]);
+
+        return response()->json(array(
+          'validity' => true,
+          'success' => 'Coupon Applied Successfully'
+        ));
+      } else {
+        return response()->json(['error' => 'Coupon Criteria Not Met for this course and instructor']);
+      }
+    } else {
+      return response()->json(['error' => 'Invalid Coupon']);
+    }
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
