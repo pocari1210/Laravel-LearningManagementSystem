@@ -1,0 +1,101 @@
+
+2-投稿したレビューの表示
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Review.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'user_id', 'id');
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+              @php
+              $reviews =
+              App\Models\Review::where('course_id',$course->id)
+              ->where('status',1)->latest()->limit(5)->get();
+              @endphp
+
+              @foreach ($reviews as $item)
+              <div class="media media-card border-bottom border-bottom-gray pb-4 mb-4">
+                <div class="media-img mr-4 rounded-full">
+                  <img class="rounded-full lazy"
+                    src="{{ (!empty($item->user->photo)) ? url('upload/user_images/'.$item->user->photo) : url('upload/no_image.jpg')}}"
+                    data-src="images/small-avatar-1.jpg" alt="User image">
+                </div>
+                <div class="media-body">
+                  <div class="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                    <h5>{{ $item->user->name }}</h5>
+                    <div class="review-stars">
+
+                      @if($item->rating == NULL)
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      @elseif ($item->rating == 1)
+                      <span class="la la-star"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      @elseif ($item->rating == 2)
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+                      @elseif ($item->rating == 3)
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star-o"></span>
+                      <span class="la la-star-o"></span>
+
+                      @elseif ($item->rating == 4)
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star-o"></span>
+                      @elseif ($item->rating == 5)
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      <span class="la la-star"></span>
+                      @endif
+                    </div>
+                  </div>
+                  <span class="d-block lh-18 pb-2">{{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
+                  <p class="pb-2">{{ $item->comment }}</p>
+                  <div class="helpful-action">
+                    <span class="d-block fs-13">Was this review helpful?</span>
+                    <button class="btn">Yes</button>
+                    <button class="btn">No</button>
+                    <span class="btn-text fs-14 cursor-pointer pl-1" data-toggle="modal"
+                      data-target="#reportModal">Report</span>
+                  </div>
+                </div>
+              </div><!-- end media -->
+              @endforeach
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+reviewのstatusを1に変更し、詳細ページに
+投稿されたレビューが表示できていたらOK
+
