@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Controllers\Backend\ReportController;
+use App\Http\Controllers\Backend\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -419,4 +420,7 @@ Route::post('/payment', [CartController::class, 'Payment'])
 
 Route::post('/stripe_order', [CartController::class, 'StripeOrder'])
   ->name('stripe_order');
+
+Route::post('/store/review', [ReviewController::class, 'StoreReview'])
+  ->name('store.review');
 // FrontendのRoute : END

@@ -1,0 +1,120 @@
+
+1-レビューの雛形(投稿まで)
+
+下記コマンドでモデルとテーブル新規作成
+php artisan make:model Review -m
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Backend/ReviewController
+
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Review.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class Review extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆テーブルの編集◆
+
+ディレクトリ
+\database\migrations\2024_04_28_071916_create_reviews_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('reviews', function (Blueprint $table) {
+      $table->id();
+
+      $table->unsignedBigInteger('course_id')->unsigned();
+      $table->foreign('course_id')
+        ->references('id')->on('courses')
+        ->onDelete('cascade');
+
+      $table->unsignedBigInteger('user_id')->unsigned();
+      $table->foreign('user_id')
+        ->references('id')->on('users')
+        ->onDelete('cascade');
+
+      $table->text('comment');
+      $table->string('rating');
+      $table->integer('instructor_id')->nullable();
+      $table->string('status')->default(0);
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\ReviewController;
+
+Route::post('/store/review', [ReviewController::class, 'StoreReview'])
+  ->name('store.review');
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+@guestでログインしてないユーザー向けに文言を表示する
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReviewController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+	public function StoreReview(Request $request)
+	{
+
+		$course = $request->course_id;
+		$instructor = $request->instructor_id;
+
+		$request->validate([
+			'comment' => 'required',
+		]);
+
+		Review::insert([
+			'course_id' => $course,
+			'user_id' => Auth::id(),
+			'comment' => $request->comment,
+			'rating' => $request->rate,
+			'instructor_id' => $instructor,
+			'created_at' => Carbon::now(),
+		]);
+
+		$notification = array(
+			'message' => 'Review Will Approve By Admin',
+			'alert-type' => 'success'
+		);
+		return redirect()->back()->with($notification);
+	} // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ログインし、レビューを投稿し、DBで確認出来たらOK
