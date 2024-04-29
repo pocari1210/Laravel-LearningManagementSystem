@@ -223,6 +223,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::post('/search/by/year', 'SearchByYear')
       ->name('search.by.year');
   });
+
+  // Admin Review All Route 
+  Route::controller(ReviewController::class)->group(function () {
+    Route::get('/admin/pending/review', 'AdminPendingReview')
+      ->name('admin.pending.review');
+  });
 }); // End Admin Group SideBar 
 
 // Adminのloginページのルート

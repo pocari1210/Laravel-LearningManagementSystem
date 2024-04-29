@@ -1,0 +1,92 @@
+
+1-レビューの承認待ち一覧
+
+◆モデルの編集◆
+
+ディレクトリ
+\app\Models\Review.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function course()
+  {
+    return $this->belongsTo(Course::class, 'course_id', 'id');
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Review All Route 
+  Route::controller(ReviewController::class)->group(function () {
+    Route::get('/admin/pending/review', 'AdminPendingReview')
+      ->name('admin.pending.review');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Review</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('admin.pending.review') }}"><i class='bx bx-radio-circle'></i>Pending Review </a>
+        </li>
+        <li> <a href="{{ route('report.view') }}"><i class='bx bx-radio-circle'></i>Active Review </a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReviewController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+	public function AdminPendingReview()
+	{
+
+		$review = Review::where('status', 0)
+			->orderBy('id', 'DESC')->get();
+
+		return view(
+			'admin.backend.review.pending_review',
+			compact('review')
+		);
+	} // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\review\pending_review.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+statusが0のレコードが表示されていたらOK
