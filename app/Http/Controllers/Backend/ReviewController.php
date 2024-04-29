@@ -77,4 +77,17 @@ class ReviewController extends Controller
 			compact('review')
 		);
 	} // End Method 
+
+	public function InstructorAllReview()
+	{
+		$id = Auth::user()->id;
+
+		$review = Review::where('instructor_id', $id)
+			->where('status', 1)->orderBy('id', 'DESC')->get();
+
+		return view(
+			'instructor.review.active_review',
+			compact('review')
+		);
+	} // End Method 
 }
