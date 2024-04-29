@@ -91,8 +91,8 @@
               <td>
                 <div class="form-check-danger form-check form-switch">
                   <input class="form-check-input status-toggle large-checkbox" type="checkbox"
-                    id="flexSwitchCheckCheckedDanger" data-user-id="{{ $item->id }}" {{ $item->status ? 'checked' : ''}}
-                  >
+                    id="flexSwitchCheckCheckedDanger" data-review-id="{{ $item->id }}" {{ $item->status ? 'checked' :
+                  ''}} >
                   <label class="form-check-label" for="flexSwitchCheckCheckedDanger"> </label>
                 </div>
               </td>
@@ -116,7 +116,7 @@
             // send an ajax request to update status 
 
             $.ajax({
-                url: "{{ route('update.user.stauts') }}",
+                url: "{{ route('update.review.stauts') }}",
                 method: "POST",
                 data: {
                     review_id : reviewId,

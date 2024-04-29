@@ -228,6 +228,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::controller(ReviewController::class)->group(function () {
     Route::get('/admin/pending/review', 'AdminPendingReview')
       ->name('admin.pending.review');
+
+    Route::post('/update/review/stauts', 'UpdateReviewStatus')
+      ->name('update.review.stauts');
   });
 }); // End Admin Group SideBar 
 

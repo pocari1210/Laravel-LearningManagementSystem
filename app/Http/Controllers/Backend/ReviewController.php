@@ -48,4 +48,21 @@ class ReviewController extends Controller
 			compact('review')
 		);
 	} // End Method 
+
+	public function UpdateReviewStatus(Request $request)
+	{
+
+		$reviewId = $request->input('review_id');
+
+		$isChecked = $request->input('is_checked', 0);
+
+		$review = Review::find($reviewId);
+
+		if ($review) {
+			$review->status = $isChecked;
+			$review->save();
+		}
+
+		return response()->json(['message' => 'Review Status Updated Successfully']);
+	} // End Method 
 }
