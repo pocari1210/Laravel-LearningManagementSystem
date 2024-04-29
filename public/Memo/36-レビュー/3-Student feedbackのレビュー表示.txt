@@ -1,0 +1,63 @@
+
+3-Student feedbackのレビュー表示
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\cource\course_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+                <div class="media-body">
+
+                  @php
+                  $reviewcount = App\Models\Review::where('course_id',$course->id)
+                  ->where('status',1)
+                  ->select('rating', DB::raw('count(*) as count'))
+                  ->groupBy('rating')
+                  ->orderBy('rating','desc')
+                  ->get();
+
+                  $totalReviews = $reviewcount->sum('count');
+
+                  $percentages = [];
+
+                  for ($i=5; $i >= 1 ; $i--) {
+                  $ratingCount = $reviewcount->where('rating',$i)->first();
+                  $count = $ratingCount ? $ratingCount->count : 0;
+                  $percent = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                  $percentages[] = [
+                  'rating' => $i,
+                  'percent' => $percent,
+                  'count' => $count,
+                  ];
+                  }
+                  
+                  @endphp
+
+                  @if (count($percentages) > 0)
+                  @foreach ($percentages as $ratingInfo)
+
+                  <div class="review-bars d-flex align-items-center mb-2">
+                    <div class="review-bars__text">{{ $ratingInfo['rating'] }} stars</div>
+                    <div class="review-bars__fill">
+                      <div class="skillbar-box">
+                        <div class="skillbar" data-percent="{{ $ratingInfo['percent'] }}%">
+                          <div class="skillbar-bar bg-3" style="width: {{ $ratingInfo['percent'] }}%;"></div>
+                        </div> <!-- End Skill Bar -->
+                      </div>
+                    </div><!-- end review-bars__fill -->
+                    <div class="review-bars__percent">{{ number_format($ratingInfo['percent'], 2) }}%</div>
+                  </div><!-- end review-bars -->
+
+                  @endforeach
+                  @else
+                  <p>No Reviews Available</p>
+                  @endif
+
+                </div><!-- end media-body -->
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Student feedbackの欄でレビューの平均、件数が
+計算されて表示されていたらOK
