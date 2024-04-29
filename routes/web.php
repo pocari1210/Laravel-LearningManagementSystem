@@ -231,6 +231,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/review/stauts', 'UpdateReviewStatus')
       ->name('update.review.stauts');
+
+    Route::get('/admin/active/review', 'AdminActiveReview')
+      ->name('admin.active.review');
   });
 }); // End Admin Group SideBar 
 
