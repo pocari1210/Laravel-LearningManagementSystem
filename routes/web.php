@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\ReviewController;
+use App\Http\Controllers\Backend\ActiveUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -234,6 +235,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/active/review', 'AdminActiveReview')
       ->name('admin.active.review');
+  });
+
+  // Admin All user and Instructor All Route 
+  Route::controller(ActiveUserController::class)->group(function () {
+    Route::get('/all/user', 'AllUser')
+      ->name('all.user');
   });
 }); // End Admin Group SideBar 
 
