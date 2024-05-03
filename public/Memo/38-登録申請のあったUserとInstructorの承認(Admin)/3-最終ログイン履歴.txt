@@ -1,0 +1,82 @@
+
+3-最終ログイン履歴
+
+◆テーブルの編集◆
+
+ディレクトリ
+\database\migrations\2014_10_12_000000_create_users_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+$table->string('last_seen')->nullable();
+
+★コード解説★
+テーブルのカラムを追加している
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ミドルウェアの編集◆
+
+ディレクトリ
+\app\Http\Middleware\Role.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use App\Models\User;
+
+    // ★Userのログイン状況(Active/Inactive)★
+    if (Auth::check()) {
+      $expireTime = Carbon::now()->addSeconds(30);
+
+      // Cacheデータを新規追加または上書きする
+      Cache::put('user-is-online' . Auth::user()->id, true, $expireTime);
+
+      User::where('id', Auth::user()->id)
+        ->update(['last_seen' => Carbon::now()]);
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\User.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Illuminate\Support\Facades\Cache; 
+
+    // User Active Now
+    public function UserOnline()
+    {
+        return Cache::has('user-is-online' . $this->id);
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\user\instructor_all.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+              <td>
+                @if ($item->UserOnline())
+                <span class="badge badge-pill bg-success">Active Now</span>
+
+                @else
+                <span class="badge badge-pill bg-danger">{{ Carbon\Carbon::parse($item->last_seen)->diffForHumans() }}
+                </span>
+
+                @endif
+              </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+user,instructorでログインし、last_seenのカラムが更新されていたら
+OK
