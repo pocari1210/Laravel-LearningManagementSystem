@@ -20,6 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link href="{{ asset('backend/assets/css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('backend/assets/css/icons.css') }}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
   <title>Admin Login </title>
 </head>
 
@@ -30,11 +31,13 @@
       <div class="">
         <div class="row g-0">
 
-          <div class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
+          <div
+            class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
 
             <div class="card shadow-none bg-transparent shadow-none rounded-0 mb-0">
               <div class="card-body">
-                <img src="{{ asset('backend/assets/images/login-images/login-cover.svg') }}" class="img-fluid auth-img-cover-login" width="650" alt="" />
+                <img src="{{ asset('backend/assets/images/login-images/login-cover.svg') }}"
+                  class="img-fluid auth-img-cover-login" width="650" alt="" />
               </div>
             </div>
 
@@ -58,7 +61,9 @@
 
                       <div class="col-12">
                         <label for="inputEmailAddress" class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" id="inputEmailAddress" placeholder="jhon@example.com">
+                        <input type="email" id="email" name="email"
+                          class="form-control @error('email') is-invalid @enderror" id="inputEmailAddress"
+                          placeholder="jhon@example.com">
                         @error('email')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -66,7 +71,10 @@
                       <div class="col-12">
                         <label for="inputChoosePassword" class="form-label">Password</label>
                         <div class="input-group" id="show_hide_password">
-                          <input type="password" name="password" id="password" class="form-control border-end-0 @error('password') is-invalid @enderror" placeholder="Enter Password"> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+                          <input type="password" name="password" id="password"
+                            class="form-control border-end-0 @error('password') is-invalid @enderror"
+                            placeholder="Enter Password"> <a href="javascript:;"
+                            class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
                           @error('password')
                           <span class="text-danger">{{ $message }}</span>
                           @enderror
@@ -78,7 +86,8 @@
                           <label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
                         </div>
                       </div>
-                      <div class="col-md-6 text-end"> <a href="authentication-forgot-password.html">Forgot Password ?</a>
+                      <div class="col-md-6 text-end"> <a href="authentication-forgot-password.html">Forgot Password
+                          ?</a>
                       </div>
                       <div class="col-12">
                         <div class="d-grid">
@@ -87,7 +96,8 @@
                       </div>
                       <div class="col-12">
                         <div class="text-center ">
-                          <p class="mb-0">Don't have an account yet? <a href="authentication-signup.html">Sign up here</a>
+                          <p class="mb-0">Don't have an account yet? <a href="authentication-signup.html">Sign up
+                              here</a>
                           </p>
                         </div>
                       </div>
@@ -97,10 +107,14 @@
                     <hr>
                   </div>
                   <div class="list-inline contacts-social text-center">
-                    <a href="javascript:;" class="list-inline-item bg-facebook text-white border-0 rounded-3"><i class="bx bxl-facebook"></i></a>
-                    <a href="javascript:;" class="list-inline-item bg-twitter text-white border-0 rounded-3"><i class="bx bxl-twitter"></i></a>
-                    <a href="javascript:;" class="list-inline-item bg-google text-white border-0 rounded-3"><i class="bx bxl-google"></i></a>
-                    <a href="javascript:;" class="list-inline-item bg-linkedin text-white border-0 rounded-3"><i class="bx bxl-linkedin"></i></a>
+                    <a href="javascript:;" class="list-inline-item bg-facebook text-white border-0 rounded-3"><i
+                        class="bx bxl-facebook"></i></a>
+                    <a href="javascript:;" class="list-inline-item bg-twitter text-white border-0 rounded-3"><i
+                        class="bx bxl-twitter"></i></a>
+                    <a href="javascript:;" class="list-inline-item bg-google text-white border-0 rounded-3"><i
+                        class="bx bxl-google"></i></a>
+                    <a href="javascript:;" class="list-inline-item bg-linkedin text-white border-0 rounded-3"><i
+                        class="bx bxl-linkedin"></i></a>
                   </div>
 
                 </div>
@@ -140,6 +154,30 @@
   </script>
   <!--app JS-->
   <script src="{{ asset('backend/assets/js/app.js') }}"></script>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>
+    @if(Session::has('message'))
+	var type = "{{ Session::get('alert-type','info') }}"
+	switch(type){
+		case 'info':
+		toastr.info(" {{ Session::get('message') }} ");
+		break;
+	
+		case 'success':
+		toastr.success(" {{ Session::get('message') }} ");
+		break;
+	
+		case 'warning':
+		toastr.warning(" {{ Session::get('message') }} ");
+		break;
+	
+		case 'error':
+		toastr.error(" {{ Session::get('message') }} ");
+		break; 
+	}
+	@endif 
+  </script>
 </body>
 
 </html>
