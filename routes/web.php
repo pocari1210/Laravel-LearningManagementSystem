@@ -18,6 +18,8 @@ use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 
+use App\Http\Middleware\RedirectIfAuthenticated;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -249,7 +251,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
 // Adminのloginページのルート
 Route::get('/admin/login', [AdminController::class, 'AdminLogin'])
-  ->name('admin.login');
+  ->name('admin.login')->middleware(RedirectIfAuthenticated::class);
 
 Route::get('/become/instructor', [AdminController::class, 'BecomeInstructor'])
   ->name('become.instructor');
@@ -396,7 +398,7 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
 
 // Instructorのloginページのルート
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])
-  ->name('instructor.login');
+  ->name('instructor.login')->middleware(RedirectIfAuthenticated::class);
 
 Route::get('/course/details/{id}/{slug}', [IndexController::class, 'CourseDetails']);
 
