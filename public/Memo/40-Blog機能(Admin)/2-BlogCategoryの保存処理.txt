@@ -1,0 +1,57 @@
+
+2-BlogCategoryの保存処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin All user and Instructor All Route 
+  Route::controller(BlogController::class)->group(function () {
+
+    Route::post('/blog/category/store', 'StoreBlogCategory')
+      ->name('blog.category.store');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\blogcategory\blog_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Blog
+      Category</button>
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function StoreBlogCategory(Request $request)
+  {
+
+    BlogCategory::insert([
+      'category_name' => $request->category_name,
+      'category_slug' => strtolower(str_replace(' ', '-', $request->category_name)),
+    ]);
+
+    $notification = array(
+      'message' => 'BlogCategory Inserted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
