@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
+use App\Http\Controllers\Backend\BlogController;
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 
@@ -246,6 +247,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/all/instructor', 'AllInstructor')
       ->name('all.instructor');
+  });
+
+  // Admin All user and Instructor All Route 
+  Route::controller(BlogController::class)->group(function () {
+    Route::get('/blog/category', 'AllBlogCategory')
+      ->name('blog.category');
   });
 }); // End Admin Group SideBar 
 

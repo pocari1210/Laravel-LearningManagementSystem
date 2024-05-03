@@ -1,0 +1,115 @@
+
+1-BlogCategoryの一覧ページ疎通
+
+下記コマンドでModelとtableを新規作成
+php artisan make:model BlogCategory -m
+
+下記コマンドでコントローラー新規作成
+php artisan make:controller Backend/BlogController
+
+◆Modelの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+class BlogCategory extends Model
+{
+  use HasFactory;
+  protected $guarded = [];
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆tableの編集◆
+
+ディレクトリ
+\database\migrations\2024_05_03_085409_create_blog_categories_table.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function up(): void
+  {
+    Schema::create('blog_categories', function (Blueprint $table) {
+      $table->id();
+      $table->string('category_name')->nullable();
+      $table->string('category_slug')->nullable();
+      $table->timestamps();
+    });
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\BlogController;
+
+  // Admin All user and Instructor All Route 
+  Route::controller(BlogController::class)->group(function () {
+    Route::get('/blog/category', 'AllBlogCategory')
+      ->name('blog.category');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Blog </div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('blog.category') }}"><i class='bx bx-radio-circle'></i>Blog Category </a>
+        </li>
+        <li> <a href="{{ route('all.instructor') }}"><i class='bx bx-radio-circle'></i>All Instructor</a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AllBlogCategory()
+  {
+
+    $category = BlogCategory::latest()->get();
+
+    return view(
+      'admin.backend.blogcategory.blog_category',
+      compact('category')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\blogcategory\blog_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
