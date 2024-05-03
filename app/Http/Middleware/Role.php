@@ -31,9 +31,20 @@ class Role
         ->update(['last_seen' => Carbon::now()]);
     }
 
-    // roleが一致していない場合、dashboardページにリダイレクトされる
-    if ($request->user()->role !== $role) {
+    // 遷移されてきたアカウントのroleを初期値にしている
+    $userRole = $request->user()->role;
+
+    // roleが一致していない場合、各$userRoleのdashboardページにリダイレクトされる
+    if ($userRole === 'user' && $role !== 'user') {
       return redirect('dashboard');
+    } elseif ($userRole === 'admin' && $role === 'user') {
+      return redirect('/admin/dashboard');
+    } elseif ($userRole === 'instructor' && $role === 'user') {
+      return redirect('/instructor/dashboard');
+    } elseif ($userRole === 'admin' && $role === 'instructor') {
+      return redirect('/admin/dashboard');
+    } elseif ($userRole === 'instructor' && $role === 'admin') {
+      return redirect('/instructor/dashboard');
     }
 
     return $next($request);
