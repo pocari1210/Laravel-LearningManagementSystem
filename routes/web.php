@@ -249,7 +249,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
       ->name('all.instructor');
   });
 
-  // Admin All user and Instructor All Route 
+  // Blog Category All Route 
   Route::controller(BlogController::class)->group(function () {
     Route::get('/blog/category', 'AllBlogCategory')
       ->name('blog.category');
@@ -264,6 +264,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')
       ->name('delete.blog.category');
+  });
+
+  // Blog Post All Route 
+  Route::controller(BlogController::class)->group(function () {
+    Route::get('/blog/post', 'BlogPost')
+      ->name('blog.post');
   });
 }); // End Admin Group SideBar 
 
