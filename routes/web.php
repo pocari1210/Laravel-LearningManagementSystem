@@ -282,6 +282,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/blog/post', 'UpdateBlogPost')
       ->name('update.blog.post');
+
+    Route::get('/delete/post/{id}', 'DeleteBlogPost')
+      ->name('delete.post');
   });
 }); // End Admin Group SideBar 
 
