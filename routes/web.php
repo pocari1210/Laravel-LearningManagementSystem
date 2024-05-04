@@ -276,6 +276,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/store/blog/post', 'StoreBlogPost')
       ->name('store.blog.post');
+
+    Route::get('/edit/post/{id}', 'EditBlogPost')
+      ->name('edit.post');
+
+    Route::post('/update/blog/post', 'UpdateBlogPost')
+      ->name('update.blog.post');
   });
 }); // End Admin Group SideBar 
 
