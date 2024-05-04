@@ -14,7 +14,7 @@ $blog = App\Models\BlogPost::latest()->limit(3)->get();
       @foreach ($blog as $item)
       <div class="card card-item">
         <div class="card-image">
-          <a href="blog-single.html" class="d-block">
+          <a href="{{ url('blog/details/'.$item->post_slug) }}" class="d-block">
             <img class="card-img-top" src="{{ asset($item->post_image) }}" alt="Card image cap">
           </a>
           <div class="course-badge-labels">
@@ -24,7 +24,7 @@ $blog = App\Models\BlogPost::latest()->limit(3)->get();
           </div>
         </div><!-- end card-image -->
         <div class="card-body">
-          <h5 class="card-title"><a href="blog-single.html">{{ $item->post_title }}</a></h5>
+          <h5 class="card-title"><a href="{{ url('blog/details/'.$item->post_slug) }}">{{ $item->post_title }}</a></h5>
           <ul
             class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center flex-wrap fs-14 pt-2">
             <li class="d-flex align-items-center">By<a href="#">Admin</a></li>
