@@ -258,6 +258,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
       ->name('blog.category.store');
 
     Route::get('/edit/blog/category/{id}', 'EditBlogCategory');
+
+    Route::post('/blog/category/update', 'UpdateBlogCategory')
+      ->name('blog.category.update');
+
+    Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')
+      ->name('delete.blog.category');
   });
 }); // End Admin Group SideBar 
 
