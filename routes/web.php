@@ -273,6 +273,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/add/blog/post', 'AddBlogPost')
       ->name('add.blog.post');
+
+    Route::post('/store/blog/post', 'StoreBlogPost')
+      ->name('store.blog.post');
   });
 }); // End Admin Group SideBar 
 

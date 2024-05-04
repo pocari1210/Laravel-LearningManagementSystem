@@ -22,7 +22,7 @@
   <div class="card">
     <div class="card-body p-4">
       <h5 class="mb-4">Add Blog Post</h5>
-      <form id="myForm" action="{{ route('store.category') }}" method="post" class="row g-3"
+      <form id="myForm" action="{{ route('store.blog.post') }}" method="post" class="row g-3"
         enctype="multipart/form-data">
         @csrf
 
