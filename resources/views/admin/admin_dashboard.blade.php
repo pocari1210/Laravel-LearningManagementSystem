@@ -14,6 +14,11 @@
   <link href="{{ asset('backend/assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
   <link href="{{ asset('backend/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}" rel="stylesheet" />
   <link href="{{ asset('backend/assets/plugins/metismenu/css/metisMenu.min.css') }}" rel="stylesheet" />
+
+  <!--tagsinput-->
+  <link href="{{ asset('backend/assets/plugins/input-tags/css/tagsinput.css') }}" rel="stylesheet" />
+  <!--tagsinput-->
+
   <!-- loader-->
   <link href="{{ asset('backend/assets/css/pace.min.css') }}" rel="stylesheet" />
   <script src="{{ asset('backend/assets/js/pace.min.js') }}"></script>
@@ -263,6 +268,10 @@
   <script src="{{ asset('backend/assets/js/app.js') }}"></script>
   <script src="{{ asset('backend/assets/js/validate.min.js') }}"></script>
 
+  <!--tagsinput-->
+  <script src="{{ asset('backend/assets/plugins/input-tags/js/tagsinput.js') }}"></script>
+  <!--tagsinput-->
+
   <!-- sweetalert2@10 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="{{ asset('backend/assets/js/code.js') }}"></script>
@@ -305,6 +314,15 @@
     @endif
   </script>
   <!-- toastr JS : END -->
+
+  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({
+		selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+		plugins: 'powerpaste advcode table lists checklist',
+		toolbar: 'undo redo | blocks| bold italic | bullist numlist checklist | code | table'
+	});
+  </script>
 
 </body>
 

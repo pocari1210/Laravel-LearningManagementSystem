@@ -270,6 +270,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::controller(BlogController::class)->group(function () {
     Route::get('/blog/post', 'BlogPost')
       ->name('blog.post');
+
+    Route::get('/add/blog/post', 'AddBlogPost')
+      ->name('add.blog.post');
   });
 }); // End Admin Group SideBar 
 
