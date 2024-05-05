@@ -1,0 +1,89 @@
+
+2-サイト設定の更新
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Site Setting All Route 
+  Route::controller(SettingController::class)->group(function () {
+
+    Route::post('/update/site', 'UpdateSite')
+      ->name('update.site');
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\site\site_update.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\SettingController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    public function UpdateSite(Request $request){
+
+        $site_id = $request->id;
+
+        if ($request->file('logo')) {
+
+            $image = $request->file('logo');  
+            $name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+            Image::make($image)->resize(140,41)->save('upload/logo/'.$name_gen);
+            $save_url = 'upload/logo/'.$name_gen;
+
+            SiteSetting::find($site_id)->update([
+                'phone' => $request->phone, 
+                'email' => $request->email, 
+                'address' => $request->address, 
+                'facebook' => $request->facebook, 
+                'twitter' => $request->twitter, 
+                'copyright' => $request->copyright,  
+                'logo' => $save_url,        
+
+            ]);
+
+            $notification = array(
+                'message' => 'Site Setting Updated with image Successfully',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);  
+
+        } else {
+
+            SiteSetting::find($site_id)->update([
+                'phone' => $request->phone, 
+                'email' => $request->email, 
+                'address' => $request->address, 
+                'facebook' => $request->facebook, 
+                'twitter' => $request->twitter, 
+                'copyright' => $request->copyright,  
+
+            ]);
+
+            $notification = array(
+                'message' => 'Site Setting Updated without image Successfully',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);  
+
+        } // end else 
+
+    }// End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+サイト設定の更新ができたらOK
