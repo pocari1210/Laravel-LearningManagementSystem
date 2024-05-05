@@ -1,3 +1,13 @@
+
+2-Pagination編集
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\vendor\pagination\custom.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
 @if ($paginator->hasPages())
 <ul class="pagination justify-content-center">
 
@@ -47,3 +57,12 @@
 
 </ul>
 @endif
+
+★コード解説★
+\resources\views\vendor\pagination\default.blade.phpを元に
+編集を行う
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+paginationのボタンを押して、2ページ目に遷移できたらOK
+
