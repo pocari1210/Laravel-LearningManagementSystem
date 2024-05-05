@@ -450,4 +450,18 @@ class CartController extends Controller
 
     return response()->json(['success' => 'Successfully Added on Your Cart']);
   } // End Method 
+
+  public function MarkAsRead(Request $request, $notificationId)
+  {
+
+    $user = Auth::user();
+
+    // notificationsテーブルのidを取得している
+    $notification = $user->notifications()->where('id', $notificationId)->first();
+
+    if ($notification) {
+      $notification->markAsRead();
+    }
+    return response()->json(['count' => $user->unreadNotifications()->count()]);
+  } // End Method 
 }
