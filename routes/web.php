@@ -18,6 +18,7 @@ use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 use App\Http\Controllers\Backend\BlogController;
+use App\Http\Controllers\Backend\SettingController;
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 
@@ -285,6 +286,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/delete/post/{id}', 'DeleteBlogPost')
       ->name('delete.post');
+  });
+
+  // Site Setting All Route 
+  Route::controller(SettingController::class)->group(function () {
+    Route::get('/site/setting', 'SiteSetting')
+      ->name('site.setting');
   });
 }); // End Admin Group SideBar 
 
