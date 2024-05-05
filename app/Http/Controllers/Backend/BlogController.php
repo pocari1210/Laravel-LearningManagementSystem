@@ -241,4 +241,20 @@ class BlogController extends Controller
       compact('blog', 'breadcat', 'bcategory', 'post')
     );
   } // End Method 
+
+  public function BlogList()
+  {
+
+    $blog = BlogPost::latest()->get();
+
+    $bcategory = BlogCategory::latest()->get();
+
+    $post = BlogPost::latest()
+      ->limit(3)->get();
+
+    return view(
+      'frontend.blog.blog_list',
+      compact('blog', 'bcategory', 'post')
+    );
+  } // End Method 
 }

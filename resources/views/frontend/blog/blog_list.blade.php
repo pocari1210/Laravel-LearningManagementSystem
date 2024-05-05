@@ -9,15 +9,13 @@
   <div class="container">
     <div class="breadcrumb-content d-flex flex-wrap align-items-center justify-content-between">
       <div class="section-heading">
-        <h2 class="section__title text-white">{{ $breadcat->category_name }} Category</h2>
+        <h2 class="section__title text-white"> All Blog</h2>
       </div>
-
       <ul class="generic-list-item generic-list-item-white generic-list-item-arrow d-flex flex-wrap align-items-center">
         <li><a href="index.html">Home</a></li>
         <li>Blog</li>
-        <li>{{ $breadcat->category_name }}</li>
-      </ul>
 
+      </ul>
     </div><!-- end breadcrumb-content -->
   </div><!-- end container -->
 </section><!-- end breadcrumb-area -->
@@ -72,8 +70,6 @@
             </div><!-- end card -->
           </div><!-- end col-lg-6 -->
           @endforeach
-
-
 
         </div><!-- end row -->
         <div class="text-center pt-3">
@@ -141,7 +137,6 @@
             </div>
           </div><!-- end card -->
 
-
           <div class="card card-item">
             <div class="card-body">
               <h3 class="card-title fs-18 pb-2">Sidebar Form</h3>
@@ -166,40 +161,7 @@
               </form>
             </div>
           </div><!-- end card -->
-          <div class="card card-item">
-            <div class="card-body">
-              <h3 class="card-title fs-18 pb-2">Post Tags</h3>
-              <div class="divider"><span></span></div>
-              <ul class="generic-list-item generic-list-item-boxed d-flex flex-wrap fs-15">
-                <li class="mr-2"><a href="#">Business</a></li>
-                <li class="mr-2"><a href="#">Event</a></li>
-                <li class="mr-2"><a href="#">Video</a></li>
-                <li class="mr-2"><a href="#">Audio</a></li>
-                <li class="mr-2"><a href="#">Software</a></li>
-                <li class="mr-2"><a href="#">Conference</a></li>
-                <li class="mr-2"><a href="#">Marketing</a></li>
-                <li class="mr-2"><a href="#">Freelance</a></li>
-                <li class="mr-2"><a href="#">Tips</a></li>
-                <li class="mr-2"><a href="#">Technology</a></li>
-                <li class="mr-2"><a href="#">Entrepreneur</a></li>
-              </ul>
-            </div>
-          </div><!-- end card -->
-          <div class="card card-item">
-            <div class="card-body">
-              <h3 class="card-title fs-18 pb-2">Subscribe</h3>
-              <div class="divider"><span></span></div>
-              <form method="post">
-                <div class="input-group">
-                  <input class="form-control form--control pl-3" type="email" name="email"
-                    placeholder="Enter email address">
-                  <div class="input-group-append">
-                    <button class="btn theme-btn"><i class="la la-arrow-right"></i></button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div><!-- end card -->
+
           <div class="card card-item">
             <div class="card-body">
               <h3 class="card-title fs-18 pb-2">Connect & Follow</h3>
@@ -220,9 +182,5 @@
 <!-- ================================
        START BLOG AREA
 ================================= -->
-
-
-
-
 
 @endsection

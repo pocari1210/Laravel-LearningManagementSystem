@@ -496,4 +496,6 @@ Route::post('/store/review', [ReviewController::class, 'StoreReview'])
 Route::get('/blog/details/{slug}', [BlogController::class, 'BlogDetails']);
 
 Route::get('/blog/cat/list/{id}', [BlogController::class, 'BlogCatList']);
+
+Route::get('/blog', [BlogController::class, 'BlogList'])->name('blog');
 // FrontendのRoute : END
