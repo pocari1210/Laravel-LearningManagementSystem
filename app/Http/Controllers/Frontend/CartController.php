@@ -14,6 +14,7 @@ use App\Models\CourseLecture;
 use App\Models\Coupon;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Models\User;
 
 use InterventionImage;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,8 @@ use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Session;
 use Stripe;
+use App\Notifiations\OrderComplete;
+use Illuminate\Support\Facades\Notification;
 
 class CartController extends Controller
 {
@@ -259,6 +262,7 @@ class CartController extends Controller
 
   public function Payment(Request $request)
   {
+    $user = User::where('role', 'instructor')->get();
 
     // couponの処理
     if (Session::has('coupon')) {
@@ -329,6 +333,9 @@ class CartController extends Controller
       } // end foreach 
 
       $request->session()->forget('cart');
+
+      /// Send Notification 
+      Notification::send($user, new OrderComplete($request->name));
 
       $notification = array(
         'message' => 'Cash Payment Submit Successfully',
