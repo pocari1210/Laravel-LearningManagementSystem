@@ -1,0 +1,46 @@
+
+3-Blogの詳細ページにtagやcategory疎通
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function BlogDetails($slug)
+  {
+
+    $blog = BlogPost::where('post_slug', $slug)->first();
+
+    $tags = $blog->post_tags;
+
+    $tags_all = explode(',', $tags);
+
+    $bcategory = BlogCategory::latest()->get();
+
+    $post = BlogPost::latest()->limit(3)->get();
+
+    return view(
+      'frontend.blog.blog_details',
+      compact('blog', 'tags_all', 'bcategory', 'post')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\blog\blog_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    @foreach ($tags_all as $tag)
+    <li class="mr-2"><a href="#">{{ ucwords($tag) }}</a></li>
+    @endforeach
+
+★コード解説★
+ucwordsで頭文字を大文字に変換している。
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
