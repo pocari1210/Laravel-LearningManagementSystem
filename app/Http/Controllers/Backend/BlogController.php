@@ -245,7 +245,10 @@ class BlogController extends Controller
   public function BlogList()
   {
 
-    $blog = BlogPost::latest()->get();
+    // $blog = BlogPost::latest()->get();
+
+    // 投稿されたBlogを1ページに2件ずつ表示させる
+    $blog = BlogPost::latest()->paginate(2);
 
     $bcategory = BlogCategory::latest()->get();
 
