@@ -22,7 +22,7 @@ use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Session;
 use Stripe;
-use App\Notifiations\OrderComplete;
+use App\Notifications\OrderComplete;
 use Illuminate\Support\Facades\Notification;
 
 class CartController extends Controller
