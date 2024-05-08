@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 use App\Http\Controllers\Backend\BlogController;
 use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\RoleController;
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 
@@ -295,6 +296,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/site', 'UpdateSite')
       ->name('update.site');
+  });
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+    Route::get('/all/permission', 'AllPermission')
+      ->name('all.permission');
   });
 }); // End Admin Group SideBar 
 
