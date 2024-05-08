@@ -1,0 +1,112 @@
+
+4-権限の編集と更新処理と削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/edit/permission/{id}', 'EditPermission')
+      ->name('edit.permission');
+
+    Route::post('/update/permission', 'UpdatePermission')
+      ->name('update.permission');
+
+    Route::get('/delete/permission/{id}', 'DeletePermission')
+      ->name('delete.permission');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\all_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('edit.permission',$item->id) }}" class="btn btn-info px-5">Edit </a>
+    <a href="{{ route('delete.permission',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\all_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function EditPermission($id)
+  {
+
+    $permission = Permission::find($id);
+    return view('admin.backend.pages.permission.edit_permission', compact('permission'));
+  } // End Method 
+
+  public function UpdatePermission(Request $request)
+  {
+
+    $per_id = $request->id;
+
+    Permission::find($per_id)->update([
+      'name' => $request->name,
+      'group_name' => $request->group_name,
+    ]);
+
+    $notification = array(
+      'message' => 'Permission Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('all.permission')->with($notification);
+  } // End Method 
+
+  public function DeletePermission($id)
+  {
+
+    Permission::find($id)->delete();
+
+    $notification = array(
+      'message' => 'Permission Deleted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\edit_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+        <div class="form-group col-md-6">
+          <label for="input1" class="form-label"> Group Name</label>
+          <select name="group_name" class="form-select mb-3" aria-label="Default select example">
+            <option selected="" disabled>Open this select menu</option>
+
+            <option value="Category" {{ $permission->group_name == 'Category' ? 'selected' : '' }}>Category</option>
+            <option value="Instructor" {{ $permission->group_name == 'Instructor' ? 'selected' : '' }}>Instructor
+            </option>
+            <option value="Coupon" {{ $permission->group_name == 'Coupon' ? 'selected' : '' }}>Coupon</option>
+            <option value="Setting" {{ $permission->group_name == 'Setting' ? 'selected' : '' }}>Setting</option>
+            <option value="Orders" {{ $permission->group_name == 'Orders' ? 'selected' : '' }}>Orders</option>
+            <option value="Report" {{ $permission->group_name == 'Report' ? 'selected' : '' }}>Report</option>
+            <option value="Review" {{ $permission->group_name == 'Review' ? 'selected' : '' }}>Review</option>
+            <option value="All User" {{ $permission->group_name == 'All User' ? 'selected' : '' }}>All User </option>
+            <option value="Blog" {{ $permission->group_name == 'Blog' ? 'selected' : '' }}>Blog</option>
+            <option value="Role and Permission" {{ $permission->group_name == 'Role and Permission' ? 'selected' : ''
+              }}>Role and Permission</option>
+          </select>
+        </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
