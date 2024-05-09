@@ -1,0 +1,81 @@
+
+5-ExcelのImport
+
+下記コマンドでImportファイル新規作成
+php artisan make:import PermissionImport --model=User
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::post('/import', 'Import')
+      ->name('import');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\all_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+&nbsp;&nbsp;
+<a href="{{ route('import.permission') }}" class="btn btn-warning ">Import </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Imports\PermissionImport;
+
+  public function Import(Request $request)
+  {
+
+    Excel::import(new PermissionImport, $request->file('import_file'));
+
+    $notification = array(
+      'message' => 'Permission Imported Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+  } // End Method
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Importファイルの編集◆
+
+ディレクトリ
+\app\Imports\PermissionImport.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Spatie\Permission\Models\Permission;
+
+  public function model(array $row)
+  {
+    return new Permission([
+      'name'     => $row[0],
+      'group_name'    => $row[1],
+    ]);
+  }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+ファイルをアップロードし、DBに格納されていたらOK

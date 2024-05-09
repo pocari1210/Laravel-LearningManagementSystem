@@ -323,6 +323,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/export', 'Export')
       ->name('export');
+
+    Route::post('/import', 'Import')
+      ->name('import');
   });
 }); // End Admin Group SideBar 
 
