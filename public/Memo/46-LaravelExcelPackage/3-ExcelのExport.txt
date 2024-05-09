@@ -1,0 +1,68 @@
+
+3-ExcelのExport
+
+下記コマンドでExportファイル新規作成
+php artisan make:export PermissionExport --model=User
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/export', 'Export')
+      ->name('export');
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\import_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <ol class="breadcrumb mb-0 p-0">
+    <a href="{{ route('export') }}" class="btn btn-warning ">Download Xlsx </a>
+  </ol>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Exports\PermissionExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+  public function Export()
+  {
+    return Excel::download(new PermissionExport, 'permission.xlsx');
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆Exportファイルの編集◆
+
+ディレクトリ
+\app\Exports\PermissionExport.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Spatie\Permission\Models\Permission;
+
+    public function collection()
+    {
+        return Permission::select('name','group_name')->get();
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Download Xlsxを押してexcelをExportできたらOK
