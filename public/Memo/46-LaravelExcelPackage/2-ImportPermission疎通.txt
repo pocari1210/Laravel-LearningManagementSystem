@@ -1,0 +1,63 @@
+
+2-ImportPermission疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/import/permission', 'ImportPermission')
+      ->name('import.permission');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\all_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<div class="btn-group">
+  <a href="{{ route('add.permission') }}" class="btn btn-primary px-5">Add Permission </a>
+
+  ↓↓追加↓↓
+  &nbsp;&nbsp;
+  <a href="{{ route('import.permission') }}" class="btn btn-warning ">Import </a>
+</div>
+
+★コード解説★
+&nbsp;で半角スペースをいれている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function ImportPermission()
+  {
+    return view('admin.backend.pages.permission.import_permission');
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\import_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
