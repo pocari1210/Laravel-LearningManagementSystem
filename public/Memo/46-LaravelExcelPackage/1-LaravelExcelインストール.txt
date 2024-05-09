@@ -1,0 +1,42 @@
+
+1-LaravelExcelインストール
+
+Laravel Excel
+https://docs.laravel-excel.com/3.1/getting-started/
+
+下記コマンドでインストール
+composer require maatwebsite/excel
+
+下記でconfig作成
+php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider" --tag=config
+
+◆config(app)の編集◆
+
+ディレクトリ
+\config\app.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/*
+* Package Service Providers...
+*/
+
+Maatwebsite\Excel\ExcelServiceProvider::class,
+
+'aliases' => Facade::defaultAliases()->merge([
+  'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆config(えｘせｌ)の編集◆
+
+ディレクトリ
+\config\excel.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+変更なし
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
