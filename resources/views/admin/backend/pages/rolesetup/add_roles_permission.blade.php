@@ -47,15 +47,26 @@
           <div class="col-3">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">Permission All </label>
+              <label class="form-check-label" for="flexCheckDefault">{{ $group->group_name }} </label>
             </div>
           </div>
 
           <div class="col-9">
+
+            @php
+            $permissions = App\Models\User::getpermissionByGroupName($group->group_name)
+            @endphp
+
+            @foreach ($permissions as $permission)
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">{{ $group->group_name }}</label>
+              <input class="form-check-input" type="checkbox" name="permission[]" value="{{ $permission->id }}"
+                id="checkDefault{{ $permission->id }}">
+              <label class="form-check-label" for="checkDefault{{ $permission->id }}">{{ $permission->name }}</label>
             </div>
+            @endforeach
+
+            <br>
+
           </div>
         </div>
 
