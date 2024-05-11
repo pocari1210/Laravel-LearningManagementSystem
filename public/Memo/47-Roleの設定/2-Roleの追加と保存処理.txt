@@ -1,0 +1,73 @@
+
+2-Roleの追加と保存処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/add/roles', 'AddRoles')
+      ->name('add.roles');
+
+    Route::post('/store/roles', 'StoreRoles')
+      ->name('store.roles');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\roles\all_roles.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="btn-group">
+    <a href="{{ route('add.roles') }}" class="btn btn-primary  ">Add Roles </a>
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddRoles()
+  {
+    return view('admin.backend.pages.roles.add_roles');
+  } // End Method
+
+  public function StoreRoles(Request $request)
+  {
+
+    Role::create([
+      'name' => $request->name,
+    ]);
+
+    $notification = array(
+      'message' => 'Role Created Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('all.roles')->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\roles\add_roles.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+RoleのDBを確認して、保存処理ができているのを確認出来たらOK

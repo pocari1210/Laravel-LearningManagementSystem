@@ -15,8 +15,7 @@
     </div>
     <div class="ms-auto">
       <div class="btn-group">
-        <a href="#" class="btn btn-primary  ">Add Roles </a>
-
+        <a href="{{ route('add.roles') }}" class="btn btn-primary  ">Add Roles </a>
       </div>
     </div>
   </div>
