@@ -245,4 +245,27 @@ class RoleController extends Controller
     );
   } // End Method 
 
+  public function AdminUpdateRoles(Request $request, $id)
+  {
+
+    $role = Role::find($id);
+
+    // $permissions = $request->permission;
+
+    $permissions = collect($request->input('permission'))
+      ->map(fn ($val) => (int)$val)
+      ->all();
+
+    // syncPermissionsでまとめて登録を行うことができる
+    if (!empty($permissions)) {
+      $role->syncPermissions($permissions);
+    }
+
+    $notification = array(
+      'message' => 'Role Permission Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('all.roles.permission')->with($notification);
+  } // End Method 
+
 }

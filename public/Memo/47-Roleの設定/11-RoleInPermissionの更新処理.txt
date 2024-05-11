@@ -1,0 +1,66 @@
+
+11-RoleInPermissionの更新処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::post('/admin/roles/update/{id}', 'AdminUpdateRoles')
+      ->name('admin.roles.update');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\edit_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form id="myForm" action="{{ route('admin.roles.update',$role->id) }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+    @csrf
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminUpdateRoles(Request $request, $id)
+  {
+
+    $role = Role::find($id);
+
+    // $permissions = $request->permission;
+
+    $permissions = collect($request->input('permission'))
+      ->map(fn ($val) => (int)$val)
+      ->all();
+
+    // syncPermissionsでまとめて登録を行うことができる
+    if (!empty($permissions)) {
+      $role->syncPermissions($permissions);
+    }
+
+    $notification = array(
+      'message' => 'Role Permission Updated Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->route('all.roles.permission')->with($notification);
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+更新が行えたらOK

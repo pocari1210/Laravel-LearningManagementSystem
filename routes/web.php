@@ -359,6 +359,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/edit/roles/{id}', 'AdminEditRoles')
       ->name('admin.edit.roles');
+
+    Route::post('/admin/roles/update/{id}', 'AdminUpdateRoles')
+      ->name('admin.roles.update');
   });
 }); // End Admin Group SideBar 
 
