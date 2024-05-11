@@ -107,4 +107,15 @@ class RoleController extends Controller
     return redirect()->back()->with($notification);
   } // End Method
 
+  public function AllRoles()
+  {
+
+    $roles = Role::all();
+
+    return view(
+      'admin.backend.pages.roles.all_roles',
+      compact('roles')
+    );
+  } // End Method
+
 }

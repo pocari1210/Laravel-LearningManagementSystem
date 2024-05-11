@@ -327,6 +327,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::post('/import', 'Import')
       ->name('import');
   });
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+    Route::get('/all/roles', 'AllRoles')
+      ->name('all.roles');
+  });
 }); // End Admin Group SideBar 
 
 // Adminのloginページのルート
