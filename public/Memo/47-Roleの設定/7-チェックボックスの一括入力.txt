@@ -1,0 +1,27 @@
+
+7-チェックボックスの一括入力
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\add_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckMain">
+    <label class="form-check-label" for="flexCheckMain">Permission All </label>
+  </div>
+
+<script>
+  $('#flexCheckMain').click(function(){
+      if ($(this).is(':checked')) {
+        $('input[ type=checkbox]').prop('checked',true)  
+      }else{
+        $('input[ type=checkbox]').prop('checked',false)  
+      }
+  });
+</script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
