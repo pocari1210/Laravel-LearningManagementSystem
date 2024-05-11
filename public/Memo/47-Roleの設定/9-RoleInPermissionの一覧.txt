@@ -1,0 +1,67 @@
+
+9-RoleInPermissionの一覧
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/all/roles/permission', 'AllRolesPermission')
+      ->name('all.roles.permission');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <li> <a href="{{ route('all.roles.permission') }}"><i class='bx bx-radio-circle'></i>All Role In Permission</a>
+  </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AllRolesPermission()
+  {
+
+    $roles = Role::all();
+
+    return view(
+      'admin.backend.pages.rolesetup.all_roles_permission',
+      compact('roles')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\all_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  {{-- permissionsのDBからnameカラムのデータを表示 --}}
+  <td>
+    @foreach ($item->permissions as $prem)
+    <span class="badge bg-danger">{{ $prem->name }}</span>
+    @endforeach
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

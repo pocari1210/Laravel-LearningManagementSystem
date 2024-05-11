@@ -353,6 +353,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/role/permission/store', 'RolePermissionStore')
       ->name('role.permission.store');
+
+    Route::get('/all/roles/permission', 'AllRolesPermission')
+      ->name('all.roles.permission');
   });
 }); // End Admin Group SideBar 
 
