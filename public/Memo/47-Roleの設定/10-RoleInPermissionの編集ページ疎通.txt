@@ -1,0 +1,89 @@
+
+10-RoleInPermissionの編集ページ疎通
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\User.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    public static function roleHasPermissions($role, $permissions)
+    {
+        $hasPermission =  true;
+        foreach ($permissions as  $permission) {
+            if (!$role->hasPermissionTo($permission->name)) {
+                $hasPermission = false;
+            }
+            return $hasPermission;
+        }
+    } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/admin/edit/roles/{id}', 'AdminEditRoles')
+      ->name('admin.edit.roles');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\all_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+↓↓routeの変更↓↓
+<a href="{{ route('admin.edit.roles',$item->id) }}" class="btn btn-info px-5">Edit </a>
+<a href="{{ route('delete.roles',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AdminEditRoles($id)
+  {
+
+    $role = Role::find($id);
+
+    $permissions = Permission::all();
+
+    $permission_groups = User::getpermissionGroups();
+
+    return view(
+      'admin.backend.pages.rolesetup.edit_roles_permission',
+      compact('role', 'permission_groups', 'permissions')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\edit_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+編集ページに遷移ができ、登録された箇所にチェックがはいっていればOK

@@ -356,6 +356,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/all/roles/permission', 'AllRolesPermission')
       ->name('all.roles.permission');
+
+    Route::get('/admin/edit/roles/{id}', 'AdminEditRoles')
+      ->name('admin.edit.roles');
   });
 }); // End Admin Group SideBar 
 
