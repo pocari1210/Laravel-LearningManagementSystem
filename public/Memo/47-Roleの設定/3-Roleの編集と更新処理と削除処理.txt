@@ -1,0 +1,101 @@
+
+3-Roleの編集と更新処理と削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Role All Route 
+  Route::controller(RoleController::class)->group(function () {
+
+    Route::get('/edit/roles/{id}', 'EditRoles')
+      ->name('edit.roles');
+
+    Route::post('/update/roles', 'UpdateRoles')
+      ->name('update.roles');
+
+    Route::get('/delete/roles/{id}', 'DeleteRoles')
+      ->name('delete.roles');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\roles\all_roles.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <td>
+    <a href="{{ route('edit.roles',$item->id) }}" class="btn btn-info px-5">Edit </a>
+    <a href="{{ route('delete.roles',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+  </td>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function EditRoles($id)
+  {
+
+    $roles = Role::find($id);
+
+    return view(
+      'admin.backend.pages.roles.edit_roles',
+      compact('roles')
+    );
+  } // End Method 
+
+  public function UpdateRoles(Request $request)
+  {
+
+    $role_id = $request->id;
+
+    Role::find($role_id)->update([
+      'name' => $request->name,
+    ]);
+
+    $notification = array(
+      'message' => 'Role Updated Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->route('all.roles')->with($notification);
+  } // End Method 
+
+  public function DeleteRoles($id)
+  {
+
+    Role::find($id)->delete();
+
+    $notification = array(
+      'message' => 'Role Deleted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\roles\edit_roles.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+編集ページより更新処理を行うことができ、
+一覧ページより削除処理が実行できたらOK

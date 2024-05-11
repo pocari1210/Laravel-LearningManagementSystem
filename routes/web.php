@@ -338,6 +338,15 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/store/roles', 'StoreRoles')
       ->name('store.roles');
+
+    Route::get('/edit/roles/{id}', 'EditRoles')
+      ->name('edit.roles');
+
+    Route::post('/update/roles', 'UpdateRoles')
+      ->name('update.roles');
+
+    Route::get('/delete/roles/{id}', 'DeleteRoles')
+      ->name('delete.roles');
   });
 }); // End Admin Group SideBar 
 
