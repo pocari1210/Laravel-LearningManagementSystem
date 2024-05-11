@@ -1,0 +1,59 @@
+
+5-登録されたPermissionの疎通
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\User.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    public static function getpermissionGroups()
+    {
+        $permission_groups = DB::table('permissions')->select('group_name')->groupBy('group_name')->get();
+        return $permission_groups;
+    }
+
+★コード解説★
+permissionsのDBに登録されたgroup_nameのデータを取得している
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\User;
+
+  public function AddRolesPermission()
+  {
+
+    $roles = Role::all();
+
+    $permission_groups = User::getpermissionGroups();
+
+    return view(
+      'admin.backend.pages.rolesetup.add_roles_permission',
+      compact('roles', 'permission_groups')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\rolesetup\add_roles_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+登録したPermissionが疎通できていればOK
