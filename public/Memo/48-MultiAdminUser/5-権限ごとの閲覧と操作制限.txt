@@ -1,0 +1,70 @@
+
+5-権限ごとの閲覧と操作制限
+
+category.menuという項目をRole ＆ permissionで登録し、
+adminに権限を付与する必要がある
+
+◆middlewareの編集◆
+
+ディレクトリ
+\app\Http\Kernel.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  protected $middlewareAliases = [
+
+    'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Category All Route 
+  Route::controller(CategoryController::class)->group(function () {
+    Route::get('/all/category', 'AllCategory')
+      ->name('all.category')->middleware('permission:category.all');
+
+★コード解説★
+middlewareの追加
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    @if (Auth::user()->can('category.menu'))
+    <li>
+      <a href="javascript:;" class="has-arrow">
+        <div class="parent-icon"><i class='bx bx-cart'></i>
+        </div>
+        <div class="menu-title">Manage Category</div>
+      </a>
+      <ul>
+        @if (Auth::user()->can('category.all'))
+        <li> <a href="{{ route('all.category') }}"><i class='bx bx-radio-circle'></i>All Category </a>
+        </li>
+        @endif
+        <li> <a href="{{ route('all.subcategory') }}"><i class='bx bx-radio-circle'></i>All SubCategory </a>
+        </li>
+      </ul>
+    </li>
+    @endif
+
+★コード解説★
+
+権限があるアカウントで表示され、逆に権限がないアカウントが非表示になっていればOK
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+

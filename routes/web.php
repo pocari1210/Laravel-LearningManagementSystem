@@ -119,7 +119,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   // Category All Route 
   Route::controller(CategoryController::class)->group(function () {
     Route::get('/all/category', 'AllCategory')
-      ->name('all.category');
+      ->name('all.category')->middleware('permission:category.all');
 
     Route::get('/add/category', 'AddCategory')
       ->name('add.category');
