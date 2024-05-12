@@ -371,6 +371,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
   Route::controller(AdminController::class)->group(function () {
     Route::get('/all/admin', 'AllAdmin')
       ->name('all.admin');
+
+    Route::get('/add/admin', 'AddAdmin')
+      ->name('add.admin');
+
+    Route::post('/store/admin', 'StoreAdmin')
+      ->name('store.admin');
   });
 }); // End Admin Group SideBar 
 

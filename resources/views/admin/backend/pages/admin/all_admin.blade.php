@@ -16,7 +16,7 @@
 
     <div class="ms-auto">
       <div class="btn-group">
-        <a href="{{ route('add.permission') }}" class="btn btn-primary  ">Add Admin </a>
+        <a href="{{ route('add.admin') }}" class="btn btn-primary  ">Add Admin </a>
       </div>
     </div>
   </div>
@@ -50,7 +50,11 @@
               <td>{{ $item->name }}</td>
               <td>{{ $item->email }}</td>
               <td>{{ $item->phone }}</td>
-              <td>Role</td>
+              <td>
+                @foreach ($item->roles as $role)
+                <span class="badge badge-pill bg-danger">{{ $role->name }}</span>
+                @endforeach
+              </td>
               <td>
                 <a href="{{ route('edit.permission',$item->id) }}" class="btn btn-info px-5">Edit </a>
                 <a href="{{ route('delete.permission',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
