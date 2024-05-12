@@ -1,0 +1,56 @@
+
+4-Adminの削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin User All Route 
+  Route::controller(AdminController::class)->group(function () {
+
+    Route::get('/delete/admin/{id}', 'DeleteAdmin')
+      ->name('delete.admin');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\admin\all_admin.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('delete.admin',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteAdmin($id)
+  {
+
+    $user = User::find($id);
+
+    if (!is_null($user)) {
+      $user->delete();
+    }
+
+    $notification = array(
+      'message' => 'Admin Deleted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+  } // End Method
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

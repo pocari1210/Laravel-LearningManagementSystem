@@ -383,6 +383,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::post('/update/admin/{id}', 'UpdateAdmin')
       ->name('update.admin');
+
+    Route::get('/delete/admin/{id}', 'DeleteAdmin')
+      ->name('delete.admin');
   });
 }); // End Admin Group SideBar 
 
