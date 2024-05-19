@@ -357,8 +357,8 @@ class CartController extends Controller
     $token = $_POST['stripeToken'];
 
     $charge = \Stripe\Charge::create([
-      'amount' => $total_amount * 100,
-      'currency' => 'usd',
+      'amount' => $total_amount,
+      'currency' => 'jpy',
       'description' => 'Lms',
       'source' => $token,
       'metadata' => ['order_id' => '3434'],
