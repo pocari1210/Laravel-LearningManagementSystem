@@ -1,0 +1,75 @@
+
+3-通知の既読
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::post('/mark-notification-as-read/{notification}', [CartController::class, 'MarkAsRead']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\header.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown">
+<span class="alert-count" id="notification-count">{{ $ncount }}</span></a>
+
+<a class="dropdown-item" href="javascript:;" onclick="markNotificationRead('{{ $notification->id }}')">
+
+<script>
+  function markNotificationRead(notificationId){
+      fetch('/mark-notification-as-read/'+notificationId,{
+          method: 'POST',
+          headers: {
+              'Content-Type' : 'application/json',
+              'X-CSRF-TOKEN' : '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({})
+      })
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById('notification-count').textContent = data.count;
+      })
+      .catch(error => {
+          console.log('Error',error)
+      });
+  }
+</script>
+
+★コード解説★
+既読を確認するJSのコード
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function MarkAsRead(Request $request, $notificationId)
+  {
+
+    $user = Auth::user();
+    $notification = $user->notifications()->where('id', $notificationId)->first();
+
+    if ($notification) {
+      $notification->markAsRead();
+    }
+    return response()->json(['count' => $user->unreadNotifications()->count()]);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+instructorのヘッダーの通知をクリックし、件数が1件減り、
+既読が確認出来たらOK

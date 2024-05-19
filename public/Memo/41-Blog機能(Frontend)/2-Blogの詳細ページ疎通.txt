@@ -1,0 +1,78 @@
+
+2-Blogの詳細ページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+Route::get('/blog/details/{slug}', [BlogController::class, 'BlogDetails']);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\frontend\home\blog-area.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<h5 class="card-title"><a href="{{ url('blog/details/'.$item->post_slug) }}">
+{{ $item->post_title }}</a></h5>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function BlogDetails($slug)
+  {
+
+    $blog = BlogPost::where('post_slug', $slug)->first();
+
+    return view(
+      'frontend.blog.blog_details',
+      compact('blog')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\blog\blog_details.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+@extends('frontend.master')
+@section('home')
+
+<!-- ================================
+    START BREADCRUMB AREA
+================================= -->
+<section class="breadcrumb-area pt-80px pb-80px pattern-bg">
+  <div class="container">
+    <div class="breadcrumb-content">
+      <div class="section-heading pb-3">
+        <h2 class="section__title"> {{ $blog->post_title }}</h2>
+      </div>
+      <ul class="generic-list-item generic-list-item-arrow d-flex flex-wrap align-items-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog-no-sidebar.html">Blog</a></li>
+        <li>{{ $blog->post_title }}</li>
+      </ul>
+      <ul
+        class="generic-list-item generic-list-item-bullet generic-list-item--bullet d-flex align-items-center flex-wrap fs-14 pt-2">
+        <li class="d-flex align-items-center">By<a href="#">Admin</a></li>
+        <li class="d-flex align-items-center"> {{ $blog->created_at->format('M d Y') }} </li>
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,71 @@
+
+4-BlogCategoryの更新処理と削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin All user and Instructor All Route 
+  Route::controller(BlogController::class)->group(function () {
+
+    Route::post('/blog/category/update', 'UpdateBlogCategory')
+      ->name('blog.category.update');
+
+    Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')
+      ->name('delete.blog.category');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\blogcategory\blog_category.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+   public function UpdateBlogCategory(Request $request){
+    $cat_id = $request->cat_id;
+
+    BlogCategory::find($cat_id)->update([
+        'category_name' => $request->category_name,
+        'category_slug' => strtolower(str_replace(' ','-',$request->category_name)),
+    ]);
+
+    $notification = array(
+        'message' => 'BlogCategory Updated Successfully',
+        'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+
+
+   }// End Method 
+
+   public function DeleteBlogCategory($id){
+
+    BlogCategory::find($id)->delete();
+
+    $notification = array(
+        'message' => 'BlogCategory Deleted Successfully',
+        'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+
+
+   }// End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

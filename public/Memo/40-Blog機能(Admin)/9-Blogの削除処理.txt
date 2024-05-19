@@ -1,0 +1,61 @@
+
+9-Blogの削除処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Blog Post All Route 
+  Route::controller(BlogController::class)->group(function () {
+
+    Route::get('/delete/post/{id}', 'DeleteBlogPost')
+      ->name('delete.post');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\post\all_post.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('delete.post',$item->id) }}" class="btn btn-danger px-5" id="delete">Delete </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function DeleteBlogPost($id)
+  {
+
+    $item = BlogPost::find($id);
+
+    $img = $item->post_image;
+
+    unlink($img);
+
+    BlogPost::find($id)->delete();
+
+    $notification = array(
+      'message' => 'Blog Post Deleted Successfully',
+      'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+  } // End Method 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

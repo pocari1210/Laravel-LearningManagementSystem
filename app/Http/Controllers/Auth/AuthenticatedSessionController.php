@@ -29,6 +29,12 @@ class AuthenticatedSessionController extends Controller
 
     $request->session()->regenerate();
 
+    // Login成功時のtoastrのコメント
+    $notification = array(
+      'message' => 'Login Successfully',
+      'alert-type' => 'success'
+    );
+
     // role毎のログイン後の遷移先指定
     $url = '';
     if ($request->user()->role === 'admin') {
@@ -39,7 +45,7 @@ class AuthenticatedSessionController extends Controller
       $url = '/dashboard';
     }
 
-    return redirect()->intended($url);
+    return redirect()->intended($url)->with($notification);
   }
 
   /**

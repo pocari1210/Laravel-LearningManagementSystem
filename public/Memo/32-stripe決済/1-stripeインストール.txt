@@ -1,0 +1,41 @@
+
+下記のコマンドでstripeインストール
+composer require stripe/stripe-php
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Frontend\CartController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    $data = array();
+    $data['name'] = $request->name;
+    $data['email'] = $request->email;
+    $data['phone'] = $request->phone;
+    $data['address'] = $request->address;
+    $data['course_title'] = $request->course_title;
+    $cartTotal = Cart::total();
+    $carts = Cart::content();
+
+    if ($request->cash_delivery == 'stripe') {
+      return view('frontend.payment.stripe', compact('data', 'cartTotal', 'carts'));
+    } elseif ($request->cash_delivery == 'handcash') {
+
+★コード解説★
+stripe決済を導入する場合、データを受け取って、遷移先の
+stripe.blade.phpにデータをわたす
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\frontend\payment\stripe.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

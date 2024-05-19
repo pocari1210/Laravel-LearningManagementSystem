@@ -1,0 +1,98 @@
+
+2-Adminの追加と保存処理
+
+laravel-permissionのver6だと動かなかったため、
+下記コマンドにてグレードダウン
+
+エラー名
+There is no role named `1` for guard `web`.
+
+composer require spatie/laravel-permission "^5.11"
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin User All Route 
+  Route::controller(AdminController::class)->group(function () {
+
+    Route::get('/add/admin', 'AddAdmin')
+      ->name('add.admin');
+
+    Route::post('/store/admin', 'StoreAdmin')
+      ->name('store.admin');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\admin\add_admin.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+        <div class="form-group col-md-6">
+          <label for="input1" class="form-label"> Role Name</label>
+          <select name="roles" class="form-select mb-3" aria-label="Default select example">
+            <option selected="" disabled>Open this select menu</option>
+            @foreach ($roles as $role)
+            <option value="{{ $role->id }}"> {{ $role->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
+★コード解説★
+コントローラーからわたってきた$rolesのデータを
+表示させている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\AdminController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function AddAdmin()
+  {
+
+    $roles = Role::all();
+
+    return view(
+      'admin.backend.pages.admin.add_admin',
+      compact('roles')
+    );
+  } // End Method
+
+  public function StoreAdmin(Request $request)
+  {
+
+    $user = new User();
+    $user->username = $request->username;
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+    $user->address = $request->address;
+    $user->password = Hash::make($request->password);
+    $user->role = 'admin';
+    $user->status = '1';
+    $user->save();
+
+    if ($request->roles) {
+      $user->assignRole($request->roles);
+    }
+
+    $notification = array(
+      'message' => 'New Admin Inserted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->route('all.admin')->with($notification);
+  } // End Method
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

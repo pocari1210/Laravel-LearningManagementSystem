@@ -1,0 +1,50 @@
+
+2-ログイン中のログインページ遷移の修正
+
+ログインしているAdminとInstructorでログインページに
+遷移ができてしまう不具合を修正
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Middleware\RedirectIfAuthenticated;
+
+Route::get('/admin/login', [AdminController::class, 'AdminLogin'])
+  ->name('admin.login')->middleware(RedirectIfAuthenticated::class);
+
+Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])
+  ->name('instructor.login')->middleware(RedirectIfAuthenticated::class);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ミドルウェアの編集◆
+
+ディレクトリ
+\app\Http\Middleware\RedirectIfAuthenticated.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+foreach ($guards as $guard) {
+    if (Auth::guard($guard)->check()) {
+
+        if (Auth::check() && Auth::user()->role == 'user') {
+            return redirect('/dashboard');
+        }
+        if (Auth::check() && Auth::user()->role == 'instructor') {
+            return redirect('/instructor/dashboard');
+        }
+        if (Auth::check() && Auth::user()->role == 'admin') {
+            return redirect('/admin/dashboard');
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+admin,instructor,userでログインし、「/login」と検索した際、
+dashboardのページにリダイレクトされたらOK

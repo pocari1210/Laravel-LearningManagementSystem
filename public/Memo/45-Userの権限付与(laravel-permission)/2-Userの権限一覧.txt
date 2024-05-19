@@ -1,0 +1,81 @@
+
+2-Userの権限一覧
+
+下記コマンドで、コントローラー新規作成
+php artisan make:controller Backend/RoleController
+
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Http\Controllers\Backend\RoleController;
+
+  // Permission All Route 
+  Route::controller(RoleController::class)->group(function () {
+    Route::get('/all/permission', 'AllPermission')
+      ->name('all.permission');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li class="menu-label">Role & Permission</li>
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class="bx bx-line-chart"></i>
+        </div>
+        <div class="menu-title">Role & Permission</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('all.permission') }}"><i class='bx bx-radio-circle'></i>All Permission</a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\RoleController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+  public function AllPermission()
+  {
+
+    $permissions = Permission::all();
+
+    return view(
+      'admin.backend.pages.permission.all_permission',
+      compact('permissions')
+    );
+  } // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\pages\permission\all_permission.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

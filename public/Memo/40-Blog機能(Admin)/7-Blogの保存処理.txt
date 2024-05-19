@@ -1,0 +1,81 @@
+
+◆Modelの編集◆
+
+ディレクトリ
+\app\Models\BlogPost.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    public function blog(){
+        return $this->belongsTo(BlogCategory::class, 'blogcat_id' ,'id');
+    }
+
+★コード解説★
+BlogCategoryとリレーションをしている
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Blog Post All Route 
+  Route::controller(BlogController::class)->group(function () {
+
+    Route::post('/store/blog/post', 'StoreBlogPost')
+      ->name('store.blog.post');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\post\add_post.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <form id="myForm" action="{{ route('store.blog.post') }}" method="post" class="row g-3"
+    enctype="multipart/form-data">
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function StoreBlogPost(Request $request)
+  {
+
+    $image = $request->file('post_image');
+    $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+    InterventionImage::make($image)->resize(370, 247)->save('upload/post/' . $name_gen);
+    $save_url = 'upload/post/' . $name_gen;
+
+    BlogPost::insert([
+      'blogcat_id' => $request->blogcat_id,
+      'post_title' => $request->post_title,
+      'post_slug' => strtolower(str_replace(' ', '-', $request->post_title)),
+      'long_descp' => $request->long_descp,
+      'post_tags' => $request->post_tags,
+      'post_image' => $save_url,
+      'created_at' => Carbon::now(),
+    ]);
+
+    $notification = array(
+      'message' => 'Blog Post Inserted Successfully',
+      'alert-type' => 'success'
+    );
+
+    return redirect()->route('blog.post')->with($notification);
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+DBを確認し、保存ができていればOK

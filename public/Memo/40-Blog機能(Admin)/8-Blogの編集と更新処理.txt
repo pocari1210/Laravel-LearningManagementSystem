@@ -1,0 +1,116 @@
+
+8-Blogの編集と更新処理
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Blog Post All Route 
+  Route::controller(BlogController::class)->group(function () {
+
+    Route::get('/edit/post/{id}', 'EditBlogPost')
+      ->name('edit.post');
+      
+    Route::post('/update/blog/post', 'UpdateBlogPost')
+      ->name('update.blog.post');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\post\all_post.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+<a href="{{ route('edit.post',$item->id) }}" class="btn btn-info px-5">Edit </a>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\BlogController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  public function EditBlogPost($id)
+  {
+
+    $blogcat = BlogCategory::latest()->get();
+
+    $post = BlogPost::find($id);
+
+    return view(
+      'admin.backend.post.edit_post',
+      compact('post', 'blogcat')
+    );
+  } // End Method 
+
+
+  public function UpdateBlogPost(Request $request)
+  {
+
+    $post_id = $request->id;
+
+    if ($request->file('post_image')) {
+
+      $image = $request->file('post_image');
+      $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+      InterventionImage::make($image)->resize(370, 247)->save('upload/post/' . $name_gen);
+      $save_url = 'upload/post/' . $name_gen;
+
+      BlogPost::find($post_id)->update([
+        'blogcat_id' => $request->blogcat_id,
+        'post_title' => $request->post_title,
+        'post_slug' => strtolower(str_replace(' ', '-', $request->post_title)),
+        'long_descp' => $request->long_descp,
+        'post_tags' => $request->post_tags,
+        'post_image' => $save_url,
+        'created_at' => Carbon::now(),
+
+      ]);
+
+      $notification = array(
+        'message' => 'Blog Post Updated Successfully',
+        'alert-type' => 'success'
+      );
+      return redirect()->route('blog.post')->with($notification);
+    } else {
+
+      BlogPost::find($post_id)->update([
+        'blogcat_id' => $request->blogcat_id,
+        'post_title' => $request->post_title,
+        'post_slug' => strtolower(str_replace(' ', '-', $request->post_title)),
+        'long_descp' => $request->long_descp,
+        'post_tags' => $request->post_tags,
+        'created_at' => Carbon::now(),
+
+      ]);
+
+      $notification = array(
+        'message' => 'Blog Post Updated Successfully',
+        'alert-type' => 'success'
+      );
+
+      return redirect()->route('blog.post')->with($notification);
+    } // end else 
+
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\admin\backend\post\edit_post.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

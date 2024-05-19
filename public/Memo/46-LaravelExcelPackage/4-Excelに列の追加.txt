@@ -1,0 +1,31 @@
+
+4-Excelに列を追加
+
+◆Exportファイルの編集◆
+
+ディレクトリ
+\app\Exports\PermissionExport.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+↓↓モジュールのインポート↓↓
+use Maatwebsite\Excel\Concerns\WithHeadings;
+
+↓↓WithHeadings追加↓↓
+class PermissionExport implements FromCollection, WithHeadings
+{
+
+  ↓↓nameとgroup_nameの列を追加↓↓
+  public function headings(): array
+  {
+    return [
+      'name',
+      'group_name',
+    ];
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+Exportをして、Excelに列が追加されていたらOK
+

@@ -1,0 +1,73 @@
+
+4-Instructorページで承認されたレビューの一覧表示
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor Review All Route 
+  Route::controller(ReviewController::class)->group(function () {
+    Route::get('/instructor/all/review', 'InstructorAllReview')
+      ->name('instructor.all.review');
+  });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\body\sidebar.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+    <li>
+      <a class="has-arrow" href="javascript:;">
+        <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+        </div>
+        <div class="menu-title">Manage Reivew</div>
+      </a>
+      <ul>
+        <li> <a href="{{ route('instructor.all.review') }}"><i class='bx bx-radio-circle'></i>All Review</a>
+        </li>
+      </ul>
+    </li>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReviewController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+	public function InstructorAllReview()
+	{
+		$id = Auth::user()->id;
+
+		$review = Review::where('instructor_id', $id)
+			->where('status', 1)->orderBy('id', 'DESC')->get();
+
+		return view(
+			'instructor.review.active_review',
+			compact('review')
+		);
+	} // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\review\active_review.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+InstructorページでstatusがActiveのレビューが表示されたらOK

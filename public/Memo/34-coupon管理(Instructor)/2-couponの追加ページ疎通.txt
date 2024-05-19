@@ -1,0 +1,65 @@
+
+2-couponの追加ページ疎通
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Instructor Coupon All Route 
+  Route::controller(CouponController::class)->group(function () {
+
+    Route::get('/instructor/add/coupon', 'InstructorAddCoupon')
+      ->name('instructor.add.coupon');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\instructor\coupon\coupon_all.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  <div class="btn-group">
+    <a href="{{ route('instructor.add.coupon') }}" class="btn btn-primary px-5">Add Coupon </a>
+  </div>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\CouponController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+use App\Models\Course;
+
+  public function InstructorAddCoupon()
+  {
+    $id = Auth::user()->id;
+
+    $courses = Course::where('instructor_id', $id)->get();
+
+    return view(
+      'instructor.coupon.coupon_add',
+      compact('courses')
+    );
+  } // End Method 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移先)◆
+
+ディレクトリ
+\resources\views\instructor\coupon\coupon_add.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+追加ページの疎通ができたらOK

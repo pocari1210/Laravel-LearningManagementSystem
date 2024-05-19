@@ -1,0 +1,58 @@
+
+2-レビューの承認処理(update)
+
+◆ルートの編集◆
+
+ディレクトリ
+\routes\web.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+  // Admin Review All Route 
+  Route::controller(ReviewController::class)->group(function () {
+
+    Route::post('/update/review/stauts', 'UpdateReviewStatus')
+      ->name('update.review.stauts');
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆ビューの編集(遷移元)◆
+
+ディレクトリ
+\resources\views\admin\backend\review\pending_review.blade.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+◆コントローラーの編集◆
+
+ディレクトリ
+\app\Http\Controllers\Backend\ReviewController.php
+
+・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・・
+
+	public function UpdateReviewStatus(Request $request)
+	{
+
+		$reviewId = $request->input('review_id');
+
+		$isChecked = $request->input('is_checked', 0);
+
+		$review = Review::find($reviewId);
+
+		if ($review) {
+			$review->status = $isChecked;
+			$review->save();
+		}
+
+		return response()->json(['message' => 'Review Status Updated Successfully']);
+	} // End Method 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+DBを確認して、statusが0から1に代わっていたらOK
