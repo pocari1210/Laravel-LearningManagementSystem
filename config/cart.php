@@ -73,7 +73,7 @@ return [
         'decimal_point' => '.',
 
         // ↓↓「,」を削除した↓
-        'thousand_separator' => ',',
+        'thousand_separator' => '',
 
     ],
 
